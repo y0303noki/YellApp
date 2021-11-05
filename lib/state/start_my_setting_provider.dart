@@ -68,7 +68,6 @@ class StartMySetting extends ChangeNotifier {
       selectedWeekDay.remove(dayNum);
     }
     selectedWeekDay.sort();
-    print(selectedWeekDay);
     notifyListeners();
   }
 }

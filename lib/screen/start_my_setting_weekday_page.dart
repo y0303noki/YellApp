@@ -8,11 +8,14 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/start_my_setting_confirm_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
+final errorTextProvider = StateProvider((ref) => '');
+
 class StartMySettinWeekdayPage extends HookWidget {
   // final startMySetting = useProvider(startMySettingProvider);
 
   @override
   Widget build(BuildContext context) {
+    final errorText = useProvider(errorTextProvider);
     final startMySetting = useProvider(startMySettingProvider);
     return Scaffold(
       appBar: AppBar(
@@ -37,6 +40,9 @@ class StartMySettinWeekdayPage extends HookWidget {
                     Row(
                       children: weekDayWidget(startMySetting),
                     ),
+                    errorText.state.isNotEmpty
+                        ? TextWidget.mainText2('選択して！')
+                        : Container(),
                   ],
                 ),
               ],
@@ -64,6 +70,13 @@ class StartMySettinWeekdayPage extends HookWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      // 曜日を選択する
+                      if (startMySetting.selectedWeekDay.isEmpty) {
+                        errorText.state = '選択して！';
+                        return;
+                      } else {
+                        errorText.state = '';
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
