@@ -17,17 +17,6 @@ class ButtonWidget {
       ),
       child: Center(child: TextWidget.mainButtonText('自分の記録を始める')),
     );
-    // return SizedBox(
-    //   height: 100,
-    //   width: deviceWidth * 0.8,
-    //   child: ElevatedButton(
-    //     onPressed: () {},
-    //     child: const Text(
-    //       '自分の記録',
-    //     ),
-    //     style: ButtonStyle(),
-    //   ),
-    // );
   }
 
   static startAtherButton(double deviceWidth) {
@@ -38,7 +27,9 @@ class ButtonWidget {
         color: Colors.blue,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(child: TextWidget.mainButtonText('応援する')),
+      child: Center(
+        child: TextWidget.mainButtonText('応援する'),
+      ),
     );
   }
 }

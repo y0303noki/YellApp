@@ -39,7 +39,12 @@ class StartPage extends HookWidget {
                     ),
                   );
                 },
-                child: ButtonWidget.startMyButton(deviceSize.width),
+                child: Column(
+                  children: [
+                    ButtonWidget.startMyButton(deviceSize.width),
+                    Text('友達に応援してもらう'),
+                  ],
+                ),
               ),
               Column(
                 children: [

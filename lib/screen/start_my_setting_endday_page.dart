@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -5,13 +7,12 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/screen/start_my_setting_endday_page.dart';
+import 'package:yell_app/screen/start_my_setting_confirm_page.dart';
+import 'package:yell_app/screen/start_my_setting_weekday_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-class StartMySettingStartdayPage extends HookWidget {
-  // const StartMySettingStartdayPage({Key? key}) : super(key: key);
-
+class StartMySettinEnddayPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final startMySetting = useProvider(startMySettingProvider);
@@ -34,16 +35,25 @@ class StartMySettingStartdayPage extends HookWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.mainText2('いつから'),
+                    TextWidget.mainText2('いつまで'),
                     TextButton(
                       onPressed: () async {
                         DateTime? result = await CommonWidget.selectDatePicker(
-                            context, startMySetting.startAt, null);
-                        startMySetting.selectStartAt(result);
+                            context,
+                            startMySetting.endAt,
+                            startMySetting.startAt);
+                        startMySetting.selectEndAt(result);
                       },
-                      child: TextWidget.mainText1(startMySetting.startAtStr),
+                      child: TextWidget.mainText1(startMySetting.endAtStr),
                     ),
-                    TextWidget.mainText2(''),
+                    startMySetting.endAt != null
+                        ? TextButton(
+                            onPressed: () async {
+                              startMySetting.selectEndAt(null);
+                            },
+                            child: TextWidget.mainText2('無期限にする'),
+                          )
+                        : Container(),
                   ],
                 ),
               ],
@@ -74,7 +84,7 @@ class StartMySettingStartdayPage extends HookWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettinEnddayPage(),
+                          builder: (context) => StartMySettinWeekdayPage(),
                         ),
                       );
                     },

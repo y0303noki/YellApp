@@ -5,6 +5,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/start_my_setting_startday_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
+import 'package:yell_app/state/start_my_setting_provider.dart';
 
 final disabledProvider = StateProvider((ref) => true);
 final errorTextProvider = StateProvider((ref) => '');
@@ -14,9 +15,10 @@ class StartMySettingPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textEditingController =
-        TextEditingController(text: '');
     final errorText = useProvider(errorTextProvider);
+    final startMySetting = useProvider(startMySettingProvider);
+    TextEditingController _textEditingController =
+        TextEditingController(text: startMySetting.goalTitle);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,6 +79,7 @@ class StartMySettingPage extends HookWidget {
                       } else {
                         errorText.state = '';
                       }
+                      startMySetting.goalTitle = _textEditingController.text;
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -5,12 +5,11 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/screen/start_my_setting_endday_page.dart';
-import 'package:yell_app/state/counter_provider.dart';
+import 'package:yell_app/screen/start_my_setting_confirm_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-class StartMySettingStartdayPage extends HookWidget {
-  // const StartMySettingStartdayPage({Key? key}) : super(key: key);
+class StartMySettinWeekdayPage extends HookWidget {
+  // final startMySetting = useProvider(startMySettingProvider);
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +28,15 @@ class StartMySettingStartdayPage extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.mainText2('いつから'),
-                    TextButton(
-                      onPressed: () async {
-                        DateTime? result = await CommonWidget.selectDatePicker(
-                            context, startMySetting.startAt, null);
-                        startMySetting.selectStartAt(result);
-                      },
-                      child: TextWidget.mainText1(startMySetting.startAtStr),
+                    TextWidget.mainText2('何曜日にやりますか？'),
+                    Row(
+                      children: weekDayWidget(startMySetting),
                     ),
-                    TextWidget.mainText2(''),
                   ],
                 ),
               ],
@@ -74,7 +67,7 @@ class StartMySettingStartdayPage extends HookWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettinEnddayPage(),
+                          builder: (context) => StartMySettingConfirmPage(),
                         ),
                       );
                     },
@@ -87,5 +80,39 @@ class StartMySettingStartdayPage extends HookWidget {
         ),
       ),
     );
+  }
+
+  // 日　〜　土　まで1週間分のWidget
+  List<Widget> weekDayWidget(StartMySetting startMySetting) {
+    List<Widget> row = <Widget>[];
+    List<String> weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+    List<int> weekDaysNum = [0, 1, 2, 3, 4, 5, 6];
+    for (int num in weekDaysNum) {
+      Widget tempWidget = InkWell(
+        onTap: () {
+          startMySetting.selectWeekDay(num);
+        },
+        child: Container(
+          margin: const EdgeInsets.only(
+            left: 1,
+            right: 1,
+          ),
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: startMySetting.selectedWeekDay.contains(num)
+                    ? Colors.red
+                    : Colors.blue),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(weekDays[num]),
+          ),
+        ),
+      );
+      row.add(tempWidget);
+    }
+    return row;
   }
 }
