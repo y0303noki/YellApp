@@ -5,7 +5,6 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 class StartMySettingConfirmPage extends ConsumerWidget {
@@ -29,23 +28,42 @@ class StartMySettingConfirmPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextWidget.mainText2('続けること'),
-                TextField(
-                  enabled: false,
-                  controller: _textEditingController,
-                  // maxLength: 20,
-                  style: TextStyle(),
-                  maxLines: 1,
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 30,
+                  ),
+                  child: TextField(
+                    enabled: false,
+                    controller: _textEditingController,
+                    style: TextStyle(),
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextWidget.mainText2('いつから'),
-                TextWidget.mainText2(startMySetting.startAtStr),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 30,
+                  ),
+                  child: TextWidget.mainText2(startMySetting.startAtStr),
+                ),
                 TextWidget.mainText2('いつまで'),
-                TextWidget.mainText2(startMySetting.endAtStr),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 30,
+                  ),
+                  child: TextWidget.mainText2(startMySetting.endAtStr),
+                ),
+                Container(),
               ],
             ),
             Column(
