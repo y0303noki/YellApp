@@ -12,10 +12,10 @@ import 'package:yell_app/screen/start_my_setting_weekday_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-class StartMySettinEnddayPage extends HookWidget {
+class StartMySettinEnddayPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final startMySetting = useProvider(startMySettingProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final startMySetting = ref.watch(startMySettingProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

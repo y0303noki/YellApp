@@ -5,11 +5,11 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/screen/start_my_setting_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 
-class StartPage extends HookWidget {
+class StartPage extends ConsumerWidget {
   const StartPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

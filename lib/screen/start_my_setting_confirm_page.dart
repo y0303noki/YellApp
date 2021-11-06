@@ -8,10 +8,10 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-class StartMySettingConfirmPage extends HookWidget {
+class StartMySettingConfirmPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final startMySetting = useProvider(startMySettingProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final startMySetting = ref.watch(startMySettingProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: startMySetting.goalTitle);
 

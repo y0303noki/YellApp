@@ -10,13 +10,13 @@ import 'package:yell_app/state/start_my_setting_provider.dart';
 final disabledProvider = StateProvider((ref) => true);
 final errorTextProvider = StateProvider((ref) => '');
 
-class StartMySettingPage extends HookWidget {
+class StartMySettingPage extends ConsumerWidget {
   const StartMySettingPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final errorText = useProvider(errorTextProvider);
-    final startMySetting = useProvider(startMySettingProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    String errorText = ref.watch(errorTextProvider);
+    final startMySetting = ref.watch(startMySettingProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: startMySetting.goalTitle);
 
@@ -43,7 +43,7 @@ class StartMySettingPage extends HookWidget {
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: '（例）筋トレ、勉強',
-                    errorText: errorText.state.isEmpty ? null : errorText.state,
+                    errorText: errorText.isEmpty ? null : errorText,
                   ),
                 ),
               ],
@@ -74,10 +74,10 @@ class StartMySettingPage extends HookWidget {
                     onPressed: () {
                       if (_textEditingController.text.isEmpty) {
                         // エラーを出す
-                        errorText.state = '入力してください。';
+                        errorText = '入力してください。';
                         return;
                       } else {
-                        errorText.state = '';
+                        errorText = '';
                       }
                       startMySetting.goalTitle = _textEditingController.text;
                       Navigator.push(

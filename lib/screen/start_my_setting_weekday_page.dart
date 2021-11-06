@@ -10,13 +10,13 @@ import 'package:yell_app/state/start_my_setting_provider.dart';
 
 final errorTextProvider = StateProvider((ref) => '');
 
-class StartMySettinWeekdayPage extends HookWidget {
-  // final startMySetting = useProvider(startMySettingProvider);
+class StartMySettinWeekdayPage extends ConsumerWidget {
+  // final startMySetting = ref.watch(startMySettingProvider);
 
   @override
-  Widget build(BuildContext context) {
-    final errorText = useProvider(errorTextProvider);
-    final startMySetting = useProvider(startMySettingProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    String errorText = ref.watch(errorTextProvider);
+    final startMySetting = ref.watch(startMySettingProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -40,7 +40,7 @@ class StartMySettinWeekdayPage extends HookWidget {
                     Row(
                       children: weekDayWidget(startMySetting),
                     ),
-                    errorText.state.isNotEmpty
+                    errorText.isNotEmpty
                         ? TextWidget.mainText2('選択して！')
                         : Container(),
                   ],
@@ -72,10 +72,10 @@ class StartMySettinWeekdayPage extends HookWidget {
                     onPressed: () {
                       // 曜日を選択する
                       if (startMySetting.selectedWeekDay.isEmpty) {
-                        errorText.state = '選択して！';
+                        errorText = '選択して！';
                         return;
                       } else {
-                        errorText.state = '';
+                        errorText = '';
                       }
                       Navigator.push(
                         context,
