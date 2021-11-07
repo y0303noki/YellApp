@@ -10,6 +10,7 @@ class MyAchievment extends ChangeNotifier {
   int selectedHowManyTime = 0;
   String selectedMemberId = '';
   List<String> memberIdList = [];
+  bool isTapedToday = false;
 
   // // データを初期化
   // void resetData() {
@@ -27,6 +28,15 @@ class MyAchievment extends ChangeNotifier {
     if (memberIdList.contains(memberId)) {
       selectedMemberId = memberId;
     }
+    notifyListeners();
+  }
+
+  // 達成ボタンをタップ
+  void tapToday() {
+    // if (isTapedToday) {
+    //   return;
+    // }
+    isTapedToday = !isTapedToday;
     notifyListeners();
   }
 }

@@ -33,8 +33,8 @@ class ButtonWidget {
     );
   }
 
-  // 今日の達成ボタン
-  static achiecmentToday(double deviceWidth) {
+  // 今日の達成ボタン（未完了）
+  static yetAchievementToday(double deviceWidth) {
     return Container(
       height: 100,
       width: deviceWidth * 0.8,
@@ -44,6 +44,21 @@ class ButtonWidget {
       ),
       child: Center(
         child: TextWidget.mainButtonText('達成'),
+      ),
+    );
+  }
+
+  // 達成ずみ
+  static achievementedToday(double deviceWidth) {
+    return Container(
+      height: 100,
+      width: deviceWidth * 0.8,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: TextWidget.mainButtonText('達成ずみ'),
       ),
     );
   }

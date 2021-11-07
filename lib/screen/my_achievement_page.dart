@@ -32,7 +32,16 @@ class MyAchievementPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                ButtonWidget.achiecmentToday(deviceSize.width),
+                // 達成ボタン
+                InkWell(
+                  onTap: () {
+                    print('tap');
+                    myAchievment.tapToday();
+                  },
+                  child: myAchievment.isTapedToday
+                      ? ButtonWidget.achievementedToday(deviceSize.width)
+                      : ButtonWidget.yetAchievementToday(deviceSize.width),
+                ),
                 Row(
                   children: [
                     TextWidget.mainText2('継続'),
