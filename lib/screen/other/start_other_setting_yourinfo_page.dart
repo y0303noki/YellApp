@@ -3,22 +3,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
-import 'package:yell_app/screen/start_my_setting_startday_page.dart';
-import 'package:yell_app/state/counter_provider.dart';
+import 'package:yell_app/screen/my/start_my_setting_startday_page.dart';
+import 'package:yell_app/state/other_setting_code_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-final disabledProvider = StateProvider((ref) => true);
-final errorTextProvider = StateProvider((ref) => '');
-
-class StartMySettingPage extends ConsumerWidget {
-  const StartMySettingPage({Key? key}) : super(key: key);
+class StartOtherSettingYourinfoPage extends ConsumerWidget {
+  const StartOtherSettingYourinfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String errorText = ref.watch(errorTextProvider);
-    final startMySetting = ref.watch(startMySettingProvider);
+    final otherSettingCode = ref.watch(otherSettingCodeProvider);
     TextEditingController _textEditingController =
-        TextEditingController(text: startMySetting.goalTitle);
+        TextEditingController(text: '');
 
     return Scaffold(
       appBar: AppBar(
@@ -35,15 +31,14 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText1('続けること'),
+                TextWidget.mainText2('あなたのニックネームを教えてください'),
                 TextField(
                   controller: _textEditingController,
-                  maxLength: 20,
+                  maxLength: 10,
                   style: TextStyle(),
                   maxLines: 1,
                   decoration: InputDecoration(
-                    hintText: '（例）筋トレ、勉強',
-                    errorText: errorText.isEmpty ? null : errorText,
+                    hintText: '（例）かな',
                   ),
                 ),
               ],
@@ -72,14 +67,6 @@ class StartMySettingPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      if (_textEditingController.text.isEmpty) {
-                        // エラーを出す
-                        errorText = '入力してください。';
-                        return;
-                      } else {
-                        errorText = '';
-                      }
-                      startMySetting.goalTitle = _textEditingController.text;
                       Navigator.push(
                         context,
                         MaterialPageRoute(

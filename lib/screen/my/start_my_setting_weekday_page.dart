@@ -5,7 +5,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/screen/start_my_setting_confirm_page.dart';
+import 'package:yell_app/screen/my/start_my_setting_confirm_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 class StartMySettinWeekdayPage extends ConsumerWidget {

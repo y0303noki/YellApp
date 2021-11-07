@@ -5,7 +5,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/screen/my_achievement_page.dart';
+import 'package:yell_app/screen/my/my_achievement_page.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -163,9 +163,9 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     );
 
     // firebaseに送信したとする
+    model.id = 'goalId1';
 
     // firebaseから取得したとする
-
     myAchievment.goalTitle = model.goalTitle;
     myAchievment.selectedHowManyTime = model.howManyTimes;
     myAchievment.endAt = model.endAt;
