@@ -24,4 +24,11 @@ class TextWidget {
       style: const TextStyle(fontSize: 20),
     );
   }
+
+  static mainText3(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 15),
+    );
+  }
 }

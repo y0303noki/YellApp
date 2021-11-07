@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
-import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/utility/utility.dart';
 
 final startMySettingProvider =
@@ -14,6 +12,7 @@ class StartMySetting extends ChangeNotifier {
   DateTime? endAt;
   String endAtStr = '無期限';
   List<int> selectedWeekDay = [];
+  int selectedHowManyTime = 7; // 週に何回
 
   // データを初期化
   void resetData() {
@@ -68,6 +67,12 @@ class StartMySetting extends ChangeNotifier {
       selectedWeekDay.remove(dayNum);
     }
     selectedWeekDay.sort();
+    notifyListeners();
+  }
+
+  // 週に何回やるか
+  void selectHowManyTime(int times) {
+    selectedHowManyTime = times;
     notifyListeners();
   }
 }

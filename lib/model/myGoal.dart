@@ -4,7 +4,7 @@
 class MyGoalModel {
   String id;
   String goalTitle = '';
-  List<int> dayOfWeekList = []; // 実行する曜日（0:日曜日, 1:月曜日 ~ 6:土曜日）
+  int howManyTimes = 0; // 1週間に何日（1~7)
   DateTime? startAt;
   DateTime? endAt;
   DateTime? createdAt;
@@ -12,7 +12,9 @@ class MyGoalModel {
   MyGoalModel({
     this.id = '',
     this.goalTitle = '',
-    this.dayOfWeekList = const [],
+    this.howManyTimes = 0,
+    this.startAt,
+    this.endAt,
     this.createdAt,
     this.updatedAt,
   });

@@ -32,4 +32,19 @@ class ButtonWidget {
       ),
     );
   }
+
+  // 今日の達成ボタン
+  static achiecmentToday(double deviceWidth) {
+    return Container(
+      height: 100,
+      width: deviceWidth * 0.8,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: TextWidget.mainButtonText('達成'),
+      ),
+    );
+  }
 }

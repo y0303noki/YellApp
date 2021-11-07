@@ -8,14 +8,11 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/start_my_setting_confirm_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-final errorTextProvider = StateProvider((ref) => '');
-
 class StartMySettinWeekdayPage extends ConsumerWidget {
   // final startMySetting = ref.watch(startMySettingProvider);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String errorText = ref.watch(errorTextProvider);
     final startMySetting = ref.watch(startMySettingProvider);
     return Scaffold(
       appBar: AppBar(
@@ -36,13 +33,11 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.mainText2('何曜日にやりますか？'),
+                    TextWidget.mainText2('頻度を教えてください。'),
+                    TextWidget.mainText2('1週間のうちに何日おこないますか？'),
                     Row(
                       children: weekDayWidget(startMySetting),
                     ),
-                    errorText.isNotEmpty
-                        ? TextWidget.mainText2('選択して！')
-                        : Container(),
                   ],
                 ),
               ],
@@ -70,13 +65,6 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // 曜日を選択する
-                      if (startMySetting.selectedWeekDay.isEmpty) {
-                        errorText = '選択して！';
-                        return;
-                      } else {
-                        errorText = '';
-                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -95,15 +83,15 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
     );
   }
 
-  // 日　〜　土　まで1週間分のWidget
+  // 1 ~ 7 のwidget
   List<Widget> weekDayWidget(StartMySetting startMySetting) {
     List<Widget> row = <Widget>[];
-    List<String> weekDays = ['日', '月', '火', '水', '木', '金', '土'];
-    List<int> weekDaysNum = [0, 1, 2, 3, 4, 5, 6];
+    List<String> weekDays = ['1', '2', '3', '4', '5', '6', '7'];
+    List<int> weekDaysNum = [1, 2, 3, 4, 5, 6, 7];
     for (int num in weekDaysNum) {
       Widget tempWidget = InkWell(
         onTap: () {
-          startMySetting.selectWeekDay(num);
+          startMySetting.selectHowManyTime(num);
         },
         child: Container(
           margin: const EdgeInsets.only(
@@ -114,13 +102,13 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
           height: 40,
           decoration: BoxDecoration(
             border: Border.all(
-                color: startMySetting.selectedWeekDay.contains(num)
+                color: startMySetting.selectedHowManyTime == num
                     ? Colors.red
                     : Colors.blue),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
-            child: Text(weekDays[num]),
+            child: Text(num.toString()),
           ),
         ),
       );

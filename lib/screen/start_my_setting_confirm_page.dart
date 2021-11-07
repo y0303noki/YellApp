@@ -5,12 +5,15 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/screen/my_achievement_page.dart';
+import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 class StartMySettingConfirmPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startMySetting = ref.watch(startMySettingProvider);
+    final myAchievment = ref.watch(myAchievmentProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: startMySetting.goalTitle);
 
@@ -68,10 +71,9 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('曜日'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: selectedWeekDayWidget(startMySetting),
+                TextWidget.mainText2('1週間に'),
+                Container(
+                  child: Text(startMySetting.selectedHowManyTime.toString()),
                 ),
               ],
             ),
@@ -98,12 +100,13 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => StartMySettingStartdayPage(),
-                      //   ),
-                      // );
+                      sendMySettingDataTest(startMySetting, myAchievment);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyAchievementPage(),
+                        ),
+                      );
                     },
                     child: TextWidget.mainText2('はじめる'),
                   )
@@ -116,10 +119,10 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     );
   }
 
-  // 曜日
+  // 何日
   List<Widget> selectedWeekDayWidget(StartMySetting startMySetting) {
     List<Widget> row = <Widget>[];
-    List<String> weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+    List<String> weekDays = ['1', '2', '3', '4', '5', '6', '7'];
     for (int num in startMySetting.selectedWeekDay) {
       Widget tempWidget = InkWell(
         onTap: () {
@@ -144,5 +147,30 @@ class StartMySettingConfirmPage extends ConsumerWidget {
       row.add(tempWidget);
     }
     return row;
+  }
+
+  // Firebaseに自分のデータを送信のテスト
+  void sendMySettingDataTest(
+      StartMySetting startMySetting, MyAchievment myAchievment) {
+    DateTime now = DateTime.now();
+    MyGoalModel model = MyGoalModel(
+      goalTitle: startMySetting.goalTitle,
+      howManyTimes: startMySetting.selectedHowManyTime,
+      startAt: startMySetting.startAt,
+      endAt: startMySetting.endAt,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    // firebaseに送信したとする
+
+    // firebaseから取得したとする
+
+    myAchievment.goalTitle = model.goalTitle;
+    myAchievment.selectedHowManyTime = model.howManyTimes;
+    myAchievment.endAt = model.endAt;
+
+    // memberIdリストを取得したとする
+    myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];
   }
 }
