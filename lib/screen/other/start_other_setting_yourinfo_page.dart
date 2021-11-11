@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/my/start_my_setting_startday_page.dart';
+import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/state/other_setting_code_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -70,7 +71,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettingStartdayPage(),
+                          builder: (context) => OtherYellMainPage(),
                         ),
                       );
                     },

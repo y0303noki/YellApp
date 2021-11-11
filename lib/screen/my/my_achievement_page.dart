@@ -21,6 +21,14 @@ class MyAchievementPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            child: TextWidget.mainText3('トップに戻る'),
+          ),
+        ],
       ),
       body: Container(
         margin: const EdgeInsets.only(

@@ -19,6 +19,7 @@ class ButtonWidget {
     );
   }
 
+  // スタート画面のボタン
   static startAtherButton(double deviceWidth) {
     return Container(
       height: 100,
@@ -59,6 +60,47 @@ class ButtonWidget {
       ),
       child: Center(
         child: TextWidget.mainButtonText('達成ずみ'),
+      ),
+    );
+  }
+
+  // 円形のウィジット。アイコン
+  static iconMainWidget(String text) {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
+        borderRadius: BorderRadius.circular(40),
+      ),
+      child: Text(text),
+    );
+  }
+
+  // 円形のウィジット。アイコン
+  static iconMainMiniWidget(String text) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
+        borderRadius: BorderRadius.circular(40),
+      ),
+      child: Text(text),
+    );
+  }
+
+  // 登録ボタン
+  static registerYellComment() {
+    return Container(
+      height: 50,
+      width: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: TextWidget.mainButtonText('登録'),
       ),
     );
   }

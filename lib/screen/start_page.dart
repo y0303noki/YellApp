@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/screen/my/start_my_setting_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
+import 'package:yell_app/screen/other/start_other_yell_list_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 
 class StartPage extends ConsumerWidget {
@@ -54,7 +55,7 @@ class StartPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartOtherSettingCodePage(),
+                          builder: (context) => StartOtherYellListPage(),
                         ),
                       );
                     },
