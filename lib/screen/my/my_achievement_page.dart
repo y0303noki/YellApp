@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
-import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/member.dart';
-import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
-import 'package:yell_app/state/start_my_setting_provider.dart';
 
 class MyAchievementPage extends ConsumerWidget {
   @override
