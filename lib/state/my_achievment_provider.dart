@@ -6,6 +6,8 @@ final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
 
 class MyAchievment extends ChangeNotifier {
   String goalTitle = '';
+  String myName = '';
+  DateTime? startAt;
   DateTime? endAt;
   int selectedHowManyTime = 0;
   String selectedMemberId = '';

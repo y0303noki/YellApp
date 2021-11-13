@@ -28,6 +28,7 @@ class MyGoalFirebase {
     final _myGoalModel = MyGoalModel(
       id: data['id'],
       goalTitle: data['title'],
+      myName: data['myName'],
       howManyTimes: data['howManyTimes'],
       isDeleted: data['isDeleted'] ?? false,
       startAt: data['startAt'].toDate(),
@@ -39,7 +40,7 @@ class MyGoalFirebase {
     return _myGoalModel;
   }
 
-  /// ユーザーデータをfirestoreに格納
+  /// 自分の目標をfirestoreに格納
   Future insertMyGoalData(MyGoalModel myGoalModel) async {
     // ドキュメント作成
     Map<String, dynamic> addObject = <String, dynamic>{};
@@ -49,6 +50,7 @@ class MyGoalFirebase {
 
     addObject['userId'] = _userId;
     addObject['title'] = myGoalModel.goalTitle;
+    addObject['myName'] = myGoalModel.myName;
     addObject['howManyTimes'] = myGoalModel.howManyTimes;
     addObject['startAt'] = myGoalModel.startAt;
     addObject['endAt'] = myGoalModel.endAt;

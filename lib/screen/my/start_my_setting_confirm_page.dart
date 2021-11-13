@@ -4,10 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/my_achievement_page.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
+
+MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class StartMySettingConfirmPage extends ConsumerWidget {
   @override
@@ -108,7 +111,8 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      sendMySettingDataTest(startMySetting, myAchievment);
+                      sendMyGoalData(startMySetting, myAchievment);
+                      // sendMySettingDataTest(startMySetting, myAchievment);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -155,6 +159,28 @@ class StartMySettingConfirmPage extends ConsumerWidget {
       row.add(tempWidget);
     }
     return row;
+  }
+
+  // firestoreに送信
+  Future<void> sendMyGoalData(
+      StartMySetting startMySetting, MyAchievment myAchievment) async {
+    MyGoalModel model = MyGoalModel(
+      goalTitle: startMySetting.goalTitle,
+      myName: startMySetting.myName,
+      howManyTimes: startMySetting.selectedHowManyTime,
+      startAt: startMySetting.startAt,
+      endAt: startMySetting.endAt,
+    );
+
+    // データ送信
+    await _myGoalFirebase.insertMyGoalData(model);
+
+    // 達成画面にデータを渡す
+    myAchievment.goalTitle = startMySetting.goalTitle;
+    myAchievment.myName = startMySetting.myName;
+    myAchievment.selectedHowManyTime = startMySetting.selectedHowManyTime;
+    myAchievment.startAt = startMySetting.startAt;
+    myAchievment.endAt = startMySetting.endAt;
   }
 
   // Firebaseに自分のデータを送信のテスト

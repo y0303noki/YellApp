@@ -4,6 +4,7 @@
 class MyGoalModel {
   String id;
   String goalTitle = '';
+  String myName = '';
   int howManyTimes = 0; // 1週間に何日（1~7)
   bool isDeleted = false;
   DateTime? startAt;
@@ -13,6 +14,7 @@ class MyGoalModel {
   MyGoalModel({
     this.id = '',
     this.goalTitle = '',
+    this.myName = '',
     this.howManyTimes = 0,
     this.isDeleted = false,
     this.startAt,
