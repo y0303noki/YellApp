@@ -15,6 +15,7 @@ class TextWidget {
     return Text(
       text,
       style: const TextStyle(fontSize: 30),
+      overflow: TextOverflow.clip,
     );
   }
 
@@ -22,6 +23,7 @@ class TextWidget {
     return Text(
       text,
       style: const TextStyle(fontSize: 20),
+      overflow: TextOverflow.clip,
     );
   }
 
@@ -29,6 +31,7 @@ class TextWidget {
     return Text(
       text,
       style: const TextStyle(fontSize: 15),
+      overflow: TextOverflow.clip,
     );
   }
 }

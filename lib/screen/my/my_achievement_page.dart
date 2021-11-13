@@ -3,8 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
+
+MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class MyAchievementPage extends ConsumerWidget {
   @override
@@ -35,34 +38,76 @@ class MyAchievementPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 1,
+                    right: 1,
+                  ),
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(120 / 2),
+                  ),
+                  child: Center(
+                    child: Text('a'),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10,
+              ),
+              child: TextWidget.mainText1(myAchievment.goalTitle),
+            ),
             Column(
               children: [
                 // 達成ボタン
                 InkWell(
                   onTap: () {
-                    print('tap');
                     myAchievment.tapToday();
+                    _myGoalFirebase.updateAchieveCurrentDay(
+                        myAchievment.goalId, myAchievment.currentDay);
                   },
                   child: myAchievment.isTapedToday
                       ? ButtonWidget.achievementedToday(deviceSize.width)
                       : ButtonWidget.yetAchievementToday(deviceSize.width),
                 ),
-                Row(
-                  children: [
-                    TextWidget.mainText2('継続'),
-                    TextWidget.mainText2('1 / 40 日目'),
-                  ],
-                ),
-                TextWidget.mainText1('応援してくれるメンバー'),
-                Row(
-                  children: memberWidget(myAchievment),
-                ),
                 Container(
-                  width: deviceSize.width * 0.8,
-                  height: 200,
-                  color: Colors.grey,
-                  child: Text(myAchievment.selectedMemberId),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextWidget.mainText2('継続'),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 5,
+                          right: 5,
+                        ),
+                        child:
+                            TextWidget.mainText1('${myAchievment.currentDay}'),
+                      ),
+                      TextWidget.mainText2('日目'),
+                    ],
+                  ),
                 ),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                TextWidget.mainText2('応援してくれるメンバー'),
+                _memberWidget(context, myAchievment),
               ],
             ),
             Column(),
@@ -91,8 +136,52 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
+  // メンバーウィジット
+  Widget _memberWidget(BuildContext context, MyAchievment myAchievment) {
+    final deviceSize = MediaQuery.of(context).size;
+
+    // メンバーがいないとき
+    if (myAchievment.memberIdList.isEmpty) {
+      return Container(
+        margin: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 10,
+          bottom: 10,
+        ),
+        child: Column(
+          children: [
+            TextWidget.mainText3('まだメンバーがいません'),
+            TextButton(
+              onPressed: () {
+                // メンバー追加画面に遷移
+              },
+              child: TextWidget.mainText3('メンバーを追加する'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // メンバーがいるとき
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: _memberIconWidget(myAchievment),
+        ),
+        Container(
+          width: deviceSize.width * 0.8,
+          height: 100,
+          color: Colors.grey,
+          child: Text(myAchievment.selectedMemberId),
+        ),
+      ],
+    );
+  }
+
   // メンバーアイコン
-  List<Widget> memberWidget(MyAchievment myAchievment) {
+  List<Widget> _memberIconWidget(MyAchievment myAchievment) {
     List<Widget> row = <Widget>[];
     List<MemberModel> members = [];
     // テスト用のデータ作成

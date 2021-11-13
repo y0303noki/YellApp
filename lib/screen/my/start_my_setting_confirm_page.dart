@@ -52,27 +52,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
               ],
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextWidget.mainText2('いつから'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 30,
-                  ),
-                  child: TextWidget.mainText2(startMySetting.startAtStr),
-                ),
-                TextWidget.mainText2('いつまで'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 30,
-                  ),
-                  child: TextWidget.mainText2(startMySetting.endAtStr),
-                ),
-                Container(),
-              ],
-            ),
-            Column(
               children: [
                 TextWidget.mainText2('1週間に'),
                 Container(
@@ -168,19 +147,14 @@ class StartMySettingConfirmPage extends ConsumerWidget {
       goalTitle: startMySetting.goalTitle,
       myName: startMySetting.myName,
       howManyTimes: startMySetting.selectedHowManyTime,
-      startAt: startMySetting.startAt,
-      endAt: startMySetting.endAt,
     );
 
     // データ送信
-    await _myGoalFirebase.insertMyGoalData(model);
+    String _docId = await _myGoalFirebase.insertMyGoalData(model);
 
     // 達成画面にデータを渡す
-    myAchievment.goalTitle = startMySetting.goalTitle;
-    myAchievment.myName = startMySetting.myName;
-    myAchievment.selectedHowManyTime = startMySetting.selectedHowManyTime;
-    myAchievment.startAt = startMySetting.startAt;
-    myAchievment.endAt = startMySetting.endAt;
+    myAchievment.setInitialData(_docId, startMySetting.goalTitle,
+        startMySetting.myName, startMySetting.selectedHowManyTime, []);
   }
 
   // Firebaseに自分のデータを送信のテスト
@@ -190,8 +164,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       howManyTimes: startMySetting.selectedHowManyTime,
-      startAt: startMySetting.startAt,
-      endAt: startMySetting.endAt,
       createdAt: now,
       updatedAt: now,
     );
@@ -202,7 +174,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     // firebaseから取得したとする
     myAchievment.goalTitle = model.goalTitle;
     myAchievment.selectedHowManyTime = model.howManyTimes;
-    myAchievment.endAt = model.endAt;
 
     // memberIdリストを取得したとする
     myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];

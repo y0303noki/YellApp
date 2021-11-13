@@ -17,7 +17,7 @@ class MyGoalFirebase {
     final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
     final QuerySnapshot snapshots = await _firestore
         .collection(myGoals)
-        .where('id', isEqualTo: _userId)
+        .where('userId', isEqualTo: _userId)
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;
@@ -27,12 +27,11 @@ class MyGoalFirebase {
     Map<String, dynamic> data = docs.first.data() as Map<String, dynamic>;
     final _myGoalModel = MyGoalModel(
       id: data['id'],
-      goalTitle: data['title'],
-      myName: data['myName'],
-      howManyTimes: data['howManyTimes'],
+      goalTitle: data['title'] ?? '',
+      myName: data['myName'] ?? '',
+      howManyTimes: data['howManyTimes'] ?? 1,
+      currentDay: data['currentDay'] ?? 1,
       isDeleted: data['isDeleted'] ?? false,
-      startAt: data['startAt'].toDate(),
-      endAt: data['endAt']?.toDate(),
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
     );
@@ -41,7 +40,7 @@ class MyGoalFirebase {
   }
 
   /// 自分の目標をfirestoreに格納
-  Future insertMyGoalData(MyGoalModel myGoalModel) async {
+  Future<String> insertMyGoalData(MyGoalModel myGoalModel) async {
     // ドキュメント作成
     Map<String, dynamic> addObject = <String, dynamic>{};
     DateTime now = DateTime.now();
@@ -52,8 +51,7 @@ class MyGoalFirebase {
     addObject['title'] = myGoalModel.goalTitle;
     addObject['myName'] = myGoalModel.myName;
     addObject['howManyTimes'] = myGoalModel.howManyTimes;
-    addObject['startAt'] = myGoalModel.startAt;
-    addObject['endAt'] = myGoalModel.endAt;
+    addObject['currentDay'] = 1;
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
     addObject['updatedAt'] = now;
@@ -66,10 +64,25 @@ class MyGoalFirebase {
       final String docId = data.id;
       CommonFirebase().updateDocId(myGoals, docId);
 
-      return;
+      return docId;
     } catch (e) {
       print(e);
-      return;
+      return '';
+    }
+  }
+
+  /// 達成ボタンを押して継続日付を更新
+  Future<void> updateAchieveCurrentDay(String docId, int newDay) async {
+    // 新しい日付に更新
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+    updateData['currentDay'] = newDay;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(myGoals).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
     }
   }
 }

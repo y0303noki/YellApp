@@ -5,14 +5,16 @@ import 'package:yell_app/utility/utility.dart';
 final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
 
 class MyAchievment extends ChangeNotifier {
+  String goalId = ''; // firestoreに格納されているid
   String goalTitle = '';
   String myName = '';
-  DateTime? startAt;
-  DateTime? endAt;
   int selectedHowManyTime = 0;
   String selectedMemberId = '';
   List<String> memberIdList = [];
   bool isTapedToday = false;
+
+  int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
+  int lastDay = 0; // 最後の日（例：40日間中の40日の部分）
 
   // // データを初期化
   // void resetData() {
@@ -24,6 +26,15 @@ class MyAchievment extends ChangeNotifier {
   //   endAtStr = '無期限';
   //   notifyListeners();
   // }
+
+  void setInitialData(String id, String title, String name, int manyTimes,
+      List<String> memberIds) {
+    goalId = id;
+    goalTitle = title;
+    myName = name;
+    selectedHowManyTime = manyTimes;
+    memberIdList = memberIds;
+  }
 
   // メンバーを選択
   void selectMemberId(String memberId) {
@@ -38,7 +49,18 @@ class MyAchievment extends ChangeNotifier {
     // if (isTapedToday) {
     //   return;
     // }
+    if (!isTapedToday) {
+      currentDay++;
+    } else {
+      currentDay--;
+    }
     isTapedToday = !isTapedToday;
     notifyListeners();
   }
+
+  // // 現在の日付を1日プラス
+  // void incrementCurrentDay() {
+  //   currentDay++;
+  //   notifyListeners();
+  // }
 }
