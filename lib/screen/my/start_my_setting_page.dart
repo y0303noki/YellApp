@@ -35,7 +35,7 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText1('続けること'),
+                TextWidget.mainText1('何を続けますか？'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,

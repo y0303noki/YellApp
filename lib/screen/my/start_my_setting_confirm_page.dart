@@ -79,6 +79,14 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
+                TextWidget.mainText2('あなたのなまえ'),
+                Container(
+                  child: Text(startMySetting.myName),
+                ),
+              ],
+            ),
+            Column(
+              children: [
                 TextWidget.mainText2('はじめますか？'),
                 TextWidget.mainText2('途中で変更することはできません。'),
               ],

@@ -34,7 +34,7 @@ class StartMySettingStartdayPage extends ConsumerWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.mainText2('いつから'),
+                    TextWidget.mainText1('いつから始めますか？'),
                     TextButton(
                       onPressed: () async {
                         DateTime? result = await CommonWidget.selectDatePicker(
