@@ -6,6 +6,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
+import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/utility/dialog_utility.dart';
 
@@ -32,99 +33,15 @@ class MyAchievementPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.only(
-          left: 0,
-          right: 0,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 1,
-                    right: 1,
-                  ),
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(120 / 2),
-                  ),
-                  child: Center(
-                    child: Text('a'),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 10,
-                bottom: 10,
-              ),
-              child: TextWidget.mainText1(myAchievment.goalTitle),
-            ),
-            Column(
-              children: [
-                // 達成ボタン
-                InkWell(
-                  onTap: () async {
-                    if (myAchievment.isTapedToday) {
-                      String? result =
-                          await DialogWidget().achieveCancelDialog(context);
-
-                      if (!(result != null && result == 'YES')) {
-                        // 何もしない
-                        return;
-                      }
-                    }
-                    myAchievment.tapToday();
-                    _myGoalFirebase.updateAchieveCurrentDay(
-                        myAchievment.goalId, myAchievment.currentDay);
-                  },
-                  child: myAchievment.isTapedToday
-                      ? ButtonWidget.achievementedToday(deviceSize.width)
-                      : ButtonWidget.yetAchievementToday(deviceSize.width),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextWidget.mainText2('継続'),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          left: 5,
-                          right: 5,
-                        ),
-                        child:
-                            TextWidget.mainText1('${myAchievment.currentDay}'),
-                      ),
-                      TextWidget.mainText2('日目'),
-                    ],
-                  ),
-                ),
-                const Divider(
-                  color: Colors.grey,
-                ),
-                TextWidget.mainText2('応援してくれるメンバー'),
-                _memberWidget(context, myAchievment),
-              ],
-            ),
-            Column(),
-          ],
-        ),
-      ),
+      body: RefreshIndicator(
+          // 下に引っ張って更新
+          onRefresh: () async {
+            myAchievment.refresh = true;
+            myAchievment.refreshNotifyListeners();
+          },
+          child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: _futureBody(context, myAchievment))),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).canvasColor,
         items: const <BottomNavigationBarItem>[
@@ -235,5 +152,147 @@ class MyAchievementPage extends ConsumerWidget {
       row.add(tempWidget);
     }
     return row;
+  }
+
+  // 非同期処理でbodyWidgetを作る
+  Widget _futureBody(BuildContext context, MyAchievment myAchievment) {
+    if (!myAchievment.refresh) {
+      return _body(context, myAchievment);
+    } else {
+      myAchievment.refresh = false;
+      return FutureBuilder(
+        // future属性で非同期処理を書く
+        future: _myGoalFirebase.fetchMyGoalData(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          // 通信中
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.error != null) {
+            // エラー
+            return const Center(
+              child: Text('エラーがおきました'),
+            );
+          }
+
+          // 成功処理
+          if (snapshot.connectionState == ConnectionState.done) {
+            MyGoalModel? _data = snapshot.data;
+            // 既に登録ずみ
+            if (_data != null && !_data.isDeleted) {
+              // TODO:テスト用にメンバーidをセット
+              List<String> _testMemberId = ['member-1', 'Bember-'];
+              myAchievment.setInitialData(_data.id, _data.goalTitle,
+                  _data.myName, _data.howManyTimes, _testMemberId);
+              return _body(context, myAchievment);
+            } else {
+              // データが消えている場合はエラー
+              // 初期画面に戻る
+              return Container();
+            }
+          }
+          return Container();
+        },
+      );
+    }
+  }
+
+  Widget _body(BuildContext context, MyAchievment myAchievment) {
+    final deviceSize = MediaQuery.of(context).size;
+    return Container(
+      margin: const EdgeInsets.only(
+        left: 0,
+        right: 0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 1,
+                  right: 1,
+                ),
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(120 / 2),
+                ),
+                child: Center(
+                  child: Text('a'),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: 10,
+            ),
+            child: TextWidget.mainText1(myAchievment.goalTitle),
+          ),
+          Column(
+            children: [
+              // 達成ボタン
+              InkWell(
+                onTap: () async {
+                  if (myAchievment.isTapedToday) {
+                    String? result =
+                        await DialogWidget().achieveCancelDialog(context);
+
+                    if (!(result != null && result == 'YES')) {
+                      // 何もしない
+                      return;
+                    }
+                  }
+                  myAchievment.tapToday();
+                  _myGoalFirebase.updateAchieveCurrentDay(
+                      myAchievment.goalId, myAchievment.currentDay);
+                },
+                child: myAchievment.isTapedToday
+                    ? ButtonWidget.achievementedToday(deviceSize.width)
+                    : ButtonWidget.yetAchievementToday(deviceSize.width),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextWidget.mainText2('継続'),
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 5,
+                        right: 5,
+                      ),
+                      child: TextWidget.mainText1('${myAchievment.currentDay}'),
+                    ),
+                    TextWidget.mainText2('日目'),
+                  ],
+                ),
+              ),
+              const Divider(
+                color: Colors.grey,
+              ),
+              TextWidget.mainText2('応援してくれるメンバー'),
+              _memberWidget(context, myAchievment),
+            ],
+          ),
+          Column(),
+        ],
+      ),
+    );
   }
 }

@@ -16,6 +16,8 @@ class MyAchievment extends ChangeNotifier {
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
   int lastDay = 0; // 最後の日（例：40日間中の40日の部分）
 
+  bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
+
   // // データを初期化
   // void resetData() {
   //   goalTitle = '';
@@ -46,9 +48,6 @@ class MyAchievment extends ChangeNotifier {
 
   // 達成ボタンをタップ
   void tapToday() {
-    // if (isTapedToday) {
-    //   return;
-    // }
     if (!isTapedToday) {
       currentDay++;
     } else {
@@ -58,9 +57,7 @@ class MyAchievment extends ChangeNotifier {
     notifyListeners();
   }
 
-  // // 現在の日付を1日プラス
-  // void incrementCurrentDay() {
-  //   currentDay++;
-  //   notifyListeners();
-  // }
+  void refreshNotifyListeners() {
+    notifyListeners();
+  }
 }
