@@ -4,10 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/my_achievement_page.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
+
+MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class StartMySettingConfirmPage extends ConsumerWidget {
   @override
@@ -49,31 +52,18 @@ class StartMySettingConfirmPage extends ConsumerWidget {
               ],
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextWidget.mainText2('いつから'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 30,
-                  ),
-                  child: TextWidget.mainText2(startMySetting.startAtStr),
-                ),
-                TextWidget.mainText2('いつまで'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 30,
-                  ),
-                  child: TextWidget.mainText2(startMySetting.endAtStr),
-                ),
-                Container(),
-              ],
-            ),
-            Column(
               children: [
                 TextWidget.mainText2('1週間に'),
                 Container(
                   child: Text(startMySetting.selectedHowManyTime.toString()),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                TextWidget.mainText2('あなたのなまえ'),
+                Container(
+                  child: Text(startMySetting.myName),
                 ),
               ],
             ),
@@ -100,7 +90,8 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      sendMySettingDataTest(startMySetting, myAchievment);
+                      sendMyGoalData(startMySetting, myAchievment);
+                      // sendMySettingDataTest(startMySetting, myAchievment);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -149,6 +140,23 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     return row;
   }
 
+  // firestoreに送信
+  Future<void> sendMyGoalData(
+      StartMySetting startMySetting, MyAchievment myAchievment) async {
+    MyGoalModel model = MyGoalModel(
+      goalTitle: startMySetting.goalTitle,
+      myName: startMySetting.myName,
+      howManyTimes: startMySetting.selectedHowManyTime,
+    );
+
+    // データ送信
+    String _docId = await _myGoalFirebase.insertMyGoalData(model);
+
+    // 達成画面にデータを渡す
+    myAchievment.setInitialData(_docId, startMySetting.goalTitle,
+        startMySetting.myName, startMySetting.selectedHowManyTime, [], null);
+  }
+
   // Firebaseに自分のデータを送信のテスト
   void sendMySettingDataTest(
       StartMySetting startMySetting, MyAchievment myAchievment) {
@@ -156,8 +164,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       howManyTimes: startMySetting.selectedHowManyTime,
-      startAt: startMySetting.startAt,
-      endAt: startMySetting.endAt,
       createdAt: now,
       updatedAt: now,
     );
@@ -168,7 +174,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     // firebaseから取得したとする
     myAchievment.goalTitle = model.goalTitle;
     myAchievment.selectedHowManyTime = model.howManyTimes;
-    myAchievment.endAt = model.endAt;
 
     // memberIdリストを取得したとする
     myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];

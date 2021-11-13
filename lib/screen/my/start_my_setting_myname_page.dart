@@ -7,14 +7,20 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/screen/my/start_my_setting_confirm_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_weekday_page.dart';
-import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
-class StartMySettinEnddayPage extends ConsumerWidget {
+final errorTextProvider = StateProvider((ref) => '');
+
+class StartMySettinMynamePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String errorText = ref.watch(errorTextProvider);
     final startMySetting = ref.watch(startMySettingProvider);
+    TextEditingController _textEditingController =
+        TextEditingController(text: startMySetting.myName);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -28,33 +34,22 @@ class StartMySettinEnddayPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Column(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextWidget.mainText2('いつまで'),
-                    TextButton(
-                      onPressed: () async {
-                        DateTime? result = await CommonWidget.selectDatePicker(
-                            context,
-                            startMySetting.endAt,
-                            startMySetting.startAt);
-                        startMySetting.selectEndAt(result);
-                      },
-                      child: TextWidget.mainText1(startMySetting.endAtStr),
+                TextWidget.mainText2('最後にあなたの'),
+                TextWidget.mainText2('なまえを教えてください'),
+                TextField(
+                    controller: _textEditingController,
+                    maxLength: 10,
+                    style: TextStyle(),
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      hintText: 'なまえ',
+                      errorText: errorText.isEmpty ? null : errorText,
                     ),
-                    startMySetting.endAt != null
-                        ? TextButton(
-                            onPressed: () async {
-                              startMySetting.selectEndAt(null);
-                            },
-                            child: TextWidget.mainText2('無期限にする'),
-                          )
-                        : Container(),
-                  ],
-                ),
+                    onSubmitted: (text) {
+                      startMySetting.myName = text;
+                    }),
               ],
             ),
             // TODO
@@ -63,6 +58,7 @@ class StartMySettinEnddayPage extends ConsumerWidget {
                 'イラストとか説明が入る予定',
               ),
             ),
+            // 戻る、次へ
             Container(
               margin: const EdgeInsets.only(
                 left: 10,
@@ -80,10 +76,18 @@ class StartMySettinEnddayPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      if (_textEditingController.text.isEmpty) {
+                        // エラーを出す
+                        errorText = '入力してください。';
+                        return;
+                      } else {
+                        errorText = '';
+                      }
+                      startMySetting.myName = _textEditingController.text;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettinWeekdayPage(),
+                          builder: (context) => StartMySettingConfirmPage(),
                         ),
                       );
                     },

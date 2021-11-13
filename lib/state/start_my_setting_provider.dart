@@ -7,6 +7,7 @@ final startMySettingProvider =
 
 class StartMySetting extends ChangeNotifier {
   String goalTitle = '';
+  String myName = '';
   DateTime? startAt = DateTime.now();
   String startAtStr = '今日から';
   DateTime? endAt;
@@ -17,6 +18,7 @@ class StartMySetting extends ChangeNotifier {
   // データを初期化
   void resetData() {
     goalTitle = '';
+    myName = '';
     DateTime now = DateTime.now();
     startAtStr = Utility.toDateFormatted(now);
     startAt = now;

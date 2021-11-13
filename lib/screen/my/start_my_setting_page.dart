@@ -3,7 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
-import 'package:yell_app/screen/my/start_my_setting_startday_page.dart';
+import 'package:yell_app/screen/my/start_my_setting_myname_page.dart';
+import 'package:yell_app/screen/my/start_my_setting_weekday_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -35,7 +36,7 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText1('続けること'),
+                TextWidget.mainText1('何を続けますか？'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,
@@ -45,6 +46,9 @@ class StartMySettingPage extends ConsumerWidget {
                     hintText: '（例）筋トレ、勉強',
                     errorText: errorText.isEmpty ? null : errorText,
                   ),
+                  onSubmitted: (text) {
+                    startMySetting.goalTitle = text;
+                  },
                 ),
               ],
             ),
@@ -83,7 +87,7 @@ class StartMySettingPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettingStartdayPage(),
+                          builder: (context) => StartMySettinWeekdayPage(),
                         ),
                       );
                     },

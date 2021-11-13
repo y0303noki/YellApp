@@ -4,17 +4,23 @@
 class MyGoalModel {
   String id;
   String goalTitle = '';
+  String myName = '';
   int howManyTimes = 0; // 1週間に何日（1~7)
-  DateTime? startAt;
-  DateTime? endAt;
+  int currentDay = 0;
+  DateTime? updatedCurrentDayAt;
+  bool isDeleted = false;
+  List<String> memberIds = [];
   DateTime? createdAt;
   DateTime? updatedAt;
   MyGoalModel({
     this.id = '',
     this.goalTitle = '',
+    this.myName = '',
     this.howManyTimes = 0,
-    this.startAt,
-    this.endAt,
+    this.currentDay = 0,
+    this.updatedCurrentDayAt,
+    this.isDeleted = false,
+    this.memberIds = const [],
     this.createdAt,
     this.updatedAt,
   });
