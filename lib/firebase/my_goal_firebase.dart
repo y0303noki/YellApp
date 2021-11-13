@@ -32,6 +32,7 @@ class MyGoalFirebase {
       myName: data['myName'] ?? '',
       howManyTimes: data['howManyTimes'] ?? 1,
       currentDay: data['currentDay'] ?? 1,
+      updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -53,6 +54,7 @@ class MyGoalFirebase {
     addObject['myName'] = myGoalModel.myName;
     addObject['howManyTimes'] = myGoalModel.howManyTimes;
     addObject['currentDay'] = 1;
+    addObject['updatedCurrentDayAt'] = null;
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
     addObject['updatedAt'] = now;
@@ -78,6 +80,7 @@ class MyGoalFirebase {
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
     updateData['currentDay'] = newDay;
+    updateData['updatedCurrentDayAt'] = now;
     updateData['updatedAt'] = now;
 
     try {

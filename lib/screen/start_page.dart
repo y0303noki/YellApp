@@ -94,8 +94,13 @@ class StartPage extends ConsumerWidget {
               onTap: () {
                 // TODO:テスト用にメンバーidをセット
                 List<String> _testMemberId = ['member-1', 'aember-2'];
-                myAchievment.setInitialData(_data.id, _data.goalTitle,
-                    _data.myName, _data.howManyTimes, _testMemberId);
+                myAchievment.setInitialData(
+                    _data.id,
+                    _data.goalTitle,
+                    _data.myName,
+                    _data.howManyTimes,
+                    _testMemberId,
+                    _data.updatedCurrentDayAt);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

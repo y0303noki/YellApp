@@ -154,7 +154,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
 
     // 達成画面にデータを渡す
     myAchievment.setInitialData(_docId, startMySetting.goalTitle,
-        startMySetting.myName, startMySetting.selectedHowManyTime, []);
+        startMySetting.myName, startMySetting.selectedHowManyTime, [], null);
   }
 
   // Firebaseに自分のデータを送信のテスト

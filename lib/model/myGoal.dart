@@ -7,6 +7,7 @@ class MyGoalModel {
   String myName = '';
   int howManyTimes = 0; // 1週間に何日（1~7)
   int currentDay = 0;
+  DateTime? updatedCurrentDayAt;
   bool isDeleted = false;
   List<String> memberIds = [];
   DateTime? createdAt;
@@ -17,6 +18,7 @@ class MyGoalModel {
     this.myName = '',
     this.howManyTimes = 0,
     this.currentDay = 0,
+    this.updatedCurrentDayAt,
     this.isDeleted = false,
     this.memberIds = const [],
     this.createdAt,

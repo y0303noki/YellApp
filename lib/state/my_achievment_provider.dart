@@ -17,7 +17,7 @@ class MyAchievment extends ChangeNotifier {
   int lastDay = 0; // 最後の日（例：40日間中の40日の部分）
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
-
+  DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
   // // データを初期化
   // void resetData() {
   //   goalTitle = '';
@@ -29,13 +29,31 @@ class MyAchievment extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setInitialData(String id, String title, String name, int manyTimes,
-      List<String> memberIds) {
+  void setInitialData(
+    String id,
+    String title,
+    String name,
+    int manyTimes,
+    List<String> memberIds,
+    DateTime? currentDayAt,
+  ) {
     goalId = id;
     goalTitle = title;
     myName = name;
     selectedHowManyTime = manyTimes;
     memberIdList = memberIds;
+    refresh = false;
+
+    // 達成ボタンを押した日付と現在の日付が同じか比較
+    if (currentDayAt != null) {
+      DateTime now = DateTime.now();
+      DateTime nowDate = DateTime(now.year, now.month, now.day);
+      DateTime tapDate =
+          DateTime(currentDayAt.year, currentDayAt.month, currentDayAt.day);
+      if (!nowDate.isAtSameMomentAs(tapDate)) {
+        isTapedToday = false;
+      }
+    }
   }
 
   // メンバーを選択

@@ -183,10 +183,16 @@ class MyAchievementPage extends ConsumerWidget {
             MyGoalModel? _data = snapshot.data;
             // 既に登録ずみ
             if (_data != null && !_data.isDeleted) {
+              print('AAA');
               // TODO:テスト用にメンバーidをセット
               List<String> _testMemberId = ['member-1', 'Bember-'];
-              myAchievment.setInitialData(_data.id, _data.goalTitle,
-                  _data.myName, _data.howManyTimes, _testMemberId);
+              myAchievment.setInitialData(
+                  _data.id,
+                  _data.goalTitle,
+                  _data.myName,
+                  _data.howManyTimes,
+                  _testMemberId,
+                  _data.updatedCurrentDayAt);
               return _body(context, myAchievment);
             } else {
               // データが消えている場合はエラー
