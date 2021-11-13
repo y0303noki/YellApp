@@ -18,6 +18,7 @@ class MyGoalFirebase {
     final QuerySnapshot snapshots = await _firestore
         .collection(myGoals)
         .where('userId', isEqualTo: _userId)
+        .where('isDeleted', isEqualTo: false)
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;

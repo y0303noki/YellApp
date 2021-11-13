@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
+import 'package:yell_app/utility/dialog_utility.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -71,7 +73,16 @@ class MyAchievementPage extends ConsumerWidget {
               children: [
                 // 達成ボタン
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    if (myAchievment.isTapedToday) {
+                      String? result =
+                          await DialogWidget().achieveCancelDialog(context);
+
+                      if (!(result != null && result == 'YES')) {
+                        // 何もしない
+                        return;
+                      }
+                    }
                     myAchievment.tapToday();
                     _myGoalFirebase.updateAchieveCurrentDay(
                         myAchievment.goalId, myAchievment.currentDay);
