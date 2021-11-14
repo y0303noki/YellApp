@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/utility/dialog_utility.dart';
 
 class DialogWidget {

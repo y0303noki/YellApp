@@ -17,4 +17,13 @@ class CommonFirebase {
       print(e);
     }
   }
+
+  /// firestoreのドキュメントをidで物理削除
+  Future<void> deleteCoffeeData(String collection, String docId) async {
+    try {
+      await _firestore.collection(collection).doc(docId).delete();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

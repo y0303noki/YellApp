@@ -1,12 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
+import 'package:yell_app/firebase/invite_firebase.dart';
+import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/model/user.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class MyGoalFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final InviteFirebase _inviteFirebase = InviteFirebase();
+  Uuid _uuid = Uuid();
 
   // コレクション名前
   final String myGoals = 'my_goals';
@@ -32,6 +35,7 @@ class MyGoalFirebase {
       myName: data['myName'] ?? '',
       howManyTimes: data['howManyTimes'] ?? 1,
       currentDay: data['currentDay'] ?? 1,
+      inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
@@ -42,7 +46,8 @@ class MyGoalFirebase {
   }
 
   /// 自分の目標をfirestoreに格納
-  Future<String> insertMyGoalData(MyGoalModel myGoalModel) async {
+  Future<Map<String, Object?>> insertMyGoalData(MyGoalModel myGoalModel) async {
+    Map<String, Object?> resultMap = {}; // 返り値
     // ドキュメント作成
     Map<String, dynamic> addObject = <String, dynamic>{};
     DateTime now = DateTime.now();
@@ -59,6 +64,10 @@ class MyGoalFirebase {
     addObject['createdAt'] = now;
     addObject['updatedAt'] = now;
 
+    // inviteのデータも作っておく
+    String inviteDocId = _uuid.v4().replaceAll('-', '').substring(0, 20);
+    addObject['inviteId'] = inviteDocId;
+
     try {
       // 実際にfirestoreに格納する処理
       final DocumentReference result =
@@ -67,10 +76,29 @@ class MyGoalFirebase {
       final String docId = data.id;
       CommonFirebase().updateDocId(myGoals, docId);
 
-      return docId;
+      InviteModel? _inviteModel =
+          await _inviteFirebase.insertInviteData(inviteDocId);
+      resultMap['invite'] = _inviteModel;
+
+      final _myGoalModel = MyGoalModel(
+        id: docId,
+        goalTitle: addObject['title'],
+        myName: addObject['myName'],
+        howManyTimes: addObject['howManyTimes'],
+        currentDay: addObject['currentDay'],
+        inviteId: addObject['inviteId'],
+        updatedCurrentDayAt: addObject['updatedCurrentDayAt'],
+        isDeleted: addObject['isDeleted'] ?? false,
+        createdAt: addObject['createdAt'],
+        updatedAt: addObject['updatedAt'],
+      );
+
+      resultMap['myGoal'] = _myGoalModel;
+
+      return resultMap;
     } catch (e) {
       print(e);
-      return '';
+      return {};
     }
   }
 
