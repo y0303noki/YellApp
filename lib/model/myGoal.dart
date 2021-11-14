@@ -10,6 +10,7 @@ class MyGoalModel {
   DateTime? updatedCurrentDayAt;
   bool isDeleted = false;
   List<String> memberIds = [];
+  String inviteId = '';
   DateTime? createdAt;
   DateTime? updatedAt;
   MyGoalModel({
@@ -21,6 +22,7 @@ class MyGoalModel {
     this.updatedCurrentDayAt,
     this.isDeleted = false,
     this.memberIds = const [],
+    this.inviteId = '',
     this.createdAt,
     this.updatedAt,
   });

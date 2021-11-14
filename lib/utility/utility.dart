@@ -9,4 +9,11 @@ class Utility {
     var formatted = formatter.format(_dateTime); // DateからString
     return formatted;
   }
+
+  static String toStringyyyyMMddhh(DateTime _dateTime) {
+    initializeDateFormatting("ja_JP");
+    var formatter = DateFormat('yyyy/MM/dd HH:mm', "ja_JP");
+    var formatted = formatter.format(_dateTime); // DateからString
+    return formatted;
+  }
 }

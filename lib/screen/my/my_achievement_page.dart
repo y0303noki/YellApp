@@ -7,6 +7,8 @@ import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/utility/dialog_utility.dart';
 
@@ -16,6 +18,8 @@ class MyAchievementPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final myAchievment = ref.watch(myAchievmentProvider);
+    final invite = ref.watch(inviteProvider);
+
     TextEditingController _textEditingController =
         TextEditingController(text: myAchievment.goalTitle);
     final deviceSize = MediaQuery.of(context).size;
@@ -34,14 +38,16 @@ class MyAchievementPage extends ConsumerWidget {
         ],
       ),
       body: RefreshIndicator(
-          // 下に引っ張って更新
-          onRefresh: () async {
-            myAchievment.refresh = true;
-            myAchievment.refreshNotifyListeners();
-          },
-          child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: _futureBody(context, myAchievment))),
+        // 下に引っ張って更新
+        onRefresh: () async {
+          myAchievment.refresh = true;
+          myAchievment.refreshNotifyListeners();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: _futureBody(context, myAchievment, invite),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).canvasColor,
         items: const <BottomNavigationBarItem>[
@@ -82,7 +88,13 @@ class MyAchievementPage extends ConsumerWidget {
             TextWidget.mainText3('まだメンバーがいません'),
             TextButton(
               onPressed: () {
-                // メンバー追加画面に遷移
+                // 招待ページに遷移
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InviteMainPage(),
+                  ),
+                );
               },
               child: TextWidget.mainText3('メンバーを追加する'),
             ),
@@ -155,7 +167,8 @@ class MyAchievementPage extends ConsumerWidget {
   }
 
   // 非同期処理でbodyWidgetを作る
-  Widget _futureBody(BuildContext context, MyAchievment myAchievment) {
+  Widget _futureBody(
+      BuildContext context, MyAchievment myAchievment, Invite invite) {
     if (!myAchievment.refresh) {
       return _body(context, myAchievment);
     } else {
@@ -183,16 +196,11 @@ class MyAchievementPage extends ConsumerWidget {
             MyGoalModel? _data = snapshot.data;
             // 既に登録ずみ
             if (_data != null && !_data.isDeleted) {
-              print('AAA');
               // TODO:テスト用にメンバーidをセット
-              List<String> _testMemberId = ['member-1', 'Bember-'];
-              myAchievment.setInitialData(
-                  _data.id,
-                  _data.goalTitle,
-                  _data.myName,
-                  _data.howManyTimes,
-                  _testMemberId,
-                  _data.updatedCurrentDayAt);
+              // List<String> _testMemberId = ['member-1', 'Bember-'];
+              myAchievment.setInitialData(_data);
+              invite.id = _data.inviteId;
+
               return _body(context, myAchievment);
             } else {
               // データが消えている場合はエラー

@@ -5,8 +5,10 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
+import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/my_achievement_page.dart';
+import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -17,6 +19,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final startMySetting = ref.watch(startMySettingProvider);
     final myAchievment = ref.watch(myAchievmentProvider);
+    final invite = ref.watch(inviteProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: startMySetting.goalTitle);
 
@@ -90,7 +93,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      sendMyGoalData(startMySetting, myAchievment);
+                      sendMyGoalData(startMySetting, myAchievment, invite);
                       // sendMySettingDataTest(startMySetting, myAchievment);
                       Navigator.push(
                         context,
@@ -141,8 +144,8 @@ class StartMySettingConfirmPage extends ConsumerWidget {
   }
 
   // firestoreに送信
-  Future<void> sendMyGoalData(
-      StartMySetting startMySetting, MyAchievment myAchievment) async {
+  Future<void> sendMyGoalData(StartMySetting startMySetting,
+      MyAchievment myAchievment, Invite invite) async {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       myName: startMySetting.myName,
@@ -150,11 +153,14 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     );
 
     // データ送信
-    String _docId = await _myGoalFirebase.insertMyGoalData(model);
-
-    // 達成画面にデータを渡す
-    myAchievment.setInitialData(_docId, startMySetting.goalTitle,
-        startMySetting.myName, startMySetting.selectedHowManyTime, [], null);
+    Map<String, Object?> resultMap =
+        await _myGoalFirebase.insertMyGoalData(model);
+    if (resultMap['myGoal'] != null) {
+      myAchievment.setInitialData(resultMap['myGoal'] as MyGoalModel);
+    }
+    if (resultMap['invite'] != null) {
+      invite.setInitialData(resultMap['invite'] as InviteModel);
+    }
   }
 
   // Firebaseに自分のデータを送信のテスト

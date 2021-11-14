@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/utility/utility.dart';
 
 final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
@@ -12,6 +13,7 @@ class MyAchievment extends ChangeNotifier {
   String selectedMemberId = '';
   List<String> memberIdList = [];
   bool isTapedToday = false;
+  String inviteId = ''; // 招待コードのid
 
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
   int lastDay = 0; // 最後の日（例：40日間中の40日の部分）
@@ -29,27 +31,21 @@ class MyAchievment extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setInitialData(
-    String id,
-    String title,
-    String name,
-    int manyTimes,
-    List<String> memberIds,
-    DateTime? currentDayAt,
-  ) {
-    goalId = id;
-    goalTitle = title;
-    myName = name;
-    selectedHowManyTime = manyTimes;
-    memberIdList = memberIds;
+  void setInitialData(MyGoalModel _myGoalModel) {
+    goalId = _myGoalModel.id;
+    goalTitle = _myGoalModel.goalTitle;
+    myName = _myGoalModel.myName;
+    selectedHowManyTime = _myGoalModel.howManyTimes;
+    memberIdList = _myGoalModel.memberIds;
     refresh = false;
+    inviteId = _myGoalModel.inviteId;
 
     // 達成ボタンを押した日付と現在の日付が同じか比較
-    if (currentDayAt != null) {
+    if (_myGoalModel.createdAt != null) {
       DateTime now = DateTime.now();
       DateTime nowDate = DateTime(now.year, now.month, now.day);
-      DateTime tapDate =
-          DateTime(currentDayAt.year, currentDayAt.month, currentDayAt.day);
+      DateTime tapDate = DateTime(_myGoalModel.createdAt!.year,
+          _myGoalModel.createdAt!.month, _myGoalModel.createdAt!.day);
       if (!nowDate.isAtSameMomentAs(tapDate)) {
         isTapedToday = false;
       }
