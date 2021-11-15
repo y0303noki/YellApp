@@ -20,16 +20,6 @@ class MyAchievment extends ChangeNotifier {
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
   DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
-  // // データを初期化
-  // void resetData() {
-  //   goalTitle = '';
-  //   DateTime now = DateTime.now();
-  //   startAtStr = Utility.toDateFormatted(now);
-  //   startAt = now;
-  //   endAt = null;
-  //   endAtStr = '無期限';
-  //   notifyListeners();
-  // }
 
   void setInitialData(MyGoalModel _myGoalModel) {
     goalId = _myGoalModel.id;

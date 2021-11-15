@@ -36,8 +36,8 @@ class StartMySettinMynamePage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText2('最後にあなたの'),
-                TextWidget.mainText2('なまえを教えてください'),
+                TextWidget.headLineText5('最後にあなたの'),
+                TextWidget.headLineText5('なまえを教えてください'),
                 TextField(
                     controller: _textEditingController,
                     maxLength: 10,
@@ -72,7 +72,7 @@ class StartMySettinMynamePage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -91,7 +91,7 @@ class StartMySettinMynamePage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),

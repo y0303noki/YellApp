@@ -40,7 +40,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextWidget.mainText2('続けること'),
+                TextWidget.headLineText5('続けること'),
                 Container(
                   margin: const EdgeInsets.only(
                     left: 30,
@@ -56,7 +56,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('1週間に'),
+                TextWidget.headLineText5('1週間に'),
                 Container(
                   child: Text(startMySetting.selectedHowManyTime.toString()),
                 ),
@@ -64,7 +64,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('あなたのなまえ'),
+                TextWidget.headLineText5('あなたのなまえ'),
                 Container(
                   child: Text(startMySetting.myName),
                 ),
@@ -72,8 +72,8 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('はじめますか？'),
-                TextWidget.mainText2('途中で変更することはできません。'),
+                TextWidget.headLineText5('はじめますか？'),
+                TextWidget.headLineText5('途中で変更することはできません。'),
               ],
             ),
             Container(
@@ -89,7 +89,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -102,7 +102,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('はじめる'),
+                    child: TextWidget.headLineText5('はじめる'),
                   )
                 ],
               ),

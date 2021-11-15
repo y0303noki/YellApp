@@ -33,7 +33,7 @@ class MyAchievementPage extends ConsumerWidget {
             onPressed: () {
               Navigator.popUntil(context, (route) => route.isFirst);
             },
-            child: TextWidget.mainText3('トップに戻る'),
+            child: TextWidget.headLineText6('トップに戻る'),
           ),
         ],
       ),
@@ -85,7 +85,7 @@ class MyAchievementPage extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            TextWidget.mainText3('まだメンバーがいません'),
+            TextWidget.headLineText6('まだメンバーがいません'),
             TextButton(
               onPressed: () {
                 // 招待ページに遷移
@@ -96,7 +96,7 @@ class MyAchievementPage extends ConsumerWidget {
                   ),
                 );
               },
-              child: TextWidget.mainText3('メンバーを追加する'),
+              child: TextWidget.headLineText6('メンバーを追加する'),
             ),
           ],
         ),
@@ -175,7 +175,7 @@ class MyAchievementPage extends ConsumerWidget {
       myAchievment.refresh = false;
       return FutureBuilder(
         // future属性で非同期処理を書く
-        future: _myGoalFirebase.fetchMyGoalData(),
+        future: _myGoalFirebase.fetchGoalData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           // 通信中
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -251,7 +251,7 @@ class MyAchievementPage extends ConsumerWidget {
               top: 10,
               bottom: 10,
             ),
-            child: TextWidget.mainText1(myAchievment.goalTitle),
+            child: TextWidget.headLineText4(myAchievment.goalTitle),
           ),
           Column(
             children: [
@@ -285,22 +285,23 @@ class MyAchievementPage extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextWidget.mainText2('継続'),
+                    TextWidget.headLineText5('継続'),
                     Container(
                       padding: const EdgeInsets.only(
                         left: 5,
                         right: 5,
                       ),
-                      child: TextWidget.mainText1('${myAchievment.currentDay}'),
+                      child: TextWidget.headLineText4(
+                          '${myAchievment.currentDay}'),
                     ),
-                    TextWidget.mainText2('日目'),
+                    TextWidget.headLineText5('日目'),
                   ],
                 ),
               ),
               const Divider(
                 color: Colors.grey,
               ),
-              TextWidget.mainText2('応援してくれるメンバー'),
+              TextWidget.headLineText5('応援してくれるメンバー'),
               _memberWidget(context, myAchievment),
             ],
           ),

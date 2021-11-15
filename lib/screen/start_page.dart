@@ -73,7 +73,7 @@ class StartPage extends ConsumerWidget {
     final deviceSize = MediaQuery.of(context).size;
     return FutureBuilder(
       // future属性で非同期処理を書く
-      future: _myGoalFirebase.fetchMyGoalData(),
+      future: _myGoalFirebase.fetchGoalData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         // 通信中
         if (snapshot.connectionState == ConnectionState.waiting) {

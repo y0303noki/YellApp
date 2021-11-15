@@ -14,13 +14,16 @@ class MyGoalFirebase {
   // コレクション名前
   final String myGoals = 'my_goals';
 
-  /// 自分の目標を取得する
-  Future<MyGoalModel?> fetchMyGoalData() async {
-    final UserAuth _userAuth = UserAuth();
-    final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
+  /// 目標を取得する
+  /// 引数が指定されなければ自分のデータ
+  Future<MyGoalModel?> fetchGoalData({String userId = ''}) async {
+    if (userId.isEmpty) {
+      final UserAuth _userAuth = UserAuth();
+      userId = _userAuth.user != null ? _userAuth.user!.uid : '';
+    }
     final QuerySnapshot snapshots = await _firestore
         .collection(myGoals)
-        .where('userId', isEqualTo: _userId)
+        .where('userId', isEqualTo: userId)
         .where('isDeleted', isEqualTo: false)
         .get();
 

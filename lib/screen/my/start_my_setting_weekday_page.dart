@@ -34,8 +34,8 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.mainText2('頻度を教えてください。'),
-                    TextWidget.mainText2('1週間のうちに何日おこないますか？'),
+                    TextWidget.headLineText5('頻度を教えてください。'),
+                    TextWidget.headLineText5('1週間のうちに何日おこないますか？'),
                     Row(
                       children: weekDayWidget(startMySetting),
                     ),
@@ -62,7 +62,7 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -73,7 +73,7 @@ class StartMySettinWeekdayPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),

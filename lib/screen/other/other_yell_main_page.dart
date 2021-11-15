@@ -26,7 +26,7 @@ class OtherYellMainPage extends ConsumerWidget {
             onPressed: () {
               Navigator.popUntil(context, (route) => route.isFirst);
             },
-            child: TextWidget.mainText3('トップに戻る'),
+            child: TextWidget.headLineText6('トップに戻る'),
           ),
         ],
       ),
@@ -42,7 +42,7 @@ class OtherYellMainPage extends ConsumerWidget {
               children: [
                 // 達成ボタン
                 ButtonWidget.iconMainWidget('a'),
-                TextWidget.mainText1('2日目達成！'),
+                TextWidget.headLineText4('2日目達成！'),
                 Container(
                   margin: const EdgeInsets.only(
                     left: 10,

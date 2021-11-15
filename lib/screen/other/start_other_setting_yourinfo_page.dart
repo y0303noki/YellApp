@@ -31,7 +31,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText2('あなたのニックネームを教えてください'),
+                TextWidget.headLineText5('あなたのニックネームを教えてください'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 10,
@@ -63,7 +63,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -74,7 +74,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),

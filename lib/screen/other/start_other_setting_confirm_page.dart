@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
+import 'package:yell_app/state/other_achievment_provider.dart';
 import 'package:yell_app/state/other_setting_code_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -12,7 +13,7 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final otherSettingCode = ref.watch(otherSettingCodeProvider);
+    final otherAchievment = ref.watch(otherAchievmentProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: '');
 
@@ -44,10 +45,10 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                TextWidget.mainText1('あいうえさんを'),
-                TextWidget.mainText1('応援しますか？'),
-                TextWidget.mainText1('やること'),
-                TextWidget.mainText1('筋トレ'),
+                TextWidget.headLineText4('${otherAchievment.goalTitle}さんを'),
+                TextWidget.headLineText4('応援しますか？'),
+                TextWidget.headLineText4('やること'),
+                TextWidget.headLineText4('筋トレ'),
               ],
             ),
             // TODO
@@ -70,7 +71,7 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -81,7 +82,7 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),

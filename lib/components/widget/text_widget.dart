@@ -11,15 +11,23 @@ class TextWidget {
     );
   }
 
-  static mainText1(String text) {
+  static headLineText4(String text) {
     return Text(
       text,
-      style: const TextStyle(fontSize: 30),
+      style: const TextStyle(fontSize: 34),
       overflow: TextOverflow.clip,
     );
   }
 
-  static mainText2(String text) {
+  static headLineText5(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 24),
+      overflow: TextOverflow.clip,
+    );
+  }
+
+  static headLineText6(String text) {
     return Text(
       text,
       style: const TextStyle(fontSize: 20),
@@ -27,10 +35,10 @@ class TextWidget {
     );
   }
 
-  static mainText3(String text) {
+  static subTitleText1(String text) {
     return Text(
       text,
-      style: const TextStyle(fontSize: 15),
+      style: const TextStyle(fontSize: 16),
       overflow: TextOverflow.clip,
     );
   }

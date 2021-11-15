@@ -54,7 +54,7 @@ class StartOtherYellListPage extends ConsumerWidget {
                   ),
                 );
               },
-              child: TextWidget.mainText2('招待コードを入力する'),
+              child: TextWidget.headLineText5('招待コードを入力する'),
             ),
           ),
         ],

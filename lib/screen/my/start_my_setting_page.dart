@@ -36,7 +36,7 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText1('何を続けますか？'),
+                TextWidget.headLineText4('何を続けますか？'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,
@@ -72,7 +72,7 @@ class StartMySettingPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -91,7 +91,7 @@ class StartMySettingPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),
