@@ -10,23 +10,18 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
-import 'package:yell_app/state/other_setting_code_provider.dart';
-import 'package:yell_app/state/start_my_setting_provider.dart';
 
 InviteFirebase inviteFirebase = InviteFirebase();
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
-final inviteCodeProvider = StateProvider((ref) => '');
 
 class StartOtherSettingCodePage extends ConsumerWidget {
   const StartOtherSettingCodePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final otherSettingCode = ref.watch(otherSettingCodeProvider);
     final otherAchievment = ref.watch(otherAchievmentProvider);
-    String inviteCode = ref.watch(inviteCodeProvider);
     TextEditingController _textEditingController =
-        TextEditingController(text: inviteCode);
+        TextEditingController(text: otherAchievment.code);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,11 +44,14 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                   maxLength: 10,
                   style: TextStyle(),
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '10桁のコード',
                   ),
                   onSubmitted: (text) {
-                    inviteCode = text;
+                    otherAchievment.code = text;
+                  },
+                  onChanged: (text) {
+                    otherAchievment.code = text;
                   },
                 ),
               ],
@@ -84,7 +82,7 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                     onPressed: () async {
                       // 招待コードを検索
                       // 正しいコードなら次に遷移
-                      await _searchInviteByCode(inviteCode, otherAchievment);
+                      await _searchInviteByCode(otherAchievment);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -103,16 +101,19 @@ class StartOtherSettingCodePage extends ConsumerWidget {
     );
   }
 
-  _searchInviteByCode(String _code, OtherAchievment _otherAchievment) async {
+  _searchInviteByCode(OtherAchievment _otherAchievment) async {
     DateTime now = DateTime.now();
-    InviteModel? inviteModel = await inviteFirebase.fetchInviteByCode(_code);
+    InviteModel? inviteModel =
+        await inviteFirebase.fetchInviteByCode(_otherAchievment.code);
     // コードが存在しない
     if (inviteModel == null) {
+      print('コードが不正');
       return;
     }
     // 有効期限切れ
     if (now.isAfter(inviteModel.expiredAt as DateTime) ||
         inviteModel.isDeleted) {
+      print('有効期限切れ');
       return;
     }
     // 有効なコード
@@ -122,9 +123,12 @@ class StartOtherSettingCodePage extends ConsumerWidget {
         await myGoalFirebase.fetchGoalData(userId: ownerUserId);
     if (ownerGoalModel == null) {
       // 持ち主のユーザーidが不正
+      print('持ち主がいない');
       return;
     }
+    print(ownerGoalModel.myName);
     // セット
     _otherAchievment.goalTitle = ownerGoalModel.goalTitle;
+    _otherAchievment.ownerName = ownerGoalModel.myName;
   }
 }

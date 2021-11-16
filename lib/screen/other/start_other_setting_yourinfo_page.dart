@@ -4,17 +4,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
-import 'package:yell_app/state/other_setting_code_provider.dart';
-import 'package:yell_app/state/start_my_setting_provider.dart';
+import 'package:yell_app/state/other_achievment_provider.dart';
 
 class StartOtherSettingYourinfoPage extends ConsumerWidget {
   const StartOtherSettingYourinfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final otherSettingCode = ref.watch(otherSettingCodeProvider);
+    final otherAchievment = ref.watch(otherAchievmentProvider);
     TextEditingController _textEditingController =
-        TextEditingController(text: '');
+        TextEditingController(text: otherAchievment.otherName);
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +38,16 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: '（例）かな',
+                    errorText: otherAchievment.errorText.isEmpty
+                        ? null
+                        : otherAchievment.errorText,
                   ),
+                  onSubmitted: (text) {
+                    otherAchievment.otherName = text;
+                  },
+                  onChanged: (text) {
+                    otherAchievment.otherName = text;
+                  },
                 ),
               ],
             ),
@@ -67,6 +75,14 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      // ニックネームを反映
+                      if (_textEditingController.text.isEmpty) {
+                        // エラーを出す
+                        otherAchievment.setErrorText('入力してください。');
+                        return;
+                      } else {
+                        otherAchievment.setErrorText('');
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(

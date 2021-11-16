@@ -9,6 +9,8 @@ final otherAchievmentProvider =
 class OtherAchievment extends ChangeNotifier {
   String goalId = ''; // firestoreに格納されているid
   String goalTitle = ''; // 持ち主の目標タイトル
+  String code = ''; // 招待コード
+  String errorText = ''; // エラーテキスト
   String ownerName = ''; // 持ち主の名前
   String otherName = ''; // 応援している自分の名前
   List<String> memberIdList = []; // 応援しているメンバー
@@ -24,6 +26,12 @@ class OtherAchievment extends ChangeNotifier {
     ownerName = _ownerGoalModel.myName;
     memberIdList = _ownerGoalModel.memberIds;
     refresh = false;
+  }
+
+  // エラーテキスト
+  void setErrorText(String _text) {
+    errorText = _text;
+    notifyListeners();
   }
 
   void refreshNotifyListeners() {

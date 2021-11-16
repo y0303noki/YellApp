@@ -104,4 +104,34 @@ class ButtonWidget {
       ),
     );
   }
+
+  // 登録ずみの応援メッセージ
+  static rgisterdYellMessageWidget(double width, String text) {
+    return Container(
+      height: 100,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.yellow[100],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    top: 5,
+                  ),
+                  child: Text('選択中の応援メッセージ')),
+            ],
+          ),
+          TextWidget.headLineText6(text),
+        ],
+      ),
+      // child: Center(
+      //   child: TextWidget.headLineText6(text),
+      // ),
+    );
+  }
 }

@@ -45,10 +45,10 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                TextWidget.headLineText4('${otherAchievment.goalTitle}さんを'),
+                TextWidget.headLineText4('${otherAchievment.ownerName}さんを'),
                 TextWidget.headLineText4('応援しますか？'),
                 TextWidget.headLineText4('やること'),
-                TextWidget.headLineText4('筋トレ'),
+                TextWidget.headLineText4(otherAchievment.goalTitle),
               ],
             ),
             // TODO

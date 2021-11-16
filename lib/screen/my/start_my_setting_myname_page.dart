@@ -37,14 +37,14 @@ class StartMySettinMynamePage extends ConsumerWidget {
             Column(
               children: [
                 TextWidget.headLineText5('最後にあなたの'),
-                TextWidget.headLineText5('なまえを教えてください'),
+                TextWidget.headLineText5('ニックネームを教えてください'),
                 TextField(
                     controller: _textEditingController,
                     maxLength: 10,
                     style: TextStyle(),
                     maxLines: 1,
                     decoration: InputDecoration(
-                      hintText: 'なまえ',
+                      hintText: 'ニックネーム',
                       errorText: errorText.isEmpty ? null : errorText,
                     ),
                     onSubmitted: (text) {
