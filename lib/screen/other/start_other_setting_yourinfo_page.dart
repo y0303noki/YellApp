@@ -3,8 +3,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
+
+MemberFirebase memberFirebase = MemberFirebase();
 
 class StartOtherSettingYourinfoPage extends ConsumerWidget {
   const StartOtherSettingYourinfoPage({Key? key}) : super(key: key);
@@ -74,7 +78,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                     child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // ニックネームを反映
                       if (_textEditingController.text.isEmpty) {
                         // エラーを出す
@@ -83,6 +87,12 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                       } else {
                         otherAchievment.setErrorText('');
                       }
+                      // このタイミングでownerのデータにユーザーidを紐づける
+                      MemberModel _memberModel = MemberModel();
+                      _memberModel.memberName = otherAchievment.otherName;
+                      _memberModel.ownerGoalId = otherAchievment.goalId;
+                      addMemberData(_memberModel);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -99,5 +109,10 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // ownerのgoalに自分のデータと名前を紐づける
+  addMemberData(MemberModel memberModel) async {
+    await memberFirebase.insertMemberData(memberModel);
   }
 }

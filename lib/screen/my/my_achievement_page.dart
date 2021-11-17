@@ -126,12 +126,18 @@ class MyAchievementPage extends ConsumerWidget {
     List<MemberModel> members = [];
     // テスト用のデータ作成
     for (String id in myAchievment.memberIdList) {
-      MemberModel tempMember = MemberModel(
-        id: id,
-        name: id + '-name',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      // MemberModel tempMember = MemberModel(
+      //   id: id,
+      //   memberName: id + '-name',
+      //   createdAt: DateTime.now(),
+      //   updatedAt: DateTime.now(),
+      // );
+      MemberModel tempMember = MemberModel();
+      tempMember.id = id;
+      tempMember.memberName = id + '-name';
+      tempMember.createdAt = DateTime.now();
+      tempMember.updatedAt = DateTime.now();
+
       members.add(tempMember);
     }
     List<String> memberIdList = myAchievment.memberIdList;
@@ -157,7 +163,7 @@ class MyAchievementPage extends ConsumerWidget {
             borderRadius: BorderRadius.circular(60 / 2),
           ),
           child: Center(
-            child: Text(member.name.substring(0, 1)),
+            child: Text(member.memberName.substring(0, 1)),
           ),
         ),
       );
