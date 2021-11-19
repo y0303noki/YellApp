@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/model/invite.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -9,10 +11,25 @@ import 'package:uuid/uuid.dart';
 class MyGoalFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final InviteFirebase _inviteFirebase = InviteFirebase();
+  final MemberFirebase _memberFirebase = MemberFirebase();
   Uuid _uuid = Uuid();
 
   // コレクション名前
   final String myGoals = 'my_goals';
+
+  // 自分の目標データとメンバーデータを取得
+  Future<Map<String, Object?>?> fetchGoalAndMemberData() async {
+    Map<String, Object?> result = {};
+    MyGoalModel? goalData = await fetchGoalData();
+    if (goalData != null) {
+      List<MemberModel> members = await _fetchMember(goalData.id);
+      result['goal'] = goalData;
+      result['members'] = members;
+    } else {
+      return null;
+    }
+    return result;
+  }
 
   /// 目標を取得する
   /// 引数が指定されなければ自分のデータ
@@ -46,6 +63,10 @@ class MyGoalFirebase {
     );
 
     return _myGoalModel;
+  }
+
+  Future<List<MemberModel>> _fetchMember(String goalId) async {
+    return await _memberFirebase.fetchMemberDatasByGoalId(goalId);
   }
 
   /// 自分の目標をfirestoreに格納

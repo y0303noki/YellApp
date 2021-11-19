@@ -181,7 +181,7 @@ class MyAchievementPage extends ConsumerWidget {
       myAchievment.refresh = false;
       return FutureBuilder(
         // future属性で非同期処理を書く
-        future: _myGoalFirebase.fetchGoalData(),
+        future: _myGoalFirebase.fetchGoalAndMemberData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           // 通信中
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -199,19 +199,26 @@ class MyAchievementPage extends ConsumerWidget {
 
           // 成功処理
           if (snapshot.connectionState == ConnectionState.done) {
-            MyGoalModel? _data = snapshot.data;
+            Map<String, Object?>? _data = snapshot.data;
+            if (_data == null) {
+              // データがない、おかしい
+              return const Center(
+                child: Text('エラーがおきました'),
+              );
+            }
+            MyGoalModel goalData = _data['goal'] as MyGoalModel;
+            List<MemberModel> memberDatas =
+                _data['members'] as List<MemberModel>;
+
             // 既に登録ずみ
-            if (_data != null && !_data.isDeleted) {
+            if (!goalData.isDeleted) {
               // TODO:テスト用にメンバーidをセット
               // List<String> _testMemberId = ['member-1', 'Bember-'];
-              myAchievment.setInitialData(_data);
-              invite.id = _data.inviteId;
+              goalData.memberIds = memberDatas.map((e) => e.id).toList();
+              myAchievment.setInitialData(goalData);
+              invite.id = goalData.inviteId;
 
               return _body(context, myAchievment);
-            } else {
-              // データが消えている場合はエラー
-              // 初期画面に戻る
-              return Container();
             }
           }
           return Container();

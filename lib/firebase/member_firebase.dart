@@ -46,6 +46,38 @@ class MemberFirebase {
     return memberList;
   }
 
+  /// 自分の目標に紐づいているメンバーを取得する
+  Future<List<MemberModel>> fetchMemberDatasByGoalId(String goalId) async {
+    final QuerySnapshot snapshots = await _firestore
+        .collection(members)
+        .where('ownerGoalId', isEqualTo: goalId)
+        .where('isDeleted', isEqualTo: false)
+        .limit(5) // 5個までにしておく
+        .get();
+
+    List<QueryDocumentSnapshot> docs = snapshots.docs;
+    if (docs.isEmpty) {
+      return [];
+    }
+
+    // firestoreから取得したデータを変換
+    List<MemberModel> memberList = [];
+    for (QueryDocumentSnapshot doc in docs) {
+      MemberModel tempMemberModel = MemberModel();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      tempMemberModel.id = data['id'] ?? '';
+      tempMemberModel.memberUserId = data['memberUserId'] ?? '';
+      tempMemberModel.ownerGoalId = data['ownerGoalId'] ?? '';
+      tempMemberModel.isDeleted = data['isDeleted'] ?? false;
+      tempMemberModel.createdAt = data['createdAt']?.toDate();
+      tempMemberModel.updatedAt = data['updatedAt']?.toDate();
+      memberList.add(tempMemberModel);
+    }
+
+    return memberList;
+  }
+
   /// メンバーの情報をfirestoreに格納
   Future<Map<String, Object?>> insertMemberData(MemberModel memberModel) async {
     Map<String, Object?> resultMap = {}; // 返り値
