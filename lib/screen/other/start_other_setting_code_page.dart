@@ -126,7 +126,6 @@ class StartOtherSettingCodePage extends ConsumerWidget {
       print('持ち主がいない');
       return;
     }
-    print(ownerGoalModel.myName);
     // セット
     _otherAchievment.goalTitle = ownerGoalModel.goalTitle;
     _otherAchievment.goalId = ownerGoalModel.id;

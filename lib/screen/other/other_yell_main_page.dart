@@ -14,7 +14,7 @@ class OtherYellMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
     TextEditingController _textEditingController =
-        TextEditingController(text: otherAchievment.goalTitle);
+        TextEditingController(text: '');
     final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(

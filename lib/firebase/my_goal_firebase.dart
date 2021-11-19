@@ -69,6 +69,39 @@ class MyGoalFirebase {
     return await _memberFirebase.fetchMemberDatasByGoalId(goalId);
   }
 
+  // 自分が登録ずみの他人の目標一覧
+  Future<List<MyGoalModel>> fetchRegistedOtherGoals() async {
+    List<MemberModel> members = await _memberFirebase.fetchMemberDatas();
+    List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
+    final QuerySnapshot snapshots = await _firestore
+        .collection(myGoals)
+        .where('id', whereIn: goalIds)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+
+    List<QueryDocumentSnapshot> docs = snapshots.docs;
+
+    List<MyGoalModel> goalList = [];
+    for (QueryDocumentSnapshot doc in docs) {
+      MyGoalModel tempGoalModel = MyGoalModel();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      tempGoalModel.id = data['id'] ?? '';
+      tempGoalModel.id = data['id'];
+      tempGoalModel.goalTitle = data['title'] ?? '';
+      tempGoalModel.myName = data['myName'] ?? '';
+      tempGoalModel.howManyTimes = data['howManyTimes'] ?? 1;
+      tempGoalModel.currentDay = data['currentDay'] ?? 1;
+      tempGoalModel.inviteId = data['inviteId'] ?? '';
+      tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
+      tempGoalModel.isDeleted = data['isDeleted'] ?? false;
+      tempGoalModel.createdAt = data['createdAt'].toDate();
+      tempGoalModel.updatedAt = data['updatedAt'].toDate();
+      goalList.add(tempGoalModel);
+    }
+    return goalList;
+  }
+
   /// 自分の目標をfirestoreに格納
   Future<Map<String, Object?>> insertMyGoalData(MyGoalModel myGoalModel) async {
     Map<String, Object?> resultMap = {}; // 返り値

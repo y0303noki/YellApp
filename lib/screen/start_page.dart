@@ -103,11 +103,12 @@ class StartPage extends ConsumerWidget {
           MyGoalModel goalData = _data['goal'] as MyGoalModel;
           List<MemberModel> memberDatas = _data['members'] as List<MemberModel>;
           // 既に登録ずみ
-          if (goalData.isDeleted) {
+          if (!goalData.isDeleted) {
             return GestureDetector(
               onTap: () {
                 // TODO:テスト用にメンバーidをセット
                 // List<String> _testMemberId = ['member-1', 'aember-2'];
+                goalData.memberIds = memberDatas.map((e) => e.id).toList();
                 myAchievment.setInitialData(goalData);
                 invite.id = goalData.inviteId;
 
