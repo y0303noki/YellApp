@@ -23,7 +23,7 @@ class OtherAchievment extends ChangeNotifier {
   int messageType = 0; // 0 or 1 or 2
   String thisTimeMessage = ''; // 今回のメッセージ
   String nextTimeMessage = ''; // 次のメッセージ
-  String next2TimeMessage = ''; // 次の次のメッセー
+  String nextTime2Message = ''; // 次の次のメッセー
 
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;

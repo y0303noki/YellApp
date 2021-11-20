@@ -8,29 +8,21 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
-import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
+import 'package:bubble/bubble.dart';
+
+TextEditingController _textEditingControllerThisTime =
+    TextEditingController(text: '');
+TextEditingController _textEditingControllerNextTime =
+    TextEditingController(text: '');
+TextEditingController _textEditingControllerNextTime2 =
+    TextEditingController(text: '');
 
 class OtherYellMainPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
-    TextEditingController _textEditingController =
-        TextEditingController(text: '');
-    //  TabController _tabController = TabController(length: 3, vsync: );
+
     final deviceSize = MediaQuery.of(context).size;
-
-    AdvancedSegmentController _seg_value1 = AdvancedSegmentController('0');
-
-    // 応援メッセージ3回分
-    const List<String> yellMessages = const <String>['今回', '次回', '次の次'];
-    List<Tab> tabList = [
-      Tab(
-        child: Text('now'),
-      ),
-      Tab(
-        child: Text('now2'),
-      ),
-    ];
 
     return DefaultTabController(
       initialIndex: 1,
@@ -49,30 +41,38 @@ class OtherYellMainPage extends ConsumerWidget {
             ],
             title: const Text('TabBar Widget'),
           ),
-          body: Column(
-            children: [
-              Text('AAA'),
-              _tabBody(),
-              Text('BBB'),
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    ButtonWidget.iconMainWidget('a'),
+                    _speechMessage('つかれたーよおおおおお'),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 10,
+                  ),
+                  child: TextWidget.headLineText4('2日目達成！'),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 10,
+                  ),
+                  child: TextWidget.subTitleText1('メッセージを送ろう！'),
+                ),
+                _tabBody(otherAchievment),
+                Text('BBB'),
+              ],
+            ),
           )),
-    );
-  }
-
-  _choiceType(int index) {
-    return Column(
-      children: [
-        TextField(
-          // controller: _textEditingController,
-          maxLength: 20,
-          style: TextStyle(),
-          maxLines: 1,
-          decoration: InputDecoration(
-            hintText: '応援メッセージを入力',
-          ),
-        ),
-        ButtonWidget.rgisterdYellMessageWidget(200, 'がんばれー'),
-      ],
     );
   }
 
@@ -107,56 +107,22 @@ class OtherYellMainPage extends ConsumerWidget {
     );
   }
 
-  Widget _segmentWidget() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(5),
+  Widget _tabBody(OtherAchievment otherAchievment) {
+    // 応援メッセージタブ一覧
+    List<Tab> tabList = [
+      Tab(
+        child: TextWidget.headLineText6('今回'),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          InkWell(
-            onTap: () {},
-            child: Container(
-              margin: const EdgeInsets.only(
-                left: 0,
-                right: 0,
-              ),
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 10,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextWidget.headLineText6('今回'),
-            ),
-          ),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 10,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextWidget.headLineText6('次回'),
-            ),
-          ),
-          TextWidget.headLineText6('次の次'),
-        ],
+      Tab(
+        child: TextWidget.headLineText6('次回'),
       ),
-    );
-  }
+      Tab(
+        child: TextWidget.headLineText6('次の次'),
+      ),
+    ];
 
-  Widget _tabBody() {
     return DefaultTabController(
-      length: 4, // length of tabs
+      length: tabList.length, // length of tabs
       initialIndex: 0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -168,12 +134,7 @@ class OtherYellMainPage extends ConsumerWidget {
               },
               labelColor: Colors.green,
               unselectedLabelColor: Colors.black,
-              tabs: [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
-                Tab(text: 'Tab 3'),
-                Tab(text: 'Tab 4'),
-              ],
+              tabs: tabList,
             ),
           ),
           Container(
@@ -183,10 +144,44 @@ class OtherYellMainPage extends ConsumerWidget {
                       Border(top: BorderSide(color: Colors.grey, width: 0.5))),
               child: TabBarView(children: <Widget>[
                 Container(
-                  child: Center(
-                    child: Text('Display Tab 1',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Column(
+                    children: [
+                      Text('(達成した日付)の分のメッセージ'),
+                      TextField(
+                        controller: _textEditingControllerThisTime,
+                        maxLength: 20,
+                        style: TextStyle(),
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: '（例）えらい！',
+                          // errorText: errorText.isEmpty ? null : errorText,
+                        ),
+                        onSubmitted: (text) {
+                          // otherAchievment.thisTimeMessage = text;
+                          // otherAchievment.refreshNotifyListeners();
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              print('a');
+                              otherAchievment.thisTimeMessage =
+                                  _textEditingControllerThisTime.text;
+                              otherAchievment.refreshNotifyListeners();
+                            },
+                            child: TextWidget.subTitleText1('送信'),
+                          ),
+                        ],
+                      ),
+                      Text('届けたメッセージ'),
+                      Text(otherAchievment.thisTimeMessage),
+                    ],
                   ),
                 ),
                 Container(
@@ -203,16 +198,17 @@ class OtherYellMainPage extends ConsumerWidget {
                             fontSize: 22, fontWeight: FontWeight.bold)),
                   ),
                 ),
-                Container(
-                  child: Center(
-                    child: Text('Display Tab 4',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
-                  ),
-                ),
               ]))
         ],
       ),
+    );
+  }
+
+  Widget _speechMessage(String _text) {
+    return Bubble(
+      margin: BubbleEdges.only(top: 10),
+      nip: BubbleNip.leftTop,
+      child: Text(_text),
     );
   }
 }

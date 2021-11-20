@@ -134,4 +134,6 @@ class ButtonWidget {
       // ),
     );
   }
+
+  static speechMessageWidget(String text) {}
 }
