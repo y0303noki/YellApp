@@ -8,6 +8,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
+import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
 
 class OtherYellMainPage extends ConsumerWidget {
   @override
@@ -15,85 +16,63 @@ class OtherYellMainPage extends ConsumerWidget {
     final otherAchievment = ref.watch(otherAchievmentProvider);
     TextEditingController _textEditingController =
         TextEditingController(text: '');
+    //  TabController _tabController = TabController(length: 3, vsync: );
     final deviceSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: TextWidget.headLineText6('トップに戻る'),
+    AdvancedSegmentController _seg_value1 = AdvancedSegmentController('0');
+
+    // 応援メッセージ3回分
+    const List<String> yellMessages = const <String>['今回', '次回', '次の次'];
+    List<Tab> tabList = [
+      Tab(
+        child: Text('now'),
+      ),
+      Tab(
+        child: Text('now2'),
+      ),
+    ];
+
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 3,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                child: TextWidget.headLineText6('トップに戻る'),
+              ),
+            ],
+            title: const Text('TabBar Widget'),
           ),
-        ],
-      ),
-      body: Container(
-        margin: const EdgeInsets.only(
-          left: 0,
-          right: 0,
+          body: Column(
+            children: [
+              Text('AAA'),
+              _tabBody(),
+              Text('BBB'),
+            ],
+          )),
+    );
+  }
+
+  _choiceType(int index) {
+    return Column(
+      children: [
+        TextField(
+          // controller: _textEditingController,
+          maxLength: 20,
+          style: TextStyle(),
+          maxLines: 1,
+          decoration: InputDecoration(
+            hintText: '応援メッセージを入力',
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                // 達成ボタン
-                ButtonWidget.iconMainWidget('a'),
-                TextWidget.headLineText4('2日目達成！'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text('今回'),
-                          Text('次'),
-                          Text('次の次'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _selectDayWidth(deviceSize.width, 10, 0),
-                          const Divider(
-                            height: 0,
-                            thickness: 3,
-                          ),
-                          TextField(
-                            controller: _textEditingController,
-                            maxLength: 20,
-                            style: TextStyle(),
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: '応援メッセージを入力',
-                            ),
-                          ),
-                          ButtonWidget.rgisterdYellMessageWidget(
-                              deviceSize.width, 'がんばれー'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Text('過去の履歴を見る'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 50,
-                  ),
-                  child: ButtonWidget.registerYellComment(),
-                ),
-              ],
-            ),
-            Column(),
-          ],
-        ),
-      ),
+        ButtonWidget.rgisterdYellMessageWidget(200, 'がんばれー'),
+      ],
     );
   }
 
@@ -125,6 +104,115 @@ class OtherYellMainPage extends ConsumerWidget {
       indent: _indent,
       endIndent: _endIndent,
       color: Colors.red,
+    );
+  }
+
+  Widget _segmentWidget() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: () {},
+            child: Container(
+              margin: const EdgeInsets.only(
+                left: 0,
+                right: 0,
+              ),
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 10,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: TextWidget.headLineText6('今回'),
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 10,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: TextWidget.headLineText6('次回'),
+            ),
+          ),
+          TextWidget.headLineText6('次の次'),
+        ],
+      ),
+    );
+  }
+
+  Widget _tabBody() {
+    return DefaultTabController(
+      length: 4, // length of tabs
+      initialIndex: 0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            child: TabBar(
+              onTap: (value) {
+                print(value);
+              },
+              labelColor: Colors.green,
+              unselectedLabelColor: Colors.black,
+              tabs: [
+                Tab(text: 'Tab 1'),
+                Tab(text: 'Tab 2'),
+                Tab(text: 'Tab 3'),
+                Tab(text: 'Tab 4'),
+              ],
+            ),
+          ),
+          Container(
+              height: 400, //height of TabBarView
+              decoration: BoxDecoration(
+                  border:
+                      Border(top: BorderSide(color: Colors.grey, width: 0.5))),
+              child: TabBarView(children: <Widget>[
+                Container(
+                  child: Center(
+                    child: Text('Display Tab 1',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Text('Display Tab 2',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Text('Display Tab 3',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Text('Display Tab 4',
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ]))
+        ],
+      ),
     );
   }
 }

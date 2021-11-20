@@ -20,6 +20,7 @@ class OtherAchievment extends ChangeNotifier {
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
 
+  int messageType = 0; // 0 or 1 or 2
   String thisTimeMessage = ''; // 今回のメッセージ
   String nextTimeMessage = ''; // 次のメッセージ
   String next2TimeMessage = ''; // 次の次のメッセー
