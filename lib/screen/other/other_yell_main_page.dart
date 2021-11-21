@@ -68,8 +68,16 @@ class OtherYellMainPage extends ConsumerWidget {
                   ),
                   child: TextWidget.subTitleText1('メッセージを送ろう！'),
                 ),
-                _tabBody(otherAchievment),
-                Text('BBB'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 5,
+                    bottom: 10,
+                  ),
+                  child: _tabBody(otherAchievment),
+                ),
+                Text('過去のメッセージ'),
               ],
             ),
           )),
@@ -121,85 +129,111 @@ class OtherYellMainPage extends ConsumerWidget {
       ),
     ];
 
-    return DefaultTabController(
-      length: tabList.length, // length of tabs
-      initialIndex: 0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            child: TabBar(
-              onTap: (value) {
-                print(value);
-              },
-              labelColor: Colors.green,
-              unselectedLabelColor: Colors.black,
-              tabs: tabList,
+    return Container(
+      child: DefaultTabController(
+        length: tabList.length, // length of tabs
+        initialIndex: 0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              child: TabBar(
+                onTap: (value) {
+                  print(value);
+                },
+                labelColor: Colors.green,
+                unselectedLabelColor: Colors.black,
+                tabs: tabList,
+              ),
             ),
-          ),
-          Container(
-              height: 400, //height of TabBarView
-              decoration: BoxDecoration(
-                  border:
-                      Border(top: BorderSide(color: Colors.grey, width: 0.5))),
-              child: TabBarView(children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
+            Container(
+                height: 400, //height of TabBarView
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                    left: BorderSide(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                    right: BorderSide(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                    bottom: BorderSide(
+                      color: Colors.black,
+                      width: 1,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      Text('(達成した日付)の分のメッセージ'),
-                      TextField(
-                        controller: _textEditingControllerThisTime,
-                        maxLength: 20,
-                        style: TextStyle(),
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          hintText: '（例）えらい！',
-                          // errorText: errorText.isEmpty ? null : errorText,
-                        ),
-                        onSubmitted: (text) {
-                          // otherAchievment.thisTimeMessage = text;
-                          // otherAchievment.refreshNotifyListeners();
-                        },
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              print('a');
-                              otherAchievment.thisTimeMessage =
-                                  _textEditingControllerThisTime.text;
-                              otherAchievment.refreshNotifyListeners();
-                            },
-                            child: TextWidget.subTitleText1('送信'),
+                ),
+                child: TabBarView(children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                    ),
+                    child: Column(
+                      children: [
+                        Text('(達成した日付)の分のメッセージ'),
+                        TextField(
+                          controller: _textEditingControllerThisTime,
+                          maxLength: 20,
+                          style: TextStyle(),
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: '（例）えらい！',
+                            // errorText: errorText.isEmpty ? null : errorText,
                           ),
-                        ],
-                      ),
-                      Text('届けたメッセージ'),
-                      Text(otherAchievment.thisTimeMessage),
-                    ],
+                          onSubmitted: (text) {
+                            // otherAchievment.thisTimeMessage = text;
+                            // otherAchievment.refreshNotifyListeners();
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                print('a');
+                                otherAchievment.thisTimeMessage =
+                                    _textEditingControllerThisTime.text;
+                                otherAchievment.refreshNotifyListeners();
+                              },
+                              child: TextWidget.subTitleText1('送信'),
+                            ),
+                          ],
+                        ),
+                        Text('届けたメッセージ'),
+                        Text(otherAchievment.thisTimeMessage),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _yellMessage(otherAchievment.thisTimeMessage),
+                            ButtonWidget.iconMainWidget('a'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text('Display Tab 2',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  Container(
+                    child: Center(
+                      child: Text('Display Tab 2',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold)),
+                    ),
                   ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text('Display Tab 3',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                  Container(
+                    child: Center(
+                      child: Text('Display Tab 3',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold)),
+                    ),
                   ),
-                ),
-              ]))
-        ],
+                ]))
+          ],
+        ),
       ),
     );
   }
@@ -208,6 +242,14 @@ class OtherYellMainPage extends ConsumerWidget {
     return Bubble(
       margin: BubbleEdges.only(top: 10),
       nip: BubbleNip.leftTop,
+      child: Text(_text),
+    );
+  }
+
+  Widget _yellMessage(String _text) {
+    return Bubble(
+      margin: BubbleEdges.only(top: 10),
+      nip: BubbleNip.rightTop,
       child: Text(_text),
     );
   }
