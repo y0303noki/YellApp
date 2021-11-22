@@ -11,6 +11,14 @@ class TextWidget {
     );
   }
 
+  static headLineText3(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 48),
+      overflow: TextOverflow.clip,
+    );
+  }
+
   static headLineText4(String text) {
     return Text(
       text,

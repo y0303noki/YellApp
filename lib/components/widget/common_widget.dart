@@ -27,4 +27,19 @@ class CommonWidget {
     );
     return selectDateTime;
   }
+
+  static double defaultDescriptionWidth(double deviceWidth) {
+    return deviceWidth - 30;
+  }
+
+  static double defaultDescriptionHeight(double deviceWidth) {
+    return (deviceWidth - 20) / 2 - 10;
+  }
+
+  static Decoration defaultDescriptionDecoration() {
+    return BoxDecoration(
+      color: Colors.grey.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(20),
+    );
+  }
 }

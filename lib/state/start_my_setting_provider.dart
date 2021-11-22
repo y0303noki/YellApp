@@ -14,6 +14,7 @@ class StartMySetting extends ChangeNotifier {
   String endAtStr = '無期限';
   List<int> selectedWeekDay = [];
   int selectedHowManyTime = 7; // 週に何回
+  int selectedUnit = -1; // 日 or 回数
 
   // データを初期化
   void resetData() {
@@ -24,6 +25,11 @@ class StartMySetting extends ChangeNotifier {
     startAt = now;
     endAt = null;
     endAtStr = '無期限';
+    notifyListeners();
+  }
+
+  void selectUnit(int _unit) {
+    selectedUnit = _unit;
     notifyListeners();
   }
 

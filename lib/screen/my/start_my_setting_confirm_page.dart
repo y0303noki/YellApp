@@ -56,9 +56,9 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.headLineText5('1週間に'),
+                TextWidget.headLineText5('日にち or　回数'),
                 Container(
-                  child: Text(startMySetting.selectedHowManyTime.toString()),
+                  child: Text(startMySetting.selectedUnit.toString()),
                 ),
               ],
             ),
@@ -94,7 +94,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   TextButton(
                     onPressed: () {
                       sendMyGoalData(startMySetting, myAchievment, invite);
-                      // sendMySettingDataTest(startMySetting, myAchievment);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -149,7 +148,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       myName: startMySetting.myName,
-      howManyTimes: startMySetting.selectedHowManyTime,
+      unitType: startMySetting.selectedUnit,
     );
 
     // データ送信
@@ -169,7 +168,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     DateTime now = DateTime.now();
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
-      howManyTimes: startMySetting.selectedHowManyTime,
+      unitType: startMySetting.selectedUnit,
       createdAt: now,
       updatedAt: now,
     );
@@ -179,7 +178,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
 
     // firebaseから取得したとする
     myAchievment.goalTitle = model.goalTitle;
-    myAchievment.selectedHowManyTime = model.howManyTimes;
+    myAchievment.unitType = model.unitType;
 
     // memberIdリストを取得したとする
     myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];

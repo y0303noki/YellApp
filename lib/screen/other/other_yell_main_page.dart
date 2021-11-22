@@ -135,7 +135,7 @@ class OtherYellMainPage extends ConsumerWidget {
         initialIndex: 0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             Container(
               child: TabBar(
                 onTap: (value) {
@@ -147,7 +147,7 @@ class OtherYellMainPage extends ConsumerWidget {
               ),
             ),
             Container(
-                height: 400, //height of TabBarView
+                height: 300, //height of TabBarView
                 decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
@@ -186,10 +186,6 @@ class OtherYellMainPage extends ConsumerWidget {
                             hintText: '（例）えらい！',
                             // errorText: errorText.isEmpty ? null : errorText,
                           ),
-                          onSubmitted: (text) {
-                            // otherAchievment.thisTimeMessage = text;
-                            // otherAchievment.refreshNotifyListeners();
-                          },
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -201,12 +197,10 @@ class OtherYellMainPage extends ConsumerWidget {
                                     _textEditingControllerThisTime.text;
                                 otherAchievment.refreshNotifyListeners();
                               },
-                              child: TextWidget.subTitleText1('送信'),
+                              child: TextWidget.subTitleText1('更新'),
                             ),
                           ],
                         ),
-                        Text('届けたメッセージ'),
-                        Text(otherAchievment.thisTimeMessage),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -239,18 +233,25 @@ class OtherYellMainPage extends ConsumerWidget {
   }
 
   Widget _speechMessage(String _text) {
-    return Bubble(
-      margin: BubbleEdges.only(top: 10),
-      nip: BubbleNip.leftTop,
-      child: Text(_text),
+    return Expanded(
+      child: Bubble(
+        margin: BubbleEdges.only(top: 10),
+        nip: BubbleNip.leftTop,
+        child: Text(_text, textAlign: TextAlign.left),
+      ),
     );
   }
 
   Widget _yellMessage(String _text) {
-    return Bubble(
-      margin: BubbleEdges.only(top: 10),
-      nip: BubbleNip.rightTop,
-      child: Text(_text),
+    return Expanded(
+      child: Bubble(
+        margin: BubbleEdges.only(top: 10),
+        nip: BubbleNip.rightTop,
+        child: Text(
+          _text,
+          textAlign: TextAlign.right,
+        ),
+      ),
     );
   }
 }

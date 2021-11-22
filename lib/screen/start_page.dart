@@ -95,9 +95,21 @@ class StartPage extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, Object?>? _data = snapshot.data;
           if (_data == null) {
-            // データがない、おかしい
-            return const Center(
-              child: Text('エラーがおきました'),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartMySettingPage(),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  ButtonWidget.startMyButton(deviceSize.width),
+                  Text('友達に応援してもらう'),
+                ],
+              ),
             );
           }
           MyGoalModel goalData = _data['goal'] as MyGoalModel;
@@ -106,8 +118,6 @@ class StartPage extends ConsumerWidget {
           if (!goalData.isDeleted) {
             return GestureDetector(
               onTap: () {
-                // TODO:テスト用にメンバーidをセット
-                // List<String> _testMemberId = ['member-1', 'aember-2'];
                 goalData.memberIds = memberDatas.map((e) => e.id).toList();
                 myAchievment.setInitialData(goalData);
                 invite.id = goalData.inviteId;

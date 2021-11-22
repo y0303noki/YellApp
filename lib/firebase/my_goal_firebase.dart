@@ -53,8 +53,9 @@ class MyGoalFirebase {
       id: data['id'],
       goalTitle: data['title'] ?? '',
       myName: data['myName'] ?? '',
-      howManyTimes: data['howManyTimes'] ?? 1,
+      unitType: data['unitType'] ?? 0,
       currentDay: data['currentDay'] ?? 1,
+      currentTimes: data['currentTimes'] ?? 1,
       inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       isDeleted: data['isDeleted'] ?? false,
@@ -90,8 +91,9 @@ class MyGoalFirebase {
       tempGoalModel.id = data['id'];
       tempGoalModel.goalTitle = data['title'] ?? '';
       tempGoalModel.myName = data['myName'] ?? '';
-      tempGoalModel.howManyTimes = data['howManyTimes'] ?? 1;
+      tempGoalModel.unitType = data['unitType'] ?? 0;
       tempGoalModel.currentDay = data['currentDay'] ?? 1;
+      tempGoalModel.currentTimes = data['currentTimes'] ?? 1;
       tempGoalModel.inviteId = data['inviteId'] ?? '';
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.isDeleted = data['isDeleted'] ?? false;
@@ -114,8 +116,9 @@ class MyGoalFirebase {
     addObject['userId'] = _userId;
     addObject['title'] = myGoalModel.goalTitle;
     addObject['myName'] = myGoalModel.myName;
-    addObject['howManyTimes'] = myGoalModel.howManyTimes;
-    addObject['currentDay'] = 1;
+    addObject['unitType'] = myGoalModel.unitType;
+    addObject['currentDay'] = myGoalModel.unitType == 0 ? 1 : -1;
+    addObject['currentTimes'] = myGoalModel.unitType == 1 ? 1 : -1;
     addObject['updatedCurrentDayAt'] = null;
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
@@ -141,8 +144,9 @@ class MyGoalFirebase {
         id: docId,
         goalTitle: addObject['title'],
         myName: addObject['myName'],
-        howManyTimes: addObject['howManyTimes'],
+        unitType: addObject['unitType'],
         currentDay: addObject['currentDay'],
+        currentTimes: addObject['currentTimes'],
         inviteId: addObject['inviteId'],
         updatedCurrentDayAt: addObject['updatedCurrentDayAt'],
         isDeleted: addObject['isDeleted'] ?? false,
@@ -159,12 +163,18 @@ class MyGoalFirebase {
     }
   }
 
-  /// 達成ボタンを押して継続日付を更新
-  Future<void> updateAchieveCurrentDay(String docId, int newDay) async {
+  /// 達成ボタンを押して継続日付（回数）を更新
+  Future<void> updateAchieveCurrentDayOrTime(
+      String docId, int unitType, int newDayOrTime) async {
     // 新しい日付に更新
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
-    updateData['currentDay'] = newDay;
+    if (unitType == 0) {
+      updateData['currentDay'] = newDayOrTime;
+    } else if (unitType == 1) {
+      updateData['currentTimes'] = newDayOrTime;
+    }
+
     updateData['updatedCurrentDayAt'] = now;
     updateData['updatedAt'] = now;
 

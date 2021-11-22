@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
@@ -10,7 +8,6 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
-import 'package:yell_app/utility/dialog_utility.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -212,8 +209,6 @@ class MyAchievementPage extends ConsumerWidget {
 
             // 既に登録ずみ
             if (!goalData.isDeleted) {
-              // TODO:テスト用にメンバーidをセット
-              // List<String> _testMemberId = ['member-1', 'Bember-'];
               goalData.memberIds = memberDatas.map((e) => e.id).toList();
               myAchievment.setInitialData(goalData);
               invite.id = goalData.inviteId;
@@ -272,17 +267,15 @@ class MyAchievementPage extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   if (myAchievment.isTapedToday) {
-                    String? result =
-                        await DialogWidget().achieveCancelDialog(context);
-
-                    if (!(result != null && result == 'YES')) {
-                      // 何もしない
-                      return;
-                    }
+                    // 達成をキャンセルするとややこしいのでさせない
+                    return;
                   }
                   myAchievment.tapToday();
-                  _myGoalFirebase.updateAchieveCurrentDay(
-                      myAchievment.goalId, myAchievment.currentDay);
+                  int dayOrTime = myAchievment.unitType == 0
+                      ? myAchievment.currentDay
+                      : myAchievment.currentTime;
+                  _myGoalFirebase.updateAchieveCurrentDayOrTime(
+                      myAchievment.goalId, myAchievment.unitType, dayOrTime);
                 },
                 child: myAchievment.isTapedToday
                     ? ButtonWidget.achievementedToday(deviceSize.width)
@@ -304,10 +297,14 @@ class MyAchievementPage extends ConsumerWidget {
                         left: 5,
                         right: 5,
                       ),
-                      child: TextWidget.headLineText4(
-                          '${myAchievment.currentDay}'),
+                      child: myAchievment.unitType == 0
+                          ? TextWidget.headLineText4(
+                              '${myAchievment.currentDay}')
+                          : TextWidget.headLineText4(
+                              '${myAchievment.currentTime}'),
                     ),
-                    TextWidget.headLineText5('日目'),
+                    TextWidget.headLineText5(
+                        myAchievment.unitType == 0 ? '日目' : '回目'),
                   ],
                 ),
               ),
