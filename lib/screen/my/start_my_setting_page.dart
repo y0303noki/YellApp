@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/my/start_my_setting_myname_page.dart';
-import 'package:yell_app/screen/my/start_my_setting_weekday_page.dart';
+import 'package:yell_app/screen/my/start_my_setting_selectunit_page.dart';
 import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -36,7 +36,7 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText1('何を続けますか？'),
+                TextWidget.headLineText4('何を続けますか？'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,
@@ -72,7 +72,7 @@ class StartMySettingPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -87,11 +87,11 @@ class StartMySettingPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettinWeekdayPage(),
+                          builder: (context) => StartMySettingSelectUnitPage(),
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),

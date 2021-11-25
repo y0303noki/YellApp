@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  bubble:
+    dependency: "direct dev"
+    description:
+      name: bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   characters:
     dependency: transitive
     description:
@@ -132,6 +139,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_advanced_segment:
+    dependency: "direct dev"
+    description:
+      name: flutter_advanced_segment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1+2"
   flutter_hooks:
     dependency: "direct dev"
     description:

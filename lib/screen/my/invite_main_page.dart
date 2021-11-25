@@ -30,8 +30,8 @@ class InviteMainPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText2('おともだちを招待して'),
-                TextWidget.mainText2('応援してもらいましょう'),
+                TextWidget.headLineText5('おともだちを招待して'),
+                TextWidget.headLineText5('応援してもらいましょう'),
               ],
             ),
             Column(
@@ -113,7 +113,7 @@ class InviteMainPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                 ],
               ),

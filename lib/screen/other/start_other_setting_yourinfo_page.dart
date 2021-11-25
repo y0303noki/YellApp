@@ -3,18 +3,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
-import 'package:yell_app/state/other_setting_code_provider.dart';
-import 'package:yell_app/state/start_my_setting_provider.dart';
+import 'package:yell_app/state/other_achievment_provider.dart';
+
+MemberFirebase memberFirebase = MemberFirebase();
 
 class StartOtherSettingYourinfoPage extends ConsumerWidget {
   const StartOtherSettingYourinfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final otherSettingCode = ref.watch(otherSettingCodeProvider);
+    final otherAchievment = ref.watch(otherAchievmentProvider);
     TextEditingController _textEditingController =
-        TextEditingController(text: '');
+        TextEditingController(text: otherAchievment.otherName);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +34,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.mainText2('あなたのニックネームを教えてください'),
+                TextWidget.headLineText5('あなたのニックネームを教えてください'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 10,
@@ -39,7 +42,16 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: '（例）かな',
+                    errorText: otherAchievment.errorText.isEmpty
+                        ? null
+                        : otherAchievment.errorText,
                   ),
+                  onSubmitted: (text) {
+                    otherAchievment.otherName = text;
+                  },
+                  onChanged: (text) {
+                    otherAchievment.otherName = text;
+                  },
                 ),
               ],
             ),
@@ -63,10 +75,24 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      // ニックネームを反映
+                      if (_textEditingController.text.isEmpty) {
+                        // エラーを出す
+                        otherAchievment.setErrorText('入力してください。');
+                        return;
+                      } else {
+                        otherAchievment.setErrorText('');
+                      }
+                      // このタイミングでownerのデータにユーザーidを紐づける
+                      MemberModel _memberModel = MemberModel();
+                      _memberModel.memberName = otherAchievment.otherName;
+                      _memberModel.ownerGoalId = otherAchievment.goalId;
+                      addMemberData(_memberModel);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -74,7 +100,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('次へ'),
+                    child: TextWidget.headLineText5('次へ'),
                   )
                 ],
               ),
@@ -83,5 +109,10 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // ownerのgoalに自分のデータと名前を紐づける
+  addMemberData(MemberModel memberModel) async {
+    await memberFirebase.insertMemberData(memberModel);
   }
 }

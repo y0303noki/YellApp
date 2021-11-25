@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
@@ -10,7 +8,6 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
-import 'package:yell_app/utility/dialog_utility.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -33,7 +30,7 @@ class MyAchievementPage extends ConsumerWidget {
             onPressed: () {
               Navigator.popUntil(context, (route) => route.isFirst);
             },
-            child: TextWidget.mainText3('トップに戻る'),
+            child: TextWidget.headLineText6('トップに戻る'),
           ),
         ],
       ),
@@ -85,7 +82,7 @@ class MyAchievementPage extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            TextWidget.mainText3('まだメンバーがいません'),
+            TextWidget.headLineText6('まだメンバーがいません'),
             TextButton(
               onPressed: () {
                 // 招待ページに遷移
@@ -96,7 +93,7 @@ class MyAchievementPage extends ConsumerWidget {
                   ),
                 );
               },
-              child: TextWidget.mainText3('メンバーを追加する'),
+              child: TextWidget.headLineText6('メンバーを追加する'),
             ),
           ],
         ),
@@ -126,12 +123,18 @@ class MyAchievementPage extends ConsumerWidget {
     List<MemberModel> members = [];
     // テスト用のデータ作成
     for (String id in myAchievment.memberIdList) {
-      MemberModel tempMember = MemberModel(
-        id: id,
-        name: id + '-name',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      // MemberModel tempMember = MemberModel(
+      //   id: id,
+      //   memberName: id + '-name',
+      //   createdAt: DateTime.now(),
+      //   updatedAt: DateTime.now(),
+      // );
+      MemberModel tempMember = MemberModel();
+      tempMember.id = id;
+      tempMember.memberName = id + '-name';
+      tempMember.createdAt = DateTime.now();
+      tempMember.updatedAt = DateTime.now();
+
       members.add(tempMember);
     }
     List<String> memberIdList = myAchievment.memberIdList;
@@ -157,7 +160,7 @@ class MyAchievementPage extends ConsumerWidget {
             borderRadius: BorderRadius.circular(60 / 2),
           ),
           child: Center(
-            child: Text(member.name.substring(0, 1)),
+            child: Text(member.memberName.substring(0, 1)),
           ),
         ),
       );
@@ -175,7 +178,7 @@ class MyAchievementPage extends ConsumerWidget {
       myAchievment.refresh = false;
       return FutureBuilder(
         // future属性で非同期処理を書く
-        future: _myGoalFirebase.fetchMyGoalData(),
+        future: _myGoalFirebase.fetchGoalAndMemberData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           // 通信中
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -193,19 +196,24 @@ class MyAchievementPage extends ConsumerWidget {
 
           // 成功処理
           if (snapshot.connectionState == ConnectionState.done) {
-            MyGoalModel? _data = snapshot.data;
+            Map<String, Object?>? _data = snapshot.data;
+            if (_data == null) {
+              // データがない、おかしい
+              return const Center(
+                child: Text('エラーがおきました'),
+              );
+            }
+            MyGoalModel goalData = _data['goal'] as MyGoalModel;
+            List<MemberModel> memberDatas =
+                _data['members'] as List<MemberModel>;
+
             // 既に登録ずみ
-            if (_data != null && !_data.isDeleted) {
-              // TODO:テスト用にメンバーidをセット
-              // List<String> _testMemberId = ['member-1', 'Bember-'];
-              myAchievment.setInitialData(_data);
-              invite.id = _data.inviteId;
+            if (!goalData.isDeleted) {
+              goalData.memberIds = memberDatas.map((e) => e.id).toList();
+              myAchievment.setInitialData(goalData);
+              invite.id = goalData.inviteId;
 
               return _body(context, myAchievment);
-            } else {
-              // データが消えている場合はエラー
-              // 初期画面に戻る
-              return Container();
             }
           }
           return Container();
@@ -251,7 +259,7 @@ class MyAchievementPage extends ConsumerWidget {
               top: 10,
               bottom: 10,
             ),
-            child: TextWidget.mainText1(myAchievment.goalTitle),
+            child: TextWidget.headLineText4(myAchievment.goalTitle),
           ),
           Column(
             children: [
@@ -259,17 +267,18 @@ class MyAchievementPage extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   if (myAchievment.isTapedToday) {
-                    String? result =
-                        await DialogWidget().achieveCancelDialog(context);
-
-                    if (!(result != null && result == 'YES')) {
-                      // 何もしない
-                      return;
-                    }
+                    // 達成をキャンセルするとややこしいのでさせない
+                    return;
                   }
                   myAchievment.tapToday();
-                  _myGoalFirebase.updateAchieveCurrentDay(
-                      myAchievment.goalId, myAchievment.currentDay);
+                  int dayOrTime = myAchievment.unitType == 0
+                      ? myAchievment.currentDay
+                      : myAchievment.currentTime;
+                  _myGoalFirebase.updateAchieveCurrentDayOrTime(
+                      myAchievment.goalId,
+                      myAchievment.unitType,
+                      dayOrTime,
+                      myAchievment.achievedDayOrTime);
                 },
                 child: myAchievment.isTapedToday
                     ? ButtonWidget.achievementedToday(deviceSize.width)
@@ -285,22 +294,27 @@ class MyAchievementPage extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextWidget.mainText2('継続'),
+                    TextWidget.headLineText5('継続'),
                     Container(
                       padding: const EdgeInsets.only(
                         left: 5,
                         right: 5,
                       ),
-                      child: TextWidget.mainText1('${myAchievment.currentDay}'),
+                      child: myAchievment.unitType == 0
+                          ? TextWidget.headLineText4(
+                              '${myAchievment.currentDay}')
+                          : TextWidget.headLineText4(
+                              '${myAchievment.currentTime}'),
                     ),
-                    TextWidget.mainText2('日目'),
+                    TextWidget.headLineText5(
+                        myAchievment.unitType == 0 ? '日目' : '回目'),
                   ],
                 ),
               ),
               const Divider(
                 color: Colors.grey,
               ),
-              TextWidget.mainText2('応援してくれるメンバー'),
+              TextWidget.headLineText5('応援してくれるメンバー'),
               _memberWidget(context, myAchievment),
             ],
           ),

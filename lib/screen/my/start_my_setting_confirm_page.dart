@@ -40,7 +40,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextWidget.mainText2('続けること'),
+                TextWidget.headLineText5('続けること'),
                 Container(
                   margin: const EdgeInsets.only(
                     left: 30,
@@ -56,15 +56,15 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('1週間に'),
+                TextWidget.headLineText5('日にち or　回数'),
                 Container(
-                  child: Text(startMySetting.selectedHowManyTime.toString()),
+                  child: Text(startMySetting.selectedUnit.toString()),
                 ),
               ],
             ),
             Column(
               children: [
-                TextWidget.mainText2('あなたのなまえ'),
+                TextWidget.headLineText5('あなたのなまえ'),
                 Container(
                   child: Text(startMySetting.myName),
                 ),
@@ -72,8 +72,8 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             ),
             Column(
               children: [
-                TextWidget.mainText2('はじめますか？'),
-                TextWidget.mainText2('途中で変更することはできません。'),
+                TextWidget.headLineText5('はじめますか？'),
+                TextWidget.headLineText5('途中で変更することはできません。'),
               ],
             ),
             Container(
@@ -89,12 +89,11 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TextWidget.mainText2('戻る'),
+                    child: TextWidget.headLineText5('戻る'),
                   ),
                   TextButton(
                     onPressed: () {
                       sendMyGoalData(startMySetting, myAchievment, invite);
-                      // sendMySettingDataTest(startMySetting, myAchievment);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -102,7 +101,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                         ),
                       );
                     },
-                    child: TextWidget.mainText2('はじめる'),
+                    child: TextWidget.headLineText5('はじめる'),
                   )
                 ],
               ),
@@ -149,7 +148,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       myName: startMySetting.myName,
-      howManyTimes: startMySetting.selectedHowManyTime,
+      unitType: startMySetting.selectedUnit,
     );
 
     // データ送信
@@ -169,7 +168,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     DateTime now = DateTime.now();
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
-      howManyTimes: startMySetting.selectedHowManyTime,
+      unitType: startMySetting.selectedUnit,
       createdAt: now,
       updatedAt: now,
     );
@@ -179,7 +178,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
 
     // firebaseから取得したとする
     myAchievment.goalTitle = model.goalTitle;
-    myAchievment.selectedHowManyTime = model.howManyTimes;
+    myAchievment.unitType = model.unitType;
 
     // memberIdリストを取得したとする
     myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];
