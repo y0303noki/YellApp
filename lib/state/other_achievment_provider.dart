@@ -16,14 +16,16 @@ class OtherAchievment extends ChangeNotifier {
   List<String> memberIdList = []; // 応援しているメンバー
   bool isTapedToday = false; // 本日の分達成ずみフラグ
 
+  int unitType = 0; // 0:日 1:回数
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
+  int currentTime = 1; // 何回目？
+  DateTime? updateCurrentDayOrTime; // 達成した日付
+  String achievedDayOrTime = ''; // 達成したら2-ok
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
 
   int messageType = 0; // 0 or 1 or 2
-  String thisTimeMessage = ''; // 今回のメッセージ
-  String nextTimeMessage = ''; // 次のメッセージ
-  String nextTime2Message = ''; // 次の次のメッセー
+  String yellMessage = ''; // 今回のメッセージ
 
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;
@@ -36,6 +38,12 @@ class OtherAchievment extends ChangeNotifier {
   // エラーテキスト
   void setErrorText(String _text) {
     errorText = _text;
+    notifyListeners();
+  }
+
+  // 応援メッセージ更新
+  void setYellMessage(String _message) {
+    yellMessage = _message;
     notifyListeners();
   }
 

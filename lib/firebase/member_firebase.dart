@@ -108,20 +108,4 @@ class MemberFirebase {
       return {};
     }
   }
-
-  // /// 達成ボタンを押して継続日付を更新
-  // Future<void> updateAchieveCurrentDay(String docId, int newDay) async {
-  //   // 新しい日付に更新
-  //   Map<String, dynamic> updateData = {};
-  //   DateTime now = DateTime.now();
-  //   updateData['currentDay'] = newDay;
-  //   updateData['updatedCurrentDayAt'] = now;
-  //   updateData['updatedAt'] = now;
-
-  //   try {
-  //     await _firestore.collection(myGoals).doc(docId).update(updateData);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 }

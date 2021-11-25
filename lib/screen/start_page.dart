@@ -119,6 +119,7 @@ class StartPage extends ConsumerWidget {
             return GestureDetector(
               onTap: () {
                 goalData.memberIds = memberDatas.map((e) => e.id).toList();
+
                 myAchievment.setInitialData(goalData);
                 invite.id = goalData.inviteId;
 

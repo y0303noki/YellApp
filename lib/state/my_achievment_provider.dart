@@ -17,6 +17,7 @@ class MyAchievment extends ChangeNotifier {
 
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
   int currentTime = 0; // 何回目？
+  String achievedDayOrTime = ''; // 2日目達成 = '2-ok'
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
   DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
@@ -52,15 +53,17 @@ class MyAchievment extends ChangeNotifier {
 
   // 達成ボタンをタップ
   void tapToday() {
-    if (unitType == 0) {
-      if (!isTapedToday) {
-        currentDay++;
-      }
-    } else if (unitType == 1) {
-      if (!isTapedToday) {
-        currentTime++;
-      }
+    if (isTapedToday) {
+      return;
     }
+    // インクリメントする前の数字を使う
+    achievedDayOrTime = '$currentDay-ok';
+    if (unitType == 0) {
+      currentDay++;
+    } else if (unitType == 1) {
+      currentTime++;
+    }
+
     isTapedToday = true;
     notifyListeners();
   }

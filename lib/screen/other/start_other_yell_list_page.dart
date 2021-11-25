@@ -57,7 +57,19 @@ class StartOtherYellListPage extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           List<MyGoalModel> _goals = snapshot.data;
           if (_goals.isEmpty) {
-            return Container();
+            return Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StartOtherSettingCodePage(),
+                    ),
+                  );
+                },
+                child: TextWidget.headLineText6('招待コードを入力する'),
+              ),
+            );
           } else {
             return Column(
               children: [
@@ -117,6 +129,16 @@ class StartOtherYellListPage extends ConsumerWidget {
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
+          _otherAchievment.unitType = myGoalModel.unitType;
+          _otherAchievment.updateCurrentDayOrTime =
+              myGoalModel.updatedCurrentDayAt;
+          _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
+
+          if (_otherAchievment.unitType == 0) {
+            _otherAchievment.currentDay = myGoalModel.currentDay;
+          } else {
+            _otherAchievment.currentTime = myGoalModel.currentTimes;
+          }
           Navigator.push(
             context,
             MaterialPageRoute(

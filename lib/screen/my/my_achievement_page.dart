@@ -275,7 +275,10 @@ class MyAchievementPage extends ConsumerWidget {
                       ? myAchievment.currentDay
                       : myAchievment.currentTime;
                   _myGoalFirebase.updateAchieveCurrentDayOrTime(
-                      myAchievment.goalId, myAchievment.unitType, dayOrTime);
+                      myAchievment.goalId,
+                      myAchievment.unitType,
+                      dayOrTime,
+                      myAchievment.achievedDayOrTime);
                 },
                 child: myAchievment.isTapedToday
                     ? ButtonWidget.achievementedToday(deviceSize.width)
