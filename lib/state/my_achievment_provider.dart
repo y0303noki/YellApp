@@ -35,9 +35,11 @@ class MyAchievment extends ChangeNotifier {
     if (_myGoalModel.createdAt != null) {
       DateTime now = DateTime.now();
       DateTime nowDate = DateTime(now.year, now.month, now.day);
-      DateTime tapDate = DateTime(_myGoalModel.createdAt!.year,
-          _myGoalModel.createdAt!.month, _myGoalModel.createdAt!.day);
-      if (!nowDate.isAtSameMomentAs(tapDate)) {
+      DateTime tapDate = DateTime(
+          _myGoalModel.updatedCurrentDayAt!.year,
+          _myGoalModel.updatedCurrentDayAt!.month,
+          _myGoalModel.updatedCurrentDayAt!.day);
+      if (nowDate.isAfter(tapDate)) {
         isTapedToday = false;
       }
     }
