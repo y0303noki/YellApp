@@ -10,7 +10,6 @@ import 'package:bubble/bubble.dart';
 TextEditingController _textEditingController = TextEditingController(text: '');
 YellMessageFirebase yellMessageFirebase = YellMessageFirebase();
 bool isFirstFetchYellMessage = false;
-bool isAchieved = false; // True:達成済み False: 挑戦中
 
 class OtherYellMainPage extends ConsumerWidget {
   @override
@@ -33,42 +32,44 @@ class OtherYellMainPage extends ConsumerWidget {
         ],
         title: const Text('TabBar Widget'),
       ),
-      body: Consumer(
-        builder: (context, ref, child) {
-          return SingleChildScrollView(
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    ButtonWidget.iconMainWidget('a'),
-                    _speechMessage(otherAchievment.ownerAchievedment),
-                  ],
-                ),
-                _achievedCurrent(otherAchievment),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 5,
-                    bottom: 10,
-                  ),
-                  child: TextWidget.subTitleText1('メッセージを送ろう！'),
-                ),
-                _textEdit(otherAchievment),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 5,
-                    bottom: 10,
-                  ),
-                  child: _futureMessage(otherAchievment),
-                ),
-                Text('過去のメッセージ'),
+                ButtonWidget.iconMainWidget('a'),
+                _speechMessage(otherAchievment.ownerAchievedment),
               ],
             ),
-          );
-        },
+            _achievedCurrent(otherAchievment),
+            Container(
+              margin: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 5,
+                bottom: 10,
+              ),
+              child: TextWidget.subTitleText1('メッセージを送ろう！'),
+            ),
+            _textEdit(otherAchievment),
+            Container(
+              margin: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 5,
+                bottom: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _yellMessage(otherAchievment.yellMessage),
+                  ButtonWidget.iconMainWidget('a'),
+                ],
+              ),
+            ),
+            Text('過去のメッセージ'),
+          ],
+        ),
       ),
     );
   }
@@ -94,9 +95,8 @@ class OtherYellMainPage extends ConsumerWidget {
         showStr = '$showDayOrTime回目$str';
       }
     } else {
-      if (nowBefore12h.isBefore(updateAt)) {
+      if (otherAchievment.isAchieved) {
         // 達成済み
-        isAchieved = true;
         str = '達成済み';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay - 1;
@@ -107,7 +107,6 @@ class OtherYellMainPage extends ConsumerWidget {
         }
       } else {
         // 挑戦中
-        isAchieved = false;
         str = '挑戦中';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay;
@@ -181,7 +180,7 @@ Widget _futureMessage(OtherAchievment otherAchievment) {
         if (snapshot.connectionState == ConnectionState.done) {
           isFirstFetchYellMessage = true;
           int searchDayOrTime = 0;
-          if (isAchieved) {
+          if (otherAchievment.isAchieved) {
             searchDayOrTime = otherAchievment.currentDayOrTime - 1;
           } else {
             searchDayOrTime = otherAchievment.currentDayOrTime;
@@ -248,6 +247,7 @@ Widget _textEdit(OtherAchievment otherAchievment) {
       children: [
         Text('(達成した日付)の分のメッセージ'),
         TextField(
+          autofocus: true,
           controller: _textEditingController,
           enabled: otherAchievment.yellMessage.isEmpty,
           maxLength: 20,
@@ -271,7 +271,7 @@ Widget _textEdit(OtherAchievment otherAchievment) {
                         message: otherAchievment.yellMessage,
                       );
                       // x日目 or x回目
-                      if (isAchieved) {
+                      if (otherAchievment.isAchieved) {
                         yellMessageModel.dayOrTimes =
                             otherAchievment.currentDayOrTime - 1;
                       } else {

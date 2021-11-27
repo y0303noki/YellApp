@@ -1,11 +1,10 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/state/invite_provider.dart';
+import 'package:flutter/services.dart';
 
 InviteFirebase inviteFirebase = InviteFirebase();
 
@@ -53,10 +52,12 @@ class InviteMainPage extends ConsumerWidget {
                             ),
                           ),
                           onPressed: () async {
-                            // コピー
+                            // クリップボードにコピー
+                            final data = ClipboardData(text: invite.code);
+                            await Clipboard.setData(data);
                           },
                         ),
-                        Text('コピー'),
+                        const Text('コピー'),
                       ],
                     ),
                     Column(

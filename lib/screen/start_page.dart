@@ -54,7 +54,9 @@ class StartPage extends ConsumerWidget {
                         MaterialPageRoute(
                           builder: (context) => StartOtherYellListPage(),
                         ),
-                      );
+                      ).then((value) {
+                        myAchievment.refreshNotifyListeners();
+                      });
                     },
                     child: ButtonWidget.startAtherButton(deviceSize.width),
                   ),
@@ -102,7 +104,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => StartMySettingPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -128,7 +132,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => MyAchievementPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -145,7 +151,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => StartMySettingPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -164,7 +172,9 @@ class StartPage extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => StartMySettingPage(),
               ),
-            );
+            ).then((value) {
+              myAchievment.refreshNotifyListeners();
+            });
           },
           child: Column(
             children: [

@@ -44,6 +44,10 @@ class MyAchievment extends ChangeNotifier {
 
     // 達成ボタンを押した日付と現在の日付が同じか比較
     if (_myGoalModel.createdAt != null) {
+      if (_myGoalModel.updatedCurrentDayAt == null) {
+        isTapedToday = false;
+        return;
+      }
       DateTime now = DateTime.now();
       DateTime nowDate = DateTime(now.year, now.month, now.day);
       DateTime tapDate = DateTime(
