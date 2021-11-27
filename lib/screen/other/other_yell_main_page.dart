@@ -10,6 +10,7 @@ import 'package:bubble/bubble.dart';
 TextEditingController _textEditingController = TextEditingController(text: '');
 YellMessageFirebase yellMessageFirebase = YellMessageFirebase();
 bool isFirstFetchYellMessage = false;
+bool isAchieved = false; // True:達成済み False: 挑戦中
 
 class OtherYellMainPage extends ConsumerWidget {
   @override
@@ -95,7 +96,7 @@ class OtherYellMainPage extends ConsumerWidget {
     } else {
       if (nowBefore12h.isBefore(updateAt)) {
         // 達成済み
-
+        isAchieved = true;
         str = '達成済み';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay - 1;
@@ -106,6 +107,7 @@ class OtherYellMainPage extends ConsumerWidget {
         }
       } else {
         // 挑戦中
+        isAchieved = false;
         str = '挑戦中';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay;
@@ -153,6 +155,7 @@ Widget _yellMessage(String _text) {
 }
 
 Widget _futureMessage(OtherAchievment otherAchievment) {
+  isFirstFetchYellMessage = false;
   if (!isFirstFetchYellMessage) {
     // 初めて取得するとき
 
@@ -177,24 +180,37 @@ Widget _futureMessage(OtherAchievment otherAchievment) {
         // 成功処理
         if (snapshot.connectionState == ConnectionState.done) {
           isFirstFetchYellMessage = true;
+          int searchDayOrTime = 0;
+          if (isAchieved) {
+            searchDayOrTime = otherAchievment.currentDayOrTime - 1;
+          } else {
+            searchDayOrTime = otherAchievment.currentDayOrTime;
+          }
+
           // -okの部分を削除。
           // 現在オーナー側に表示されている数字を取得できる
 
           // int messageDayOrTime = int.parse(otherAchievment.achievedDayOrTime
           //     .substring(0, otherAchievment.achievedDayOrTime.length - 3));
 
-          // List<YellMessage> _data = snapshot.data;
-          // if (_data.isEmpty) {}
+          List<YellMessage> _data = snapshot.data;
+          if (_data.isEmpty) {}
 
-          // int dayOrTimes = 0;
-          // YellMessage? myMessage;
-          // for (YellMessage yellMessage in _data) {
-          //   // 既に応援メッセージを送信ずみ
-          //   if (yellMessage.dayOrTimes == messageDayOrTime) {
-          //     myMessage = yellMessage;
-          //     break;
-          //   }
-          // }
+          int dayOrTimes = 0;
+          YellMessage? myMessage;
+          for (YellMessage yellMessage in _data) {
+            // 既に応援メッセージを送信ずみ
+            if (yellMessage.dayOrTimes == searchDayOrTime) {
+              myMessage = yellMessage;
+              print(myMessage.message);
+              otherAchievment.yellMessage = myMessage.message;
+              break;
+            }
+          }
+          if (myMessage == null) {
+            print('NO MEssage');
+            otherAchievment.yellMessage = '';
+          }
           return Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -255,13 +271,14 @@ Widget _textEdit(OtherAchievment otherAchievment) {
                         message: otherAchievment.yellMessage,
                       );
                       // x日目 or x回目
-                      if (otherAchievment.unitType == 0) {
+                      if (isAchieved) {
                         yellMessageModel.dayOrTimes =
-                            otherAchievment.currentDay;
+                            otherAchievment.currentDayOrTime - 1;
                       } else {
                         yellMessageModel.dayOrTimes =
-                            otherAchievment.currentTime;
+                            otherAchievment.currentDayOrTime;
                       }
+
                       yellMessageFirebase
                           .insertYellMessageData(yellMessageModel);
 

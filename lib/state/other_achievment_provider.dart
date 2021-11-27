@@ -28,6 +28,15 @@ class OtherAchievment extends ChangeNotifier {
   int messageType = 0; // 0 or 1 or 2
   String yellMessage = ''; // 今回のメッセージ
 
+  // 現在の日付or回数を返す
+  int get currentDayOrTime {
+    if (unitType == 0) {
+      return currentDay;
+    } else {
+      return currentTime;
+    }
+  }
+
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;
     goalTitle = _ownerGoalModel.goalTitle;
