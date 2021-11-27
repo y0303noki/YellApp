@@ -125,7 +125,6 @@ class StartOtherYellListPage extends ConsumerWidget {
         ),
         leading: ButtonWidget.iconMainMiniWidget(_iconName),
         onTap: () {
-          print("onTap called.");
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
@@ -133,7 +132,7 @@ class StartOtherYellListPage extends ConsumerWidget {
           _otherAchievment.updateCurrentDayOrTime =
               myGoalModel.updatedCurrentDayAt;
           _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
-
+          _otherAchievment.ownerAchievedment = myGoalModel.achievedMyComment;
           if (_otherAchievment.unitType == 0) {
             _otherAchievment.currentDay = myGoalModel.currentDay;
           } else {

@@ -15,6 +15,7 @@ class OtherAchievment extends ChangeNotifier {
   String otherName = ''; // 応援している自分の名前
   List<String> memberIdList = []; // 応援しているメンバー
   bool isTapedToday = false; // 本日の分達成ずみフラグ
+  String ownerAchievedment = ''; // オーナーが達成したときのひとこと
 
   int unitType = 0; // 0:日 1:回数
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）

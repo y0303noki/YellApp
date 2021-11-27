@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
@@ -274,11 +275,17 @@ class MyAchievementPage extends ConsumerWidget {
                   int dayOrTime = myAchievment.unitType == 0
                       ? myAchievment.currentDay
                       : myAchievment.currentTime;
-                  _myGoalFirebase.updateAchieveCurrentDayOrTime(
+
+                  // 一言コメント
+                  String achievedMyMessage =
+                      await DialogWidget().achievedMyMessagelDialog(context);
+
+                  await _myGoalFirebase.updateAchieveCurrentDayOrTime(
                       myAchievment.goalId,
                       myAchievment.unitType,
                       dayOrTime,
-                      myAchievment.achievedDayOrTime);
+                      myAchievment.achievedDayOrTime,
+                      achievedMyMessage);
                 },
                 child: myAchievment.isTapedToday
                     ? ButtonWidget.achievementedToday(deviceSize.width)

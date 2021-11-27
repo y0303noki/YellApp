@@ -59,6 +59,7 @@ class MyGoalFirebase {
       inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       achievedDayOrTime: data['tempGoalModel'] ?? '',
+      achievedMyComment: data['achievedMyComment'] ?? '',
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -98,6 +99,7 @@ class MyGoalFirebase {
       tempGoalModel.inviteId = data['inviteId'] ?? '';
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
+      tempGoalModel.achievedMyComment = data['achievedMyComment'] ?? '';
       tempGoalModel.isDeleted = data['isDeleted'] ?? false;
       tempGoalModel.createdAt = data['createdAt'].toDate();
       tempGoalModel.updatedAt = data['updatedAt'].toDate();
@@ -122,6 +124,7 @@ class MyGoalFirebase {
     addObject['currentDay'] = myGoalModel.unitType == 0 ? 1 : -1;
     addObject['currentTimes'] = myGoalModel.unitType == 1 ? 1 : -1;
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
+    addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
@@ -153,6 +156,7 @@ class MyGoalFirebase {
         inviteId: addObject['inviteId'],
         updatedCurrentDayAt: addObject['updatedCurrentDayAt'],
         achievedDayOrTime: addObject['achievedDayOrTime'],
+        achievedMyComment: addObject['achievedMyComment'],
         isDeleted: addObject['isDeleted'] ?? false,
         createdAt: addObject['createdAt'],
         updatedAt: addObject['updatedAt'],
@@ -168,8 +172,12 @@ class MyGoalFirebase {
   }
 
   /// 達成ボタンを押して継続日付（回数）を更新
-  Future<void> updateAchieveCurrentDayOrTime(String docId, int unitType,
-      int newDayOrTime, String achievedDayOrTime) async {
+  Future<void> updateAchieveCurrentDayOrTime(
+      String docId,
+      int unitType,
+      int newDayOrTime,
+      String achievedDayOrTime,
+      String achievedMyComment) async {
     // 新しい日付に更新
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
@@ -179,6 +187,7 @@ class MyGoalFirebase {
       updateData['currentTimes'] = newDayOrTime;
     }
     updateData['achievedDayOrTime'] = achievedDayOrTime;
+    updateData['achievedMyComment'] = achievedMyComment;
     updateData['updatedCurrentDayAt'] = now;
     updateData['updatedAt'] = now;
 

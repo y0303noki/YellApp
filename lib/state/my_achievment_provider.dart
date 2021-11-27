@@ -59,10 +59,11 @@ class MyAchievment extends ChangeNotifier {
       return;
     }
     // インクリメントする前の数字を使う
-    achievedDayOrTime = '$currentDay-ok';
     if (unitType == 0) {
+      achievedDayOrTime = '$currentDay-ok';
       currentDay++;
     } else if (unitType == 1) {
+      achievedDayOrTime = '$currentTime-ok';
       currentTime++;
     }
 
