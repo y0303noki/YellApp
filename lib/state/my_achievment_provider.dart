@@ -22,6 +22,15 @@ class MyAchievment extends ChangeNotifier {
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
   DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
 
+  // day or time
+  int get currentDayOrTime {
+    if (unitType == 0) {
+      return currentDay;
+    } else {
+      return currentTime;
+    }
+  }
+
   void setInitialData(MyGoalModel _myGoalModel) {
     goalId = _myGoalModel.id;
     goalTitle = _myGoalModel.goalTitle;
@@ -30,6 +39,8 @@ class MyAchievment extends ChangeNotifier {
     memberIdList = _myGoalModel.memberIds;
     refresh = false;
     inviteId = _myGoalModel.inviteId;
+    currentDay = _myGoalModel.currentDay;
+    currentTime = _myGoalModel.currentTimes;
 
     // 達成ボタンを押した日付と現在の日付が同じか比較
     if (_myGoalModel.createdAt != null) {
@@ -41,6 +52,8 @@ class MyAchievment extends ChangeNotifier {
           _myGoalModel.updatedCurrentDayAt!.day);
       if (nowDate.isAfter(tapDate)) {
         isTapedToday = false;
+      } else {
+        isTapedToday = true;
       }
     }
   }

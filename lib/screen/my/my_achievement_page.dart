@@ -28,6 +28,13 @@ class MyAchievementPage extends ConsumerWidget {
         elevation: 0,
         actions: [
           TextButton(
+            onPressed: () async {
+              await _myGoalFirebase.deleteMyGoalData(myAchievment.goalId);
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            child: TextWidget.headLineText6('目標をやり直す'),
+          ),
+          TextButton(
             onPressed: () {
               Navigator.popUntil(context, (route) => route.isFirst);
             },
@@ -45,25 +52,6 @@ class MyAchievementPage extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           child: _futureBody(context, myAchievment, invite),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).canvasColor,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'ホーム',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: '設定',
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.amber[800],
-        onTap: (index) {
-          // フッターを押して画面切り替え
-          // bottomNavigationData.setCurrentIndex(index);
-        },
       ),
     );
   }
@@ -272,9 +260,7 @@ class MyAchievementPage extends ConsumerWidget {
                     return;
                   }
                   myAchievment.tapToday();
-                  int dayOrTime = myAchievment.unitType == 0
-                      ? myAchievment.currentDay
-                      : myAchievment.currentTime;
+                  int dayOrTime = myAchievment.currentDayOrTime;
 
                   // 一言コメント
                   String achievedMyMessage =
@@ -307,11 +293,11 @@ class MyAchievementPage extends ConsumerWidget {
                         left: 5,
                         right: 5,
                       ),
-                      child: myAchievment.unitType == 0
+                      child: myAchievment.isTapedToday
                           ? TextWidget.headLineText4(
-                              '${myAchievment.currentDay}')
+                              '${myAchievment.currentDayOrTime - 1}')
                           : TextWidget.headLineText4(
-                              '${myAchievment.currentTime}'),
+                              '${myAchievment.currentDayOrTime}'),
                     ),
                     TextWidget.headLineText5(
                         myAchievment.unitType == 0 ? '日目' : '回目'),

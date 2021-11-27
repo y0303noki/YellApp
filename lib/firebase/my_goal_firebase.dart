@@ -197,4 +197,9 @@ class MyGoalFirebase {
       print(e);
     }
   }
+
+  /// 指定されたidの目標データを物理削除する
+  Future<void> deleteMyGoalData(String goalId) async {
+    _firestore.collection(myGoals).doc(goalId).delete();
+  }
 }
