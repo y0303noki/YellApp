@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 
 class ButtonWidget {
@@ -12,7 +13,7 @@ class ButtonWidget {
       height: 100,
       width: deviceWidth * 0.8,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: CommonWidget.defaultButtonColor(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(child: TextWidget.mainButtonText('自分の記録を始める')),
@@ -25,7 +26,7 @@ class ButtonWidget {
       height: 100,
       width: deviceWidth * 0.8,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: CommonWidget.defaultButtonColor(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -40,7 +41,7 @@ class ButtonWidget {
       height: 100,
       width: deviceWidth * 0.8,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: CommonWidget.defaultButtonColor(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -55,11 +56,11 @@ class ButtonWidget {
       height: 100,
       width: deviceWidth * 0.8,
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: Colors.grey[300],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: TextWidget.mainButtonText('達成ずみ'),
+        child: TextWidget.mainButtonText('達成'),
       ),
     );
   }

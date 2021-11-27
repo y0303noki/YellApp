@@ -6,7 +6,6 @@ class TextWidget {
       text,
       style: const TextStyle(
         fontSize: 28,
-        color: Colors.white,
       ),
     );
   }
