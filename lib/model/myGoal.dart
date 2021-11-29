@@ -10,6 +10,7 @@ class MyGoalModel {
   int currentTimes = 0; // 何回目？
   DateTime? updatedCurrentDayAt; // 完了した日付
   String achievedDayOrTime = ''; // 2日目が完了 '2-ok'
+  String achievedMyComment = '';
   bool isDeleted = false;
   List<String> memberIds = [];
   String inviteId = '';
@@ -24,6 +25,7 @@ class MyGoalModel {
     this.currentTimes = 0,
     this.updatedCurrentDayAt,
     this.achievedDayOrTime = '',
+    this.achievedMyComment = '',
     this.isDeleted = false,
     this.memberIds = const [],
     this.inviteId = '',

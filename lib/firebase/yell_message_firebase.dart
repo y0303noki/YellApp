@@ -11,7 +11,7 @@ class YellMessageFirebase {
   // コレクション名前
   final String yellMessage = 'yell_messages';
 
-  /// 招待コードを自分のuserIdで検索
+  /// 応援メッセージをgoalIdで検索
   Future<List<YellMessage>> fetchMyGoalYellMessage(String goalId) async {
     final QuerySnapshot snapshots = await _firestore
         .collection(yellMessage)
@@ -20,27 +20,22 @@ class YellMessageFirebase {
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;
-    if (docs.isEmpty) {
-      return [];
-    }
+    return _mapYellMEssageFromDocs(docs);
+  }
 
-    List<YellMessage> yellMessages = [];
-    for (QueryDocumentSnapshot doc in docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      YellMessage tempYellMessage = YellMessage(
-        id: data['id'] ?? '',
-        goalId: data['goalId'] ?? '',
-        dayOrTimes: data['dayOrTimes'] ?? 0,
-        memberId: data['memberId'] ?? '',
-        message: data['message'] ?? '',
-        isDeleted: data['isDeleted'] ?? false,
-        createdAt: data['createdAt']?.toDate(),
-        updatedAt: data['updatedAt']?.toDate(),
-      );
-      yellMessages.add(tempYellMessage);
-    }
+  /// 応援メッセージを自分のGoalIdと現在の分だけ取得
+  Future<List<YellMessage>> fetchMyGoalYellMessageByGoalIdAndNowTime(
+      String goalId, int dayOrTimes) async {
+    List<int> list = [dayOrTimes - 1, dayOrTimes, dayOrTimes + 1];
+    final QuerySnapshot snapshots = await _firestore
+        .collection(yellMessage)
+        .where('goalId', isEqualTo: goalId)
+        .where('dayOrTimes', whereIn: list)
+        .where('isDeleted', isEqualTo: false)
+        .get();
 
-    return yellMessages;
+    List<QueryDocumentSnapshot> docs = snapshots.docs;
+    return _mapYellMEssageFromDocs(docs);
   }
 
   /// 応援メッセージを追加
@@ -87,24 +82,27 @@ class YellMessageFirebase {
     }
   }
 
-  // /// 招待コードを更新
-  // Future<InviteModel?> updateInviteCode(String docId) async {
-  //   // 新しい日付に更新
-  //   Map<String, dynamic> updateData = {};
-  //   DateTime now = DateTime.now();
-  //   DateTime nowAdd24h = now.add(const Duration(hours: 24));
-  //   String code = _uuid.v4().replaceAll('-', '').substring(0, 10);
+  // docsを応援メッセージにマッピングする
+  List<YellMessage> _mapYellMEssageFromDocs(List<QueryDocumentSnapshot> docs) {
+    if (docs.isEmpty) {
+      return [];
+    }
 
-  //   updateData['code'] = code;
-  //   updateData['expiredAt'] = nowAdd24h;
-  //   updateData['updatedAt'] = now;
-
-  //   try {
-  //     await _firestore.collection(invite).doc(docId).update(updateData);
-  //     return await fetchOwnInviteFirst(docId);
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
+    List<YellMessage> yellMessages = [];
+    for (QueryDocumentSnapshot doc in docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      YellMessage tempYellMessage = YellMessage(
+        id: data['id'] ?? '',
+        goalId: data['goalId'] ?? '',
+        dayOrTimes: data['dayOrTimes'] ?? 0,
+        memberId: data['memberId'] ?? '',
+        message: data['message'] ?? '',
+        isDeleted: data['isDeleted'] ?? false,
+        createdAt: data['createdAt']?.toDate(),
+        updatedAt: data['updatedAt']?.toDate(),
+      );
+      yellMessages.add(tempYellMessage);
+    }
+    return yellMessages;
+  }
 }

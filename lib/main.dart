@@ -13,6 +13,7 @@ Future<void> main() async {
     ProviderScope(
       child: MaterialApp(
         home: LoginCheckPage(),
+        theme: ThemeData(primaryColor: Colors.blueGrey),
       ),
     ),
   );

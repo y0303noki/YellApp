@@ -15,6 +15,7 @@ class OtherAchievment extends ChangeNotifier {
   String otherName = ''; // 応援している自分の名前
   List<String> memberIdList = []; // 応援しているメンバー
   bool isTapedToday = false; // 本日の分達成ずみフラグ
+  String ownerAchievedment = ''; // オーナーが達成したときのひとこと
 
   int unitType = 0; // 0:日 1:回数
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
@@ -26,6 +27,37 @@ class OtherAchievment extends ChangeNotifier {
 
   int messageType = 0; // 0 or 1 or 2
   String yellMessage = ''; // 今回のメッセージ
+
+  // 達成済みか否か
+  bool get isAchieved {
+    // 達成してから12時間以内は「達成済み」
+    // 12時間後は「挑戦中」
+    DateTime now = DateTime.now();
+    DateTime nowBefore12h = now.add(
+      const Duration(hours: -12),
+    );
+    if (updateCurrentDayOrTime == null) {
+      // まだ1つも達成していないので挑戦中
+      return false;
+    }
+
+    if (nowBefore12h.isBefore(updateCurrentDayOrTime!)) {
+      // 達成済み
+      return true;
+    } else {
+      // 挑戦中
+      return false;
+    }
+  }
+
+  // 現在の日付or回数を返す
+  int get currentDayOrTime {
+    if (unitType == 0) {
+      return currentDay;
+    } else {
+      return currentTime;
+    }
+  }
 
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;

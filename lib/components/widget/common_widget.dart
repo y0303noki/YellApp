@@ -36,6 +36,11 @@ class CommonWidget {
     return (deviceWidth - 20) / 2 - 10;
   }
 
+  /// ボタンの基本色
+  static Color defaultButtonColor() {
+    return Colors.lightGreen;
+  }
+
   static Decoration defaultDescriptionDecoration() {
     return BoxDecoration(
       color: Colors.grey.withOpacity(0.2),

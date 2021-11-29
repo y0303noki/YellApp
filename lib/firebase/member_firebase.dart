@@ -20,7 +20,7 @@ class MemberFirebase {
         .collection(members)
         .where('memberUserId', isEqualTo: userId)
         .where('isDeleted', isEqualTo: false)
-        .limit(5) // 5個までにしておく
+        .limit(20) // 20個までにしておく
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;

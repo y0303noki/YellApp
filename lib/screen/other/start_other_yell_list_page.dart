@@ -7,6 +7,7 @@ import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
@@ -124,8 +125,7 @@ class StartOtherYellListPage extends ConsumerWidget {
           style: const TextStyle(color: Colors.black, fontSize: 18.0),
         ),
         leading: ButtonWidget.iconMainMiniWidget(_iconName),
-        onTap: () {
-          print("onTap called.");
+        onTap: () async {
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
@@ -133,12 +133,15 @@ class StartOtherYellListPage extends ConsumerWidget {
           _otherAchievment.updateCurrentDayOrTime =
               myGoalModel.updatedCurrentDayAt;
           _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
-
+          _otherAchievment.ownerAchievedment = myGoalModel.achievedMyComment;
           if (_otherAchievment.unitType == 0) {
             _otherAchievment.currentDay = myGoalModel.currentDay;
           } else {
             _otherAchievment.currentTime = myGoalModel.currentTimes;
           }
+          // メッセージを取得
+          await selectYellMessage(_otherAchievment);
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -152,4 +155,33 @@ class StartOtherYellListPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+// 自分が送信した応援メッセージを取得してセット
+Future<void> selectYellMessage(OtherAchievment _otherAchievment) async {
+  List<YellMessage> messages =
+      await yellMessageFirebase.fetchMyGoalYellMessage(_otherAchievment.goalId);
+
+  int searchDayOrTime = 0;
+  if (_otherAchievment.isAchieved) {
+    searchDayOrTime = _otherAchievment.currentDayOrTime - 1;
+  } else {
+    searchDayOrTime = _otherAchievment.currentDayOrTime;
+  }
+
+  YellMessage? myMessage;
+  for (YellMessage yellMessage in messages) {
+    // 既に応援メッセージを送信ずみ
+    if (yellMessage.dayOrTimes == searchDayOrTime) {
+      myMessage = yellMessage;
+      print(myMessage.message);
+      _otherAchievment.yellMessage = myMessage.message;
+      break;
+    }
+  }
+  if (myMessage == null) {
+    print('NO MEssage');
+    _otherAchievment.yellMessage = '';
+  }
+  return;
 }

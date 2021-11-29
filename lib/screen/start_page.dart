@@ -5,6 +5,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/my_achievement_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
@@ -54,7 +55,9 @@ class StartPage extends ConsumerWidget {
                         MaterialPageRoute(
                           builder: (context) => StartOtherYellListPage(),
                         ),
-                      );
+                      ).then((value) {
+                        myAchievment.refreshNotifyListeners();
+                      });
                     },
                     child: ButtonWidget.startAtherButton(deviceSize.width),
                   ),
@@ -102,7 +105,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => StartMySettingPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -114,13 +119,15 @@ class StartPage extends ConsumerWidget {
           }
           MyGoalModel goalData = _data['goal'] as MyGoalModel;
           List<MemberModel> memberDatas = _data['members'] as List<MemberModel>;
+          List<YellMessage> messages = _data['messages'] as List<YellMessage>;
           // 既に登録ずみ
           if (!goalData.isDeleted) {
             return GestureDetector(
               onTap: () {
-                goalData.memberIds = memberDatas.map((e) => e.id).toList();
+                goalData.memberIds =
+                    memberDatas.map((e) => e.memberUserId).toList();
 
-                myAchievment.setInitialData(goalData);
+                myAchievment.setInitialData(goalData, messages);
                 invite.id = goalData.inviteId;
 
                 Navigator.push(
@@ -128,7 +135,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => MyAchievementPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -145,7 +154,9 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => StartMySettingPage(),
                   ),
-                );
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
               },
               child: Column(
                 children: [
@@ -164,7 +175,9 @@ class StartPage extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => StartMySettingPage(),
               ),
-            );
+            ).then((value) {
+              myAchievment.refreshNotifyListeners();
+            });
           },
           child: Column(
             children: [

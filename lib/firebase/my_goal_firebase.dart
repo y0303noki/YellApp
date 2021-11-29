@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
+import 'package:yell_app/firebase/yell_message_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,6 +14,8 @@ class MyGoalFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final InviteFirebase _inviteFirebase = InviteFirebase();
   final MemberFirebase _memberFirebase = MemberFirebase();
+  final YellMessageFirebase _yellMessageFirebase = YellMessageFirebase();
+
   Uuid _uuid = Uuid();
 
   // コレクション名前
@@ -21,12 +25,27 @@ class MyGoalFirebase {
   Future<Map<String, Object?>?> fetchGoalAndMemberData() async {
     Map<String, Object?> result = {};
     MyGoalModel? goalData = await fetchGoalData();
+    List<MemberModel> members = [];
     if (goalData != null) {
-      List<MemberModel> members = await _fetchMember(goalData.id);
+      members = await _fetchMember(goalData.id);
       result['goal'] = goalData;
       result['members'] = members;
     } else {
       return null;
+    }
+
+    // メンバーデータがあれば応援メッセージも取得
+    if (members.isNotEmpty) {
+      int dayOrTimes = 0;
+      if (goalData.unitType == 0) {
+        dayOrTimes = goalData.currentDay;
+      } else {
+        dayOrTimes = goalData.currentTimes;
+      }
+      // 対象となる日付のメッセージだけ取得
+      List<YellMessage> messages = await _yellMessageFirebase
+          .fetchMyGoalYellMessageByGoalIdAndNowTime(goalData.id, dayOrTimes);
+      result['messages'] = messages;
     }
     return result;
   }
@@ -59,6 +78,7 @@ class MyGoalFirebase {
       inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       achievedDayOrTime: data['tempGoalModel'] ?? '',
+      achievedMyComment: data['achievedMyComment'] ?? '',
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -98,6 +118,7 @@ class MyGoalFirebase {
       tempGoalModel.inviteId = data['inviteId'] ?? '';
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
+      tempGoalModel.achievedMyComment = data['achievedMyComment'] ?? '';
       tempGoalModel.isDeleted = data['isDeleted'] ?? false;
       tempGoalModel.createdAt = data['createdAt'].toDate();
       tempGoalModel.updatedAt = data['updatedAt'].toDate();
@@ -122,6 +143,7 @@ class MyGoalFirebase {
     addObject['currentDay'] = myGoalModel.unitType == 0 ? 1 : -1;
     addObject['currentTimes'] = myGoalModel.unitType == 1 ? 1 : -1;
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
+    addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
@@ -153,6 +175,7 @@ class MyGoalFirebase {
         inviteId: addObject['inviteId'],
         updatedCurrentDayAt: addObject['updatedCurrentDayAt'],
         achievedDayOrTime: addObject['achievedDayOrTime'],
+        achievedMyComment: addObject['achievedMyComment'],
         isDeleted: addObject['isDeleted'] ?? false,
         createdAt: addObject['createdAt'],
         updatedAt: addObject['updatedAt'],
@@ -168,8 +191,12 @@ class MyGoalFirebase {
   }
 
   /// 達成ボタンを押して継続日付（回数）を更新
-  Future<void> updateAchieveCurrentDayOrTime(String docId, int unitType,
-      int newDayOrTime, String achievedDayOrTime) async {
+  Future<void> updateAchieveCurrentDayOrTime(
+      String docId,
+      int unitType,
+      int newDayOrTime,
+      String achievedDayOrTime,
+      String achievedMyComment) async {
     // 新しい日付に更新
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
@@ -179,6 +206,7 @@ class MyGoalFirebase {
       updateData['currentTimes'] = newDayOrTime;
     }
     updateData['achievedDayOrTime'] = achievedDayOrTime;
+    updateData['achievedMyComment'] = achievedMyComment;
     updateData['updatedCurrentDayAt'] = now;
     updateData['updatedAt'] = now;
 
@@ -187,5 +215,10 @@ class MyGoalFirebase {
     } catch (e) {
       print(e);
     }
+  }
+
+  /// 指定されたidの目標データを物理削除する
+  Future<void> deleteMyGoalData(String goalId) async {
+    _firestore.collection(myGoals).doc(goalId).delete();
   }
 }
