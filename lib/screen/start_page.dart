@@ -124,7 +124,8 @@ class StartPage extends ConsumerWidget {
           if (!goalData.isDeleted) {
             return GestureDetector(
               onTap: () {
-                goalData.memberIds = memberDatas.map((e) => e.id).toList();
+                goalData.memberIds =
+                    memberDatas.map((e) => e.memberUserId).toList();
 
                 myAchievment.setInitialData(goalData, messages);
                 invite.id = goalData.inviteId;
