@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
+import 'package:yell_app/firebase/yell_message_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,6 +14,8 @@ class MyGoalFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final InviteFirebase _inviteFirebase = InviteFirebase();
   final MemberFirebase _memberFirebase = MemberFirebase();
+  final YellMessageFirebase _yellMessageFirebase = YellMessageFirebase();
+
   Uuid _uuid = Uuid();
 
   // コレクション名前
@@ -21,12 +25,27 @@ class MyGoalFirebase {
   Future<Map<String, Object?>?> fetchGoalAndMemberData() async {
     Map<String, Object?> result = {};
     MyGoalModel? goalData = await fetchGoalData();
+    List<MemberModel> members = [];
     if (goalData != null) {
-      List<MemberModel> members = await _fetchMember(goalData.id);
+      members = await _fetchMember(goalData.id);
       result['goal'] = goalData;
       result['members'] = members;
     } else {
       return null;
+    }
+
+    // メンバーデータがあれば応援メッセージも取得
+    if (members.isNotEmpty) {
+      int dayOrTimes = 0;
+      if (goalData.unitType == 0) {
+        dayOrTimes = goalData.currentDay;
+      } else {
+        dayOrTimes = goalData.currentTimes;
+      }
+      // 対象となる日付のメッセージだけ取得
+      List<YellMessage> messages = await _yellMessageFirebase
+          .fetchMyGoalYellMessageByGoalIdAndNowTime(goalData.id, dayOrTimes);
+      result['messages'] = messages;
     }
     return result;
   }

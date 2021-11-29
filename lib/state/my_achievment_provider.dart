@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/utility/utility.dart';
 
 final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
@@ -22,6 +23,30 @@ class MyAchievment extends ChangeNotifier {
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
   DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
 
+  List<YellMessage> yellMessages = []; // 自分宛の応援メッセージ
+
+  // 達成済みか否か
+  bool get isAchieved {
+    // 達成してから12時間以内は「達成済み」
+    // 12時間後は「挑戦中」
+    DateTime now = DateTime.now();
+    DateTime nowBefore12h = now.add(
+      const Duration(hours: -12),
+    );
+    if (updatedCurrentDayAt == null) {
+      // まだ1つも達成していないので挑戦中
+      return false;
+    }
+
+    if (nowBefore12h.isBefore(updatedCurrentDayAt!)) {
+      // 達成済み
+      return true;
+    } else {
+      // 挑戦中
+      return false;
+    }
+  }
+
   // day or time
   int get currentDayOrTime {
     if (unitType == 0) {
@@ -31,7 +56,7 @@ class MyAchievment extends ChangeNotifier {
     }
   }
 
-  void setInitialData(MyGoalModel _myGoalModel) {
+  void setInitialData(MyGoalModel _myGoalModel, List<YellMessage> messages) {
     goalId = _myGoalModel.id;
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;
@@ -41,6 +66,7 @@ class MyAchievment extends ChangeNotifier {
     inviteId = _myGoalModel.inviteId;
     currentDay = _myGoalModel.currentDay;
     currentTime = _myGoalModel.currentTimes;
+    yellMessages = messages;
 
     // 達成ボタンを押した日付と現在の日付が同じか比較
     if (_myGoalModel.createdAt != null) {
