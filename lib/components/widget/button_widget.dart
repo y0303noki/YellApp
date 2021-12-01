@@ -71,10 +71,12 @@ class ButtonWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue),
-        borderRadius: BorderRadius.circular(40),
+        border: Border.all(color: Colors.blue, width: 5),
+        borderRadius: BorderRadius.circular(80 / 2),
       ),
-      child: Text(text),
+      child: Center(
+        child: Text(text),
+      ),
     );
   }
 
@@ -85,9 +87,11 @@ class ButtonWidget {
       height: 40,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue),
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(40 / 2),
       ),
-      child: Text(text),
+      child: Center(
+        child: Text(text),
+      ),
     );
   }
 

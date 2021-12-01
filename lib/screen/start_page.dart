@@ -26,10 +26,6 @@ class StartPage extends ConsumerWidget {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
         body: bodyWidget(context, myAchievment, invite),
       ),
     );

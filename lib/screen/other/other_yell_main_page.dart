@@ -20,55 +20,60 @@ class OtherYellMainPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: TextWidget.headLineText6('トップに戻る'),
-          ),
-        ],
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 5,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        actions: [],
         title: const Text('TabBar Widget'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                ButtonWidget.iconMainWidget('a'),
-                _speechMessage(otherAchievment.ownerAchievedment),
-              ],
-            ),
-            _achievedCurrent(otherAchievment),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 5,
-                bottom: 10,
-              ),
-              child: TextWidget.subTitleText1('メッセージを送ろう！'),
-            ),
-            _textEdit(otherAchievment),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 5,
-                bottom: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        child: Container(
+          margin: const EdgeInsets.only(
+            top: 10,
+          ),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  _yellMessage(otherAchievment.yellMessage),
                   ButtonWidget.iconMainWidget('a'),
+                  _speechMessage(otherAchievment.ownerAchievedment),
                 ],
               ),
-            ),
-            Text('過去のメッセージ'),
-          ],
+              _achievedCurrent(otherAchievment),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 5,
+                  bottom: 10,
+                ),
+                child: TextWidget.subTitleText1('メッセージを送ろう！'),
+              ),
+              _textEdit(otherAchievment),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 5,
+                  bottom: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _yellMessage(otherAchievment.yellMessage),
+                    ButtonWidget.iconMainWidget('a'),
+                  ],
+                ),
+              ),
+              Text('過去のメッセージ'),
+            ],
+          ),
         ),
       ),
     );
