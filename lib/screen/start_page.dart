@@ -44,7 +44,7 @@ class StartPage extends ConsumerWidget {
               _myGoalButton(context, myAchievment, invite),
               Column(
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -55,9 +55,13 @@ class StartPage extends ConsumerWidget {
                         myAchievment.refreshNotifyListeners();
                       });
                     },
-                    child: ButtonWidget.startAtherButton(deviceSize.width),
+                    child: ButtonWidget.startMainButton(
+                      deviceSize.width,
+                      '応援する',
+                      Icons.thumb_up,
+                    ),
                   ),
-                  Text('招待コードが必要'),
+                  // Text('招待コードが必要'),
                 ],
               )
             ],
@@ -78,8 +82,8 @@ class StartPage extends ConsumerWidget {
         // 通信中
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 通信中
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: ButtonWidget.startMainWaitingButton(deviceSize.width),
           );
         }
 
@@ -94,7 +98,7 @@ class StartPage extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, Object?>? _data = snapshot.data;
           if (_data == null) {
-            return GestureDetector(
+            return InkWell(
               onTap: () {
                 Navigator.push(
                   context,
@@ -107,8 +111,11 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
-                  Text('友達に応援してもらう'),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                  ),
                 ],
               ),
             );
@@ -137,8 +144,12 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
-                  Text('登録ずみ応援してもらう'),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                  ),
+                  // Text('登録ずみ応援してもらう'),
                 ],
               ),
             );
@@ -156,7 +167,11 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                  ),
                   Text('友達に応援してもらう'),
                 ],
               ),
@@ -177,8 +192,12 @@ class StartPage extends ConsumerWidget {
           },
           child: Column(
             children: [
-              ButtonWidget.startMyButton(deviceSize.width),
-              Text('友達に応援してもらう'),
+              ButtonWidget.startMainButton(
+                deviceSize.width,
+                '自分の記録を始める',
+                Icons.directions_run,
+              ),
+              // Text('友達に応援してもらう'),
             ],
           ),
         );

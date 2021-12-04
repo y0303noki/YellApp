@@ -37,8 +37,8 @@ class CommonWidget {
   }
 
   /// ボタンの基本色
-  static Color defaultButtonColor() {
-    return Colors.lightGreen;
+  static Color? defaultButtonColor() {
+    return Colors.lightGreen[100];
   }
 
   static Decoration defaultDescriptionDecoration() {
