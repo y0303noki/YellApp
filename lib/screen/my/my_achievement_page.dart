@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
@@ -71,8 +72,6 @@ class MyAchievementPage extends ConsumerWidget {
 
   // メンバーウィジット
   Widget _memberWidget(BuildContext context, MyAchievment myAchievment) {
-    final deviceSize = MediaQuery.of(context).size;
-
     // メンバーがいないとき
     if (myAchievment.memberIdList.isEmpty) {
       return Container(
@@ -109,9 +108,19 @@ class MyAchievementPage extends ConsumerWidget {
           margin: const EdgeInsets.only(
             bottom: 10,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: _memberIconWidget(myAchievment),
+          child: Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: SingleChildScrollView(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _memberIconWidget(myAchievment),
+              ),
+            ),
           ),
         ),
         // メンバーの応援メッセージ
@@ -184,24 +193,43 @@ class MyAchievementPage extends ConsumerWidget {
           myAchievment.selectMemberId(memberId);
         },
         child: Container(
-          margin: const EdgeInsets.only(
-            left: 1,
-            right: 1,
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
           ),
-          width: 60,
-          height: 60,
+          width: 100,
+          height: 30,
           decoration: BoxDecoration(
-            border: Border.all(
-                width: 2,
-                color: myAchievment.selectedMemberId == memberId
-                    ? Colors.red
-                    : Colors.blue),
-            borderRadius: BorderRadius.circular(60 / 2),
+            color:
+                myAchievment.selectedMemberId == memberId ? Colors.red : null,
+            borderRadius: BorderRadius.circular(30),
           ),
           child: Center(
-            child: Text(member.memberName.substring(0, 1)),
+            child: Text(
+              member.memberName,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
+        // child: Container(
+        //   margin: const EdgeInsets.only(
+        //     left: 1,
+        //     right: 1,
+        //   ),
+        //   width: 60,
+        //   height: 60,
+        //   decoration: BoxDecoration(
+        //     border: Border.all(
+        //         width: 2,
+        //         color: myAchievment.selectedMemberId == memberId
+        //             ? Colors.red
+        //             : Colors.blue),
+        //     borderRadius: BorderRadius.circular(60 / 2),
+        //   ),
+        //   child: Center(
+        //     child: Text(member.memberName.substring(0, 1)),
+        //   ),
+        // ),
       );
       row.add(tempWidget);
     }

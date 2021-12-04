@@ -51,9 +51,11 @@ class StartPage extends ConsumerWidget {
                         MaterialPageRoute(
                           builder: (context) => StartOtherYellListPage(),
                         ),
-                      ).then((value) {
-                        myAchievment.refreshNotifyListeners();
-                      });
+                      ).then(
+                        (value) {
+                          myAchievment.refreshNotifyListeners();
+                        },
+                      );
                     },
                     child: ButtonWidget.startMainButton(
                       deviceSize.width,
