@@ -122,11 +122,43 @@ class StartPage extends ConsumerWidget {
               ),
             );
           }
-          MyGoalModel goalData = _data['goal'] as MyGoalModel;
-          List<MemberModel> memberDatas = _data['members'] as List<MemberModel>;
-          List<YellMessage> messages = _data['messages'] as List<YellMessage>;
-          // 既に登録ずみ
-          if (!goalData.isDeleted) {
+
+          MyGoalModel? goalData =
+              _data.containsKey('goal') ? _data['goal'] as MyGoalModel : null;
+          List<MemberModel> memberDatas = _data.containsKey('members')
+              ? _data['members'] as List<MemberModel>
+              : [];
+
+          List<YellMessage> messages = _data.containsKey('messages')
+              ? _data['messages'] as List<YellMessage>
+              : [];
+
+          if (goalData == null || goalData.isDeleted) {
+            // 登録済みのデータなし
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartMySettingPage(),
+                  ),
+                ).then((value) {
+                  myAchievment.refreshNotifyListeners();
+                });
+              },
+              child: Column(
+                children: [
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                  ),
+                  Text('友達に応援してもらう'),
+                ],
+              ),
+            );
+          } else {
+            // 登録ずみデータあり
             return GestureDetector(
               onTap: () {
                 goalData.memberIds =
@@ -155,54 +187,12 @@ class StartPage extends ConsumerWidget {
                 ],
               ),
             );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StartMySettingPage(),
-                  ),
-                ).then((value) {
-                  myAchievment.refreshNotifyListeners();
-                });
-              },
-              child: Column(
-                children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                  ),
-                  Text('友達に応援してもらう'),
-                ],
-              ),
-            );
           }
+        } else {
+          return const Center(
+            child: Text('エラーがおきました'),
+          );
         }
-        // それ以外
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StartMySettingPage(),
-              ),
-            ).then((value) {
-              myAchievment.refreshNotifyListeners();
-            });
-          },
-          child: Column(
-            children: [
-              ButtonWidget.startMainButton(
-                deviceSize.width,
-                '自分の記録を始める',
-                Icons.directions_run,
-              ),
-              // Text('友達に応援してもらう'),
-            ],
-          ),
-        );
       },
     );
   }
