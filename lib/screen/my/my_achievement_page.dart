@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
@@ -10,6 +11,7 @@ import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
+import 'package:bubble/bubble.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -25,21 +27,32 @@ class MyAchievementPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 10,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         actions: [
-          TextButton(
+          // 目標を削除する
+          IconButton(
             onPressed: () async {
-              await _myGoalFirebase.deleteMyGoalData(myAchievment.goalId);
-              Navigator.popUntil(context, (route) => route.isFirst);
+              String? result = await DialogWidget().endMyGoalDialog(context);
+              if (result == null || result == 'CANCEL') {
+                return;
+              } else {
+                // 削除実行
+                await _myGoalFirebase.deleteMyGoalData(myAchievment.goalId);
+                Navigator.popUntil(context, (route) => route.isFirst);
+              }
             },
-            child: TextWidget.headLineText6('目標をやり直す'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: TextWidget.headLineText6('トップに戻る'),
+            icon: const Icon(
+              Icons.delete_forever,
+              color: Colors.red,
+            ),
           ),
         ],
       ),
@@ -59,8 +72,6 @@ class MyAchievementPage extends ConsumerWidget {
 
   // メンバーウィジット
   Widget _memberWidget(BuildContext context, MyAchievment myAchievment) {
-    final deviceSize = MediaQuery.of(context).size;
-
     // メンバーがいないとき
     if (myAchievment.memberIdList.isEmpty) {
       return Container(
@@ -93,73 +104,139 @@ class MyAchievementPage extends ConsumerWidget {
     // メンバーがいるとき
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _memberIconWidget(myAchievment),
-        ),
         Container(
-          width: deviceSize.width * 0.8,
-          height: 100,
-          color: Colors.grey,
-          child: _selectYellMessage(myAchievment),
+          margin: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 10,
+          ),
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: _memberIconWidget(myAchievment),
+            ),
+          ),
+        ),
+        // メンバーの応援メッセージ
+        Row(
+          children: [
+            Expanded(
+              child: Bubble(
+                margin: const BubbleEdges.only(left: 10, right: 10),
+                padding: const BubbleEdges.only(top: 20, bottom: 20),
+                nip: BubbleNip.leftTop,
+                color: CommonWidget.otherDefaultColor(),
+                child: _selectYellMessage(myAchievment),
+              ),
+            ),
+          ],
+        ),
+
+        // メンバー追加ボタン
+        TextButton(
+          onPressed: () {
+            // 招待ページに遷移
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InviteMainPage(),
+              ),
+            );
+          },
+          child: TextWidget.subTitleText1('メンバーを追加する'),
         ),
       ],
     );
   }
 
+  // 応援メッセージ表示
   Widget _selectYellMessage(MyAchievment myAchievment) {
     if (myAchievment.selectedMemberId == '' ||
         myAchievment.yellMessages.isEmpty) {
-      return Text('メッセージなし');
+      return const Text('メッセージなし', textAlign: TextAlign.left);
     }
     YellMessage? selectedMessage = myAchievment.yellMessages.firstWhere(
         (message) => message.memberId == myAchievment.selectedMemberId,
         orElse: () => YellMessage());
     if (selectedMessage.message.isEmpty) {
-      return Text('見つかりません');
+      // メッセージなし
+      return const Text(
+        'メッセージがここに表示されます',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          color: Colors.grey,
+        ),
+      );
     } else {
-      return Text(selectedMessage.message);
+      // メッセージあり
+      return Text(
+        selectedMessage.message,
+        textAlign: TextAlign.left,
+      );
     }
   }
 
   // メンバーアイコン
   List<Widget> _memberIconWidget(MyAchievment myAchievment) {
     List<Widget> row = <Widget>[];
-    List<MemberModel> members = [];
-    // テスト用のデータ作成
-    for (String id in myAchievment.memberIdList) {
-      MemberModel tempMember = MemberModel();
-      tempMember.id = id;
-      tempMember.memberName = id + '-name';
-      tempMember.createdAt = DateTime.now();
-      tempMember.updatedAt = DateTime.now();
+    // 一番左のウィジット
+    Widget memberFirstWidget = Container(
+      margin: const EdgeInsets.only(
+        left: 5,
+        right: 5,
+      ),
+      padding: const EdgeInsets.only(
+        top: 5,
+        bottom: 5,
+        left: 5,
+        right: 5,
+      ),
+      color: Colors.white,
+      child: const Text('選択'),
+    );
 
-      members.add(tempMember);
-    }
+    row.add(memberFirstWidget);
+
     List<String> memberIdList = myAchievment.memberIdList;
-
     for (String memberId in memberIdList) {
-      MemberModel member = members.firstWhere((mem) => mem.id == memberId);
+      MemberModel member = myAchievment.yellMembers
+          .firstWhere((mem) => mem.memberUserId == memberId);
       Widget tempWidget = InkWell(
         onTap: () {
           myAchievment.selectMemberId(memberId);
         },
         child: Container(
           margin: const EdgeInsets.only(
-            left: 1,
-            right: 1,
+            left: 5,
+            right: 5,
           ),
-          width: 60,
-          height: 60,
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          width: 100,
+          height: 30,
           decoration: BoxDecoration(
-            border: Border.all(
-                color: myAchievment.selectedMemberId == memberId
-                    ? Colors.red
-                    : Colors.blue),
-            borderRadius: BorderRadius.circular(60 / 2),
+            border: Border.all(color: Colors.grey),
+            color: myAchievment.selectedMemberId == memberId
+                ? Colors.grey[700]
+                : null,
+            borderRadius: BorderRadius.circular(30),
           ),
           child: Center(
-            child: Text(member.memberName.substring(0, 1)),
+            child: Text(
+              member.memberName,
+              overflow: TextOverflow.ellipsis,
+              style: myAchievment.selectedMemberId == memberId
+                  ? const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)
+                  : null,
+            ),
           ),
         ),
       );
@@ -211,7 +288,7 @@ class MyAchievementPage extends ConsumerWidget {
             // 既に登録ずみ
             if (!goalData.isDeleted) {
               goalData.memberIds = memberDatas.map((e) => e.id).toList();
-              myAchievment.setInitialData(goalData, messages);
+              myAchievment.setInitialData(goalData, memberDatas, messages);
               invite.id = goalData.inviteId;
 
               return _body(context, myAchievment);
@@ -227,6 +304,7 @@ class MyAchievementPage extends ConsumerWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(
+        top: 20,
         left: 0,
         right: 0,
       ),
@@ -244,7 +322,7 @@ class MyAchievementPage extends ConsumerWidget {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue),
+                  border: Border.all(color: Colors.blue, width: 5),
                   borderRadius: BorderRadius.circular(120 / 2),
                 ),
                 child: Center(
@@ -267,6 +345,14 @@ class MyAchievementPage extends ConsumerWidget {
               // 達成ボタン
               InkWell(
                 onTap: () async {
+                  // スナックバー表示
+                  String message = 'おつかれさまです！';
+                  final snackBar = SnackBar(
+                    content: Text(message),
+                    duration: const Duration(seconds: 5),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                   if (myAchievment.isTapedToday) {
                     // 達成をキャンセルするとややこしいのでさせない
                     return;
@@ -289,6 +375,7 @@ class MyAchievementPage extends ConsumerWidget {
                     ? ButtonWidget.achievementedToday(deviceSize.width)
                     : ButtonWidget.yetAchievementToday(deviceSize.width),
               ),
+              // 継続何日目？
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
@@ -319,7 +406,7 @@ class MyAchievementPage extends ConsumerWidget {
               const Divider(
                 color: Colors.grey,
               ),
-              TextWidget.headLineText5('応援してくれるメンバー'),
+              TextWidget.headLineText5('応援中の仲間'),
               _memberWidget(context, myAchievment),
             ],
           ),
@@ -328,4 +415,6 @@ class MyAchievementPage extends ConsumerWidget {
       ),
     );
   }
+
+  // モーダルシートを表示
 }

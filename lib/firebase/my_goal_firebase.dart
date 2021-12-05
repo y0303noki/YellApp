@@ -94,6 +94,9 @@ class MyGoalFirebase {
   // 自分が登録ずみの他人の目標一覧
   Future<List<MyGoalModel>> fetchRegistedOtherGoals() async {
     List<MemberModel> members = await _memberFirebase.fetchMemberDatas();
+    if (members.isEmpty) {
+      return [];
+    }
     List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
     final QuerySnapshot snapshots = await _firestore
         .collection(myGoals)

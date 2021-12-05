@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
@@ -26,10 +27,6 @@ class StartPage extends ConsumerWidget {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
         body: bodyWidget(context, myAchievment, invite),
       ),
     );
@@ -48,20 +45,26 @@ class StartPage extends ConsumerWidget {
               _myGoalButton(context, myAchievment, invite),
               Column(
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => StartOtherYellListPage(),
                         ),
-                      ).then((value) {
-                        myAchievment.refreshNotifyListeners();
-                      });
+                      ).then(
+                        (value) {
+                          myAchievment.refreshNotifyListeners();
+                        },
+                      );
                     },
-                    child: ButtonWidget.startAtherButton(deviceSize.width),
+                    child: ButtonWidget.startMainButton(
+                      deviceSize.width,
+                      '応援する',
+                      Icons.thumb_up,
+                      CommonWidget.otherDefaultColor()!,
+                    ),
                   ),
-                  Text('招待コードが必要'),
                 ],
               )
             ],
@@ -82,8 +85,8 @@ class StartPage extends ConsumerWidget {
         // 通信中
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 通信中
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: ButtonWidget.startMainWaitingButton(deviceSize.width),
           );
         }
 
@@ -98,6 +101,44 @@ class StartPage extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, Object?>? _data = snapshot.data;
           if (_data == null) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartMySettingPage(),
+                  ),
+                ).then(
+                  (value) {
+                    myAchievment.refreshNotifyListeners();
+                  },
+                );
+              },
+              child: Column(
+                children: [
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          MyGoalModel? goalData =
+              _data.containsKey('goal') ? _data['goal'] as MyGoalModel : null;
+          List<MemberModel> memberDatas = _data.containsKey('members')
+              ? _data['members'] as List<MemberModel>
+              : [];
+
+          List<YellMessage> messages = _data.containsKey('messages')
+              ? _data['messages'] as List<YellMessage>
+              : [];
+
+          if (goalData == null || goalData.isDeleted) {
+            // 登録済みのデータなし
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -111,23 +152,23 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
-                  Text('友達に応援してもらう'),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
+                  ),
                 ],
               ),
             );
-          }
-          MyGoalModel goalData = _data['goal'] as MyGoalModel;
-          List<MemberModel> memberDatas = _data['members'] as List<MemberModel>;
-          List<YellMessage> messages = _data['messages'] as List<YellMessage>;
-          // 既に登録ずみ
-          if (!goalData.isDeleted) {
-            return GestureDetector(
+          } else {
+            // 登録ずみデータあり
+            return InkWell(
               onTap: () {
                 goalData.memberIds =
                     memberDatas.map((e) => e.memberUserId).toList();
 
-                myAchievment.setInitialData(goalData, messages);
+                myAchievment.setInitialData(goalData, memberDatas, messages);
                 invite.id = goalData.inviteId;
 
                 Navigator.push(
@@ -141,51 +182,21 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
-                  Text('登録ずみ応援してもらう'),
-                ],
-              ),
-            );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StartMySettingPage(),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
                   ),
-                ).then((value) {
-                  myAchievment.refreshNotifyListeners();
-                });
-              },
-              child: Column(
-                children: [
-                  ButtonWidget.startMyButton(deviceSize.width),
-                  Text('友達に応援してもらう'),
                 ],
               ),
             );
           }
+        } else {
+          return const Center(
+            child: Text('エラーがおきました'),
+          );
         }
-        // それ以外
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StartMySettingPage(),
-              ),
-            ).then((value) {
-              myAchievment.refreshNotifyListeners();
-            });
-          },
-          child: Column(
-            children: [
-              ButtonWidget.startMyButton(deviceSize.width),
-              Text('友達に応援してもらう'),
-            ],
-          ),
-        );
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/yell_message_firebase.dart';
 import 'package:yell_app/model/yell_message.dart';
@@ -16,59 +17,61 @@ class OtherYellMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
 
-    final deviceSize = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: TextWidget.headLineText6('トップに戻る'),
-          ),
-        ],
-        title: const Text('TabBar Widget'),
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 5,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        actions: [],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                ButtonWidget.iconMainWidget('a'),
-                _speechMessage(otherAchievment.ownerAchievedment),
-              ],
-            ),
-            _achievedCurrent(otherAchievment),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 5,
-                bottom: 10,
-              ),
-              child: TextWidget.subTitleText1('メッセージを送ろう！'),
-            ),
-            _textEdit(otherAchievment),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 5,
-                bottom: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        child: Container(
+          margin: const EdgeInsets.only(
+            top: 10,
+          ),
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  _yellMessage(otherAchievment.yellMessage),
                   ButtonWidget.iconMainWidget('a'),
+                  _speechMessage(otherAchievment.ownerAchievedment),
                 ],
               ),
-            ),
-            Text('過去のメッセージ'),
-          ],
+              _achievedCurrent(otherAchievment),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 5,
+                  bottom: 10,
+                ),
+                child: TextWidget.subTitleText1('メッセージを送ろう！'),
+              ),
+              _textEdit(otherAchievment),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 5,
+                  bottom: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _yellMessage(otherAchievment.yellMessage),
+                    ButtonWidget.iconMainWidget('a'),
+                  ],
+                ),
+              ),
+              const Text('過去のメッセージ'),
+            ],
+          ),
         ),
       ),
     );
@@ -130,21 +133,27 @@ class OtherYellMainPage extends ConsumerWidget {
   }
 }
 
+// 達成コメント
 Widget _speechMessage(String _text) {
   return Expanded(
     child: Bubble(
-      margin: BubbleEdges.only(top: 10),
+      margin: const BubbleEdges.only(top: 20),
+      padding: const BubbleEdges.only(top: 20, bottom: 20),
       nip: BubbleNip.leftTop,
+      color: CommonWidget.myDefaultColor(),
       child: Text(_text, textAlign: TextAlign.left),
     ),
   );
 }
 
+// 応援コメント
 Widget _yellMessage(String _text) {
   return Expanded(
     child: Bubble(
-      margin: BubbleEdges.only(top: 10),
+      margin: const BubbleEdges.only(top: 20),
+      padding: const BubbleEdges.only(top: 20, bottom: 20),
       nip: BubbleNip.rightTop,
+      color: CommonWidget.otherDefaultColor(),
       child: Text(
         _text,
         textAlign: TextAlign.right,

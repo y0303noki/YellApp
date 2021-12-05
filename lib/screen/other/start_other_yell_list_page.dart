@@ -28,8 +28,15 @@ class StartOtherYellListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        elevation: 0,
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 5,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: _futureBody(context, otherAchievment),
     );

@@ -3,7 +3,6 @@ import 'package:yell_app/utility/dialog_utility.dart';
 
 class DialogWidget {
   // 間違えて達成ボタンを押したとき
-
   Future<String?> achieveCancelDialog(
     BuildContext dialogContext,
   ) async {
@@ -76,6 +75,42 @@ class DialogWidget {
               onPressed: () {
                 result = '';
                 Navigator.of(context).pop('NO');
+              },
+            ),
+          ],
+        );
+      },
+    );
+    return result;
+  }
+
+  // 自分の目標を終了してデータを削除する
+  Future<String?> endMyGoalDialog(
+    BuildContext dialogContext,
+  ) async {
+    String? result;
+    await DialogUtil.show(
+      context: dialogContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('削除しますか？'),
+          content: const Text(''),
+          actions: [
+            TextButton(
+              child: const Text(
+                '削除する',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                result = 'DELETE';
+                Navigator.of(context).pop('DELETE');
+              },
+            ),
+            TextButton(
+              child: const Text('キャンセル'),
+              onPressed: () {
+                result = 'CANCEL';
+                Navigator.of(context).pop('CANCEL');
               },
             ),
           ],

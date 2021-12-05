@@ -6,46 +6,77 @@ class ButtonWidget {
   static const mainButtonWidth = 330;
   static const mainButtonHeight = 100;
 
-  // スタート画面のボタン
-  // widthは端末サイズを基準にする
-  static startMyButton(double deviceWidth) {
-    return Container(
-      height: 100,
-      width: deviceWidth * 0.8,
-      decoration: BoxDecoration(
-        color: CommonWidget.defaultButtonColor(),
-        borderRadius: BorderRadius.circular(10),
+  // アイコンのサイズ
+  static const double mainIconSize = 50;
+
+  // メインボタンelevation
+  static const double mainButtonElevation = 5.0;
+
+  // スタート画面で設置するボタン
+  static startMainButton(
+    double deviceWidth,
+    String buttonText,
+    IconData iconData,
+    Color color,
+  ) {
+    return Material(
+      elevation: mainButtonElevation,
+      child: Container(
+        height: 150,
+        width: deviceWidth * 0.8,
+        decoration: BoxDecoration(
+          color: color,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              iconData,
+              size: mainIconSize,
+            ),
+            TextWidget.headLineText5(buttonText),
+          ],
+        ),
       ),
-      child: Center(child: TextWidget.mainButtonText('自分の記録を始める')),
     );
   }
 
-  // スタート画面のボタン
-  static startAtherButton(double deviceWidth) {
-    return Container(
-      height: 100,
-      width: deviceWidth * 0.8,
-      decoration: BoxDecoration(
-        color: CommonWidget.defaultButtonColor(),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: TextWidget.mainButtonText('応援する'),
+  /// 通信中のスタートメインボタン
+  static startMainWaitingButton(
+    double deviceWidth,
+  ) {
+    return Material(
+      elevation: mainButtonElevation,
+      child: Container(
+        height: 150,
+        width: deviceWidth * 0.8,
+        decoration: BoxDecoration(
+          color: CommonWidget.myDefaultColor(),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(),
+            TextWidget.headLineText5(''),
+          ],
+        ),
       ),
     );
   }
 
   // 今日の達成ボタン（未完了）
   static yetAchievementToday(double deviceWidth) {
-    return Container(
-      height: 100,
-      width: deviceWidth * 0.8,
-      decoration: BoxDecoration(
-        color: CommonWidget.defaultButtonColor(),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: TextWidget.mainButtonText('達成'),
+    return Material(
+      elevation: mainButtonElevation,
+      child: Container(
+        height: 100,
+        width: deviceWidth * 0.8,
+        decoration: BoxDecoration(
+          color: CommonWidget.myDefaultColor(),
+        ),
+        child: Center(
+          child: TextWidget.mainButtonText('達成済み'),
+        ),
       ),
     );
   }
@@ -60,7 +91,7 @@ class ButtonWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: TextWidget.mainButtonText('達成'),
+        child: TextWidget.mainButtonText('達成済み'),
       ),
     );
   }
@@ -71,10 +102,12 @@ class ButtonWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue),
-        borderRadius: BorderRadius.circular(40),
+        border: Border.all(color: Colors.blue, width: 5),
+        borderRadius: BorderRadius.circular(80 / 2),
       ),
-      child: Text(text),
+      child: Center(
+        child: Text(text),
+      ),
     );
   }
 
@@ -85,9 +118,11 @@ class ButtonWidget {
       height: 40,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue),
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(40 / 2),
       ),
-      child: Text(text),
+      child: Center(
+        child: Text(text),
+      ),
     );
   }
 

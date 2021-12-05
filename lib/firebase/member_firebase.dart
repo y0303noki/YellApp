@@ -68,6 +68,7 @@ class MemberFirebase {
 
       tempMemberModel.id = data['id'] ?? '';
       tempMemberModel.memberUserId = data['memberUserId'] ?? '';
+      tempMemberModel.memberName = data['memberName'] ?? '';
       tempMemberModel.ownerGoalId = data['ownerGoalId'] ?? '';
       tempMemberModel.isDeleted = data['isDeleted'] ?? false;
       tempMemberModel.createdAt = data['createdAt']?.toDate();
