@@ -37,7 +37,7 @@ class CommonWidget {
   }
 
   /// ボタンの基本色
-  static Color? defaultButtonColor() {
+  static Color? myDefaultColor() {
     return Colors.lightGreen[100];
   }
 
@@ -46,5 +46,10 @@ class CommonWidget {
       color: Colors.grey.withOpacity(0.2),
       borderRadius: BorderRadius.circular(20),
     );
+  }
+
+  /// 応援のデフォルト色
+  static Color? otherDefaultColor() {
+    return Colors.lightBlue[100];
   }
 }

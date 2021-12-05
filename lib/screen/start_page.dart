@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
@@ -58,12 +59,11 @@ class StartPage extends ConsumerWidget {
                       );
                     },
                     child: ButtonWidget.startMainButton(
-                      deviceSize.width,
-                      '応援する',
-                      Icons.thumb_up,
-                    ),
+                        deviceSize.width,
+                        '応援する',
+                        Icons.thumb_up,
+                        CommonWidget.otherDefaultColor()!),
                   ),
-                  // Text('招待コードが必要'),
                 ],
               )
             ],
@@ -113,11 +113,8 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                  ),
+                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
+                      Icons.directions_run, CommonWidget.myDefaultColor()!),
                 ],
               ),
             );
@@ -148,12 +145,8 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                  ),
-                  Text('友達に応援してもらう'),
+                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
+                      Icons.directions_run, CommonWidget.myDefaultColor()!),
                 ],
               ),
             );
@@ -178,12 +171,8 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                  ),
-                  // Text('登録ずみ応援してもらう'),
+                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
+                      Icons.directions_run, CommonWidget.myDefaultColor()!),
                 ],
               ),
             );

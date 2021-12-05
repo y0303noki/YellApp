@@ -106,20 +106,19 @@ class MyAchievementPage extends ConsumerWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(
+            left: 20,
+            right: 20,
             bottom: 10,
           ),
-          child: Container(
-            margin: const EdgeInsets.only(left: 20, right: 20),
-            padding: const EdgeInsets.only(top: 5, bottom: 5),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: SingleChildScrollView(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: _memberIconWidget(myAchievment),
-              ),
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: _memberIconWidget(myAchievment),
             ),
           ),
         ),
@@ -130,14 +129,16 @@ class MyAchievementPage extends ConsumerWidget {
               alignment: Alignment.topCenter,
               margin: const BubbleEdges.only(
                 top: 10,
+                left: 20,
               ),
               padding: const BubbleEdges.fromLTRB(20, 10, 10, 10),
               nip: BubbleNip.leftTop,
-              color: Color.fromARGB(255, 225, 255, 199),
+              color: CommonWidget.otherDefaultColor(),
               child: _selectYellMessage(myAchievment),
             ),
           ],
         ),
+
         // メンバー追加ボタン
         TextButton(
           onPressed: () {
@@ -211,25 +212,6 @@ class MyAchievementPage extends ConsumerWidget {
             ),
           ),
         ),
-        // child: Container(
-        //   margin: const EdgeInsets.only(
-        //     left: 1,
-        //     right: 1,
-        //   ),
-        //   width: 60,
-        //   height: 60,
-        //   decoration: BoxDecoration(
-        //     border: Border.all(
-        //         width: 2,
-        //         color: myAchievment.selectedMemberId == memberId
-        //             ? Colors.red
-        //             : Colors.blue),
-        //     borderRadius: BorderRadius.circular(60 / 2),
-        //   ),
-        //   child: Center(
-        //     child: Text(member.memberName.substring(0, 1)),
-        //   ),
-        // ),
       );
       row.add(tempWidget);
     }

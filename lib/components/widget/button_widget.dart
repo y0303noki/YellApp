@@ -17,6 +17,7 @@ class ButtonWidget {
     double deviceWidth,
     String buttonText,
     IconData iconData,
+    Color color,
   ) {
     return Material(
       elevation: mainButtonElevation,
@@ -24,7 +25,7 @@ class ButtonWidget {
         height: 150,
         width: deviceWidth * 0.8,
         decoration: BoxDecoration(
-          color: CommonWidget.defaultButtonColor(),
+          color: color,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -50,7 +51,7 @@ class ButtonWidget {
         height: 150,
         width: deviceWidth * 0.8,
         decoration: BoxDecoration(
-          color: CommonWidget.defaultButtonColor(),
+          color: CommonWidget.myDefaultColor(),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -71,7 +72,7 @@ class ButtonWidget {
         height: 100,
         width: deviceWidth * 0.8,
         decoration: BoxDecoration(
-          color: CommonWidget.defaultButtonColor(),
+          color: CommonWidget.myDefaultColor(),
         ),
         child: Center(
           child: TextWidget.mainButtonText('達成'),

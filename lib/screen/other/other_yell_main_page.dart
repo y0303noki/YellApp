@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/yell_message_firebase.dart';
 import 'package:yell_app/model/yell_message.dart';
@@ -71,7 +72,7 @@ class OtherYellMainPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              Text('過去のメッセージ'),
+              const Text('過去のメッセージ'),
             ],
           ),
         ),
@@ -140,6 +141,7 @@ Widget _speechMessage(String _text) {
     child: Bubble(
       margin: BubbleEdges.only(top: 10),
       nip: BubbleNip.leftTop,
+      color: CommonWidget.myDefaultColor(),
       child: Text(_text, textAlign: TextAlign.left),
     ),
   );
@@ -150,6 +152,7 @@ Widget _yellMessage(String _text) {
     child: Bubble(
       margin: BubbleEdges.only(top: 10),
       nip: BubbleNip.rightTop,
+      color: CommonWidget.otherDefaultColor(),
       child: Text(
         _text,
         textAlign: TextAlign.right,
