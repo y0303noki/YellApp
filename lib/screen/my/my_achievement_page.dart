@@ -125,16 +125,13 @@ class MyAchievementPage extends ConsumerWidget {
         // メンバーの応援メッセージ
         Row(
           children: [
-            Bubble(
-              alignment: Alignment.topCenter,
-              margin: const BubbleEdges.only(
-                top: 10,
-                left: 20,
+            Expanded(
+              child: Bubble(
+                margin: const BubbleEdges.only(left: 10, right: 10),
+                nip: BubbleNip.leftTop,
+                color: CommonWidget.otherDefaultColor(),
+                child: _selectYellMessage(myAchievment),
               ),
-              padding: const BubbleEdges.fromLTRB(20, 10, 10, 10),
-              nip: BubbleNip.leftTop,
-              color: CommonWidget.otherDefaultColor(),
-              child: _selectYellMessage(myAchievment),
             ),
           ],
         ),

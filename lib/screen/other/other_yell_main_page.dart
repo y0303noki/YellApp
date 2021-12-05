@@ -136,6 +136,7 @@ class OtherYellMainPage extends ConsumerWidget {
   }
 }
 
+// 達成コメント
 Widget _speechMessage(String _text) {
   return Expanded(
     child: Bubble(
@@ -147,6 +148,7 @@ Widget _speechMessage(String _text) {
   );
 }
 
+// 応援コメント
 Widget _yellMessage(String _text) {
   return Expanded(
     child: Bubble(
