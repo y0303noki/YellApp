@@ -171,26 +171,37 @@ class MyAchievementPage extends ConsumerWidget {
   // メンバーアイコン
   List<Widget> _memberIconWidget(MyAchievment myAchievment) {
     List<Widget> row = <Widget>[];
-    List<MemberModel> members = [];
-    // テスト用のデータ作成
-    for (String id in myAchievment.memberIdList) {
-      MemberModel tempMember = MemberModel();
-      tempMember.id = id;
-      tempMember.memberName = id + '-name';
-      tempMember.createdAt = DateTime.now();
-      tempMember.updatedAt = DateTime.now();
+    // 一番左のウィジット
+    Widget memberFirstWidget = Container(
+      margin: const EdgeInsets.only(
+        left: 5,
+        right: 5,
+      ),
+      padding: const EdgeInsets.only(
+        top: 5,
+        bottom: 5,
+        left: 5,
+        right: 5,
+      ),
+      color: Colors.white,
+      child: const Text('選択'),
+    );
 
-      members.add(tempMember);
-    }
+    row.add(memberFirstWidget);
+
     List<String> memberIdList = myAchievment.memberIdList;
-
     for (String memberId in memberIdList) {
-      MemberModel member = members.firstWhere((mem) => mem.id == memberId);
+      MemberModel member = myAchievment.yellMembers
+          .firstWhere((mem) => mem.memberUserId == memberId);
       Widget tempWidget = InkWell(
         onTap: () {
           myAchievment.selectMemberId(memberId);
         },
         child: Container(
+          margin: const EdgeInsets.only(
+            left: 5,
+            right: 5,
+          ),
           padding: const EdgeInsets.only(
             left: 10,
             right: 10,
@@ -198,14 +209,20 @@ class MyAchievementPage extends ConsumerWidget {
           width: 100,
           height: 30,
           decoration: BoxDecoration(
-            color:
-                myAchievment.selectedMemberId == memberId ? Colors.red : null,
+            border: Border.all(color: Colors.grey),
+            color: myAchievment.selectedMemberId == memberId
+                ? Colors.grey[700]
+                : null,
             borderRadius: BorderRadius.circular(30),
           ),
           child: Center(
             child: Text(
               member.memberName,
               overflow: TextOverflow.ellipsis,
+              style: myAchievment.selectedMemberId == memberId
+                  ? const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)
+                  : null,
             ),
           ),
         ),
@@ -376,7 +393,7 @@ class MyAchievementPage extends ConsumerWidget {
               const Divider(
                 color: Colors.grey,
               ),
-              TextWidget.headLineText5('応援してくれるメンバー'),
+              TextWidget.headLineText5('応援中の仲間'),
               _memberWidget(context, myAchievment),
             ],
           ),
