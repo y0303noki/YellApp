@@ -128,6 +128,7 @@ class MyAchievementPage extends ConsumerWidget {
             Expanded(
               child: Bubble(
                 margin: const BubbleEdges.only(left: 10, right: 10),
+                padding: const BubbleEdges.only(top: 20, bottom: 20),
                 nip: BubbleNip.leftTop,
                 color: CommonWidget.otherDefaultColor(),
                 child: _selectYellMessage(myAchievment),
@@ -153,6 +154,7 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
+  // 応援メッセージ表示
   Widget _selectYellMessage(MyAchievment myAchievment) {
     if (myAchievment.selectedMemberId == '' ||
         myAchievment.yellMessages.isEmpty) {
@@ -162,9 +164,20 @@ class MyAchievementPage extends ConsumerWidget {
         (message) => message.memberId == myAchievment.selectedMemberId,
         orElse: () => YellMessage());
     if (selectedMessage.message.isEmpty) {
-      return Text('見つかりません', textAlign: TextAlign.left);
+      // メッセージなし
+      return const Text(
+        'メッセージがここに表示されます',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          color: Colors.grey,
+        ),
+      );
     } else {
-      return Text(selectedMessage.message, textAlign: TextAlign.left);
+      // メッセージあり
+      return Text(
+        selectedMessage.message,
+        textAlign: TextAlign.left,
+      );
     }
   }
 

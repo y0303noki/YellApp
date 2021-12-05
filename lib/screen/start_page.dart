@@ -59,10 +59,11 @@ class StartPage extends ConsumerWidget {
                       );
                     },
                     child: ButtonWidget.startMainButton(
-                        deviceSize.width,
-                        '応援する',
-                        Icons.thumb_up,
-                        CommonWidget.otherDefaultColor()!),
+                      deviceSize.width,
+                      '応援する',
+                      Icons.thumb_up,
+                      CommonWidget.otherDefaultColor()!,
+                    ),
                   ),
                 ],
               )
@@ -107,14 +108,20 @@ class StartPage extends ConsumerWidget {
                   MaterialPageRoute(
                     builder: (context) => StartMySettingPage(),
                   ),
-                ).then((value) {
-                  myAchievment.refreshNotifyListeners();
-                });
+                ).then(
+                  (value) {
+                    myAchievment.refreshNotifyListeners();
+                  },
+                );
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
-                      Icons.directions_run, CommonWidget.myDefaultColor()!),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
+                  ),
                 ],
               ),
             );
@@ -145,14 +152,18 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
-                      Icons.directions_run, CommonWidget.myDefaultColor()!),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
+                  ),
                 ],
               ),
             );
           } else {
             // 登録ずみデータあり
-            return GestureDetector(
+            return InkWell(
               onTap: () {
                 goalData.memberIds =
                     memberDatas.map((e) => e.memberUserId).toList();
@@ -171,8 +182,12 @@ class StartPage extends ConsumerWidget {
               },
               child: Column(
                 children: [
-                  ButtonWidget.startMainButton(deviceSize.width, '自分の記録を始める',
-                      Icons.directions_run, CommonWidget.myDefaultColor()!),
+                  ButtonWidget.startMainButton(
+                    deviceSize.width,
+                    '自分の記録を始める',
+                    Icons.directions_run,
+                    CommonWidget.myDefaultColor()!,
+                  ),
                 ],
               ),
             );

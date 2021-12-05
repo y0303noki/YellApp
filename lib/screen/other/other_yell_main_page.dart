@@ -17,8 +17,6 @@ class OtherYellMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
 
-    final deviceSize = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
@@ -139,7 +137,8 @@ class OtherYellMainPage extends ConsumerWidget {
 Widget _speechMessage(String _text) {
   return Expanded(
     child: Bubble(
-      margin: BubbleEdges.only(top: 10),
+      margin: const BubbleEdges.only(top: 20),
+      padding: const BubbleEdges.only(top: 20, bottom: 20),
       nip: BubbleNip.leftTop,
       color: CommonWidget.myDefaultColor(),
       child: Text(_text, textAlign: TextAlign.left),
@@ -151,7 +150,8 @@ Widget _speechMessage(String _text) {
 Widget _yellMessage(String _text) {
   return Expanded(
     child: Bubble(
-      margin: BubbleEdges.only(top: 10),
+      margin: const BubbleEdges.only(top: 20),
+      padding: const BubbleEdges.only(top: 20, bottom: 20),
       nip: BubbleNip.rightTop,
       color: CommonWidget.otherDefaultColor(),
       child: Text(

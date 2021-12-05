@@ -75,7 +75,7 @@ class ButtonWidget {
           color: CommonWidget.myDefaultColor(),
         ),
         child: Center(
-          child: TextWidget.mainButtonText('達成'),
+          child: TextWidget.mainButtonText('達成済み'),
         ),
       ),
     );
@@ -91,7 +91,7 @@ class ButtonWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: TextWidget.mainButtonText('達成'),
+        child: TextWidget.mainButtonText('達成済み'),
       ),
     );
   }
