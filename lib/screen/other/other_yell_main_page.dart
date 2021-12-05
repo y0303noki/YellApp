@@ -31,7 +31,6 @@ class OtherYellMainPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         actions: [],
-        title: const Text('TabBar Widget'),
       ),
       body: SingleChildScrollView(
         child: Container(

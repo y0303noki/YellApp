@@ -157,7 +157,7 @@ class StartPage extends ConsumerWidget {
                 goalData.memberIds =
                     memberDatas.map((e) => e.memberUserId).toList();
 
-                myAchievment.setInitialData(goalData, messages);
+                myAchievment.setInitialData(goalData, memberDatas, messages);
                 invite.id = goalData.inviteId;
 
                 Navigator.push(

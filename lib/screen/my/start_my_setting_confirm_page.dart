@@ -155,7 +155,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     Map<String, Object?> resultMap =
         await _myGoalFirebase.insertMyGoalData(model);
     if (resultMap['myGoal'] != null) {
-      myAchievment.setInitialData(resultMap['myGoal'] as MyGoalModel, []);
+      myAchievment.setInitialData(resultMap['myGoal'] as MyGoalModel, [], []);
     }
     if (resultMap['invite'] != null) {
       invite.setInitialData(resultMap['invite'] as InviteModel);

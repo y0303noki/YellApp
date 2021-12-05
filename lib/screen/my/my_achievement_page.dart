@@ -258,7 +258,7 @@ class MyAchievementPage extends ConsumerWidget {
             // 既に登録ずみ
             if (!goalData.isDeleted) {
               goalData.memberIds = memberDatas.map((e) => e.id).toList();
-              myAchievment.setInitialData(goalData, messages);
+              myAchievment.setInitialData(goalData, memberDatas, messages);
               invite.id = goalData.inviteId;
 
               return _body(context, myAchievment);

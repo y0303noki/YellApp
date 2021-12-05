@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/utility/utility.dart';
@@ -12,7 +13,10 @@ class MyAchievment extends ChangeNotifier {
   String myName = '';
   int unitType = 0; // 0:日 1:回数
   String selectedMemberId = '';
+  // メンバー
   List<String> memberIdList = [];
+  List<MemberModel> yellMembers = [];
+
   bool isTapedToday = false;
   String inviteId = ''; // 招待コードのid
 
@@ -56,7 +60,8 @@ class MyAchievment extends ChangeNotifier {
     }
   }
 
-  void setInitialData(MyGoalModel _myGoalModel, List<YellMessage> messages) {
+  void setInitialData(MyGoalModel _myGoalModel, List<MemberModel> members,
+      List<YellMessage> messages) {
     goalId = _myGoalModel.id;
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;
@@ -66,6 +71,9 @@ class MyAchievment extends ChangeNotifier {
     inviteId = _myGoalModel.inviteId;
     currentDay = _myGoalModel.currentDay;
     currentTime = _myGoalModel.currentTimes;
+    // メンバー
+    yellMembers = members;
+    // メッセージ
     yellMessages = messages;
 
     // 達成ボタンを押した日付と現在の日付が同じか比較
