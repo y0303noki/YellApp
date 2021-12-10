@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/utility/utility.dart';
 
@@ -76,6 +77,33 @@ class OtherAchievment extends ChangeNotifier {
   // 応援メッセージ更新
   void setYellMessage(String _message) {
     yellMessage = _message;
+    notifyListeners();
+  }
+
+  // クイックアクションでメッセージセット
+  void setQuickAction(int _index) {
+    switch (_index) {
+      case 0:
+        yellMessage = CommonWidget.quickAction0();
+        break;
+      case 1:
+        yellMessage = CommonWidget.quickAction1();
+        break;
+      case 2:
+        yellMessage = CommonWidget.quickAction2();
+        break;
+      case 3:
+        yellMessage = CommonWidget.quickAction3();
+        break;
+      case 4:
+        yellMessage = CommonWidget.quickAction4();
+        break;
+      case 5:
+        yellMessage = CommonWidget.quickAction5();
+        break;
+      default:
+        yellMessage = '';
+    }
     notifyListeners();
   }
 

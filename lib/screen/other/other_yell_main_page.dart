@@ -37,27 +37,73 @@ class OtherYellMainPage extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  ButtonWidget.iconMainWidget('a'),
-                  _speechMessage(otherAchievment.ownerAchievedment),
-                ],
+              Container(
+                child: TextWidget.headLineText3(otherAchievment.goalTitle),
               ),
               _achievedCurrent(otherAchievment),
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
                   right: 10,
-                  top: 5,
-                  bottom: 10,
+                  top: 0,
+                  bottom: 0,
                 ),
-                child: TextWidget.subTitleText1('メッセージを送ろう！'),
+                child: Row(
+                  children: [
+                    ButtonWidget.iconMainWidget('a'),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        left: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          TextWidget.headLineText5(otherAchievment.ownerName),
+                        ],
+                      ),
+                    ),
+                    // _speechMessage(otherAchievment.ownerAchievedment),
+                  ],
+                ),
               ),
-              _textEdit(otherAchievment),
               Container(
                 margin: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
+                  left: 10,
+                  right: 10,
+                  top: 0,
+                  bottom: 20,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Bubble(
+                        margin: const BubbleEdges.only(top: 20),
+                        padding: const BubbleEdges.only(top: 20, bottom: 20),
+                        nip: BubbleNip.leftTop,
+                        color: CommonWidget.myDefaultColor(),
+                        child: Text(otherAchievment.ownerAchievedment,
+                            textAlign: TextAlign.left),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // _speechMessage(otherAchievment.ownerAchievedment),
+
+              // Container(
+              //   margin: const EdgeInsets.only(
+              //     left: 10,
+              //     right: 10,
+              //     top: 5,
+              //     bottom: 10,
+              //   ),
+              //   child: TextWidget.subTitleText1('メッセージを送ろう！'),
+              // ),
+              // _textEdit(otherAchievment),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
                   top: 5,
                   bottom: 10,
                 ),
@@ -69,11 +115,152 @@ class OtherYellMainPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Text('過去のメッセージ'),
+              ElevatedButton(
+                child: const Text('メッセージを送る'),
+                style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.black,
+                  shape: const StadiumBorder(),
+                ),
+                onPressed: () {
+                  _showModalBottomSheat(context, otherAchievment);
+                },
+              ),
+              // const Text('過去のメッセージ'),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  _showModalBottomSheat(BuildContext context, OtherAchievment otherAchievment) {
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          // height: 400,
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GridView.count(
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 5.0,
+                    scrollDirection: Axis.vertical,
+                    crossAxisCount: 3,
+                    children: _quickAction(context, otherAchievment),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 5,
+                  bottom: 30,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: TextWidget.subTitleText1('キャンセル'),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _quickAction(
+      BuildContext context, OtherAchievment otherAchievment) {
+    return [
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction0(),
+        Icons.thumb_up_alt,
+        0,
+      ),
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction1(),
+        Icons.mood,
+        1,
+      ),
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction2(),
+        Icons.tag_faces,
+        2,
+      ),
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction3(),
+        Icons.sentiment_satisfied_alt,
+        3,
+      ),
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction4(),
+        Icons.sentiment_very_dissatisfied,
+        4,
+      ),
+      _tileContainer(
+        context,
+        otherAchievment,
+        CommonWidget.quickAction5(),
+        Icons.emoji_people,
+        5,
+      ),
+    ];
+  }
+
+  Widget _tileContainer(BuildContext context, OtherAchievment otherAchievment,
+      String _text, IconData _iconData, int _index) {
+    return GestureDetector(
+      child: GridTile(
+        child: Container(
+          decoration: BoxDecoration(
+            color: CommonWidget.otherDefaultColor()!,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Icon(
+                _iconData,
+                size: 30,
+              ),
+              Center(
+                child: TextWidget.subTitleText2(_text),
+              ),
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        otherAchievment.setQuickAction(_index);
+
+        YellMessage yellMessageModel = YellMessage(
+          goalId: otherAchievment.goalId,
+          message: otherAchievment.yellMessage,
+        );
+        // x日目 or x回目
+        if (otherAchievment.isAchieved) {
+          yellMessageModel.dayOrTimes = otherAchievment.currentDayOrTime - 1;
+        } else {
+          yellMessageModel.dayOrTimes = otherAchievment.currentDayOrTime;
+        }
+
+        yellMessageFirebase.insertOrUpdateYellMessageData(yellMessageModel);
+
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -256,7 +443,7 @@ Widget _textEdit(OtherAchievment otherAchievment) {
       children: [
         Text('(達成した日付)の分のメッセージ'),
         TextField(
-          autofocus: true,
+          // autofocus: true,
           controller: _textEditingController,
           enabled: otherAchievment.yellMessage.isEmpty,
           maxLength: 20,
@@ -288,8 +475,10 @@ Widget _textEdit(OtherAchievment otherAchievment) {
                             otherAchievment.currentDayOrTime;
                       }
 
+                      // yellMessageFirebase
+                      //     .insertYellMessageData(yellMessageModel);
                       yellMessageFirebase
-                          .insertYellMessageData(yellMessageModel);
+                          .insertOrUpdateYellMessageData(yellMessageModel);
 
                       _textEditingController.clear();
                       otherAchievment.refreshNotifyListeners();

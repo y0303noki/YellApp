@@ -97,6 +97,21 @@ class ButtonWidget {
   }
 
   // 円形のウィジット。アイコン
+  static iconBigMainWidget(String text) {
+    return Container(
+      width: 120,
+      height: 120,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue, width: 5),
+        borderRadius: BorderRadius.circular(120 / 2),
+      ),
+      child: Center(
+        child: Text(text),
+      ),
+    );
+  }
+
+  // 円形のウィジット。アイコン
   static iconMainWidget(String text) {
     return Container(
       width: 80,

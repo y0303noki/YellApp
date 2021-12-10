@@ -49,4 +49,12 @@ class TextWidget {
       overflow: TextOverflow.clip,
     );
   }
+
+  static subTitleText2(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 14),
+      overflow: TextOverflow.clip,
+    );
+  }
 }

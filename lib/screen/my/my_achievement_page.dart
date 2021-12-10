@@ -314,21 +314,7 @@ class MyAchievementPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 1,
-                  right: 1,
-                ),
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 5),
-                  borderRadius: BorderRadius.circular(120 / 2),
-                ),
-                child: Center(
-                  child: Text('a'),
-                ),
-              ),
+              ButtonWidget.iconBigMainWidget('a'),
             ],
           ),
           Container(
