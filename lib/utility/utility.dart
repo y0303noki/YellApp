@@ -5,7 +5,7 @@ class Utility {
   // dateTimeをStringに変換
   static String toDateFormatted(DateTime _dateTime) {
     initializeDateFormatting("ja_JP");
-    var formatter = DateFormat('yyyy/MM/dd(E)', "ja_JP");
+    var formatter = DateFormat('yyyy/MM/dd', "ja_JP");
     var formatted = formatter.format(_dateTime); // DateからString
     return formatted;
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
@@ -14,6 +15,7 @@ import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
 import 'package:yell_app/state/other_setting_code_provider.dart';
+import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
 
@@ -83,7 +85,7 @@ class StartOtherYellListPage extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: _goals.length, // この行を追加
+                    itemCount: _goals.length,
                     itemBuilder: (BuildContext context, int index) {
                       return _yellItem(context, _goals[index], otherAchievment);
                     },
@@ -123,7 +125,7 @@ class StartOtherYellListPage extends ConsumerWidget {
     return Container(
       decoration: const BoxDecoration(
         border: Border(
-          bottom: BorderSide(width: 1.0, color: Colors.grey),
+          bottom: BorderSide(width: 3.0, color: Colors.grey),
         ),
       ),
       child: ListTile(
@@ -132,6 +134,9 @@ class StartOtherYellListPage extends ConsumerWidget {
           style: const TextStyle(color: Colors.black, fontSize: 18.0),
         ),
         leading: ButtonWidget.iconMainMiniWidget(_iconName),
+        trailing: TextWidget.subTitleText3(
+            '${Utility.toDateFormatted(myGoalModel.createdAt!)} ~'),
+
         onTap: () async {
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;

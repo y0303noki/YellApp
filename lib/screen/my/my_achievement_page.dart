@@ -314,7 +314,9 @@ class MyAchievementPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ButtonWidget.iconBigMainWidget('a'),
+              ButtonWidget.iconBigMainWidget(
+                myAchievment.myName.substring(0, 1),
+              ),
             ],
           ),
           Container(

@@ -106,7 +106,7 @@ class ButtonWidget {
         borderRadius: BorderRadius.circular(120 / 2),
       ),
       child: Center(
-        child: Text(text),
+        child: TextWidget.headLineText3(text),
       ),
     );
   }
@@ -121,7 +121,7 @@ class ButtonWidget {
         borderRadius: BorderRadius.circular(80 / 2),
       ),
       child: Center(
-        child: Text(text),
+        child: TextWidget.headLineText5(text),
       ),
     );
   }

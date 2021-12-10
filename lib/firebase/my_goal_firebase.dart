@@ -98,13 +98,19 @@ class MyGoalFirebase {
       return [];
     }
     List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
-    final QuerySnapshot snapshots = await _firestore
-        .collection(myGoals)
-        .where('id', whereIn: goalIds)
-        .where('isDeleted', isEqualTo: false)
-        .get();
+    List<QueryDocumentSnapshot> docs = [];
+    try {
+      final QuerySnapshot snapshots = await _firestore
+          .collection(myGoals)
+          .where('id', whereIn: goalIds)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-    List<QueryDocumentSnapshot> docs = snapshots.docs;
+      docs = snapshots.docs;
+    } catch (e) {
+      print(e);
+    }
 
     List<MyGoalModel> goalList = [];
     for (QueryDocumentSnapshot doc in docs) {
