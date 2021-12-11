@@ -93,6 +93,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      myAchievment.refresh = true;
                       sendMyGoalData(startMySetting, myAchievment, invite);
                       Navigator.push(
                         context,

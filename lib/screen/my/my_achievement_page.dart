@@ -347,6 +347,68 @@ class MyAchievementPage extends ConsumerWidget {
               // 達成ボタン
               InkWell(
                 onTap: () async {
+                  // スナックバー表示
+                  String xDayMessage = 'x日おめでとうございます';
+                  String message = '今回の記録をSNSでシェアしますか？';
+                  final snackBar = SnackBar(
+                    backgroundColor: Colors.yellow[50],
+                    elevation: 30,
+                    content: Container(
+                      height: 200.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Icon(
+                                Icons.emoji_people,
+                                size: 40,
+                              ),
+                              TextWidget.snackBarText(xDayMessage),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextWidget.snackBarText(message),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                },
+                                child: TextWidget.snackBarText('しない'),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: CommonWidget.myDefaultColor(),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: TextWidget.snackBarText('シェアする'),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    duration: const Duration(seconds: 5),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                   if (myAchievment.isTapedToday) {
                     // 達成をキャンセルするとややこしいのでさせない
                     return;

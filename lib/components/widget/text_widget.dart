@@ -65,4 +65,12 @@ class TextWidget {
       overflow: TextOverflow.clip,
     );
   }
+
+  static snackBarText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 16, color: Colors.black),
+      overflow: TextOverflow.clip,
+    );
+  }
 }

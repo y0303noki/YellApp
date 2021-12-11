@@ -198,6 +198,7 @@ class OtherYellMainPage extends ConsumerWidget {
     );
   }
 
+  // メッセージを送れるリスト
   List<Widget> _quickAction(
       BuildContext context, OtherAchievment otherAchievment) {
     return [
@@ -346,18 +347,18 @@ class OtherYellMainPage extends ConsumerWidget {
   }
 }
 
-// 達成コメント
-Widget _speechMessage(String _text) {
-  return Expanded(
-    child: Bubble(
-      margin: const BubbleEdges.only(top: 20),
-      padding: const BubbleEdges.only(top: 20, bottom: 20),
-      nip: BubbleNip.leftTop,
-      color: CommonWidget.myDefaultColor(),
-      child: Text(_text, textAlign: TextAlign.left),
-    ),
-  );
-}
+// // 達成コメント
+// Widget _speechMessage(String _text) {
+//   return Expanded(
+//     child: Bubble(
+//       margin: const BubbleEdges.only(top: 20),
+//       padding: const BubbleEdges.only(top: 20, bottom: 20),
+//       nip: BubbleNip.leftTop,
+//       color: CommonWidget.myDefaultColor(),
+//       child: Text(_text, textAlign: TextAlign.left),
+//     ),
+//   );
+// }
 
 // 応援コメント
 Widget _yellMessage(String _text) {

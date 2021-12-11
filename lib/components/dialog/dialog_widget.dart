@@ -35,7 +35,7 @@ class DialogWidget {
     return result;
   }
 
-  // メモ
+  // 達成ときにひとことメッセージのためのダイアログ
   Future<String> achievedMyMessagelDialog(
     BuildContext dialogContext,
   ) async {
@@ -48,9 +48,16 @@ class DialogWidget {
           title: const Text('ひとこと残しますか？'),
           content: TextField(
             controller: _textController,
-            decoration: InputDecoration(hintText: "ここに入力"),
+            decoration: const InputDecoration(hintText: "ここに入力"),
           ),
           actions: [
+            TextButton(
+              child: const Text('キャンセル'),
+              onPressed: () {
+                result = '';
+                Navigator.of(context).pop('NO');
+              },
+            ),
             TextButton(
               child: Container(
                 padding: const EdgeInsets.only(
@@ -63,18 +70,14 @@ class DialogWidget {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Text('送信'),
+                child: const Text(
+                  '送信',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               onPressed: () {
                 result = _textController.text;
                 Navigator.of(context).pop('YES');
-              },
-            ),
-            TextButton(
-              child: const Text('キャンセル'),
-              onPressed: () {
-                result = '';
-                Navigator.of(context).pop('NO');
               },
             ),
           ],
