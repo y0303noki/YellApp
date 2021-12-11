@@ -66,7 +66,12 @@ class MyAchievment extends ChangeNotifier {
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;
     unitType = _myGoalModel.unitType;
-    memberIdList = members.map((mem) => mem.memberUserId).toList();
+    if (members.isEmpty) {
+      memberIdList = [];
+    } else {
+      memberIdList = members.map((mem) => mem.memberUserId).toList();
+    }
+
     refresh = false;
     inviteId = _myGoalModel.inviteId;
     currentDay = _myGoalModel.currentDay;

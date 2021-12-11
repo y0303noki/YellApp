@@ -328,7 +328,7 @@ class MyAchievementPage extends ConsumerWidget {
             children: [
               // 自分のでかいアイコン
               ButtonWidget.iconBigMainWidget(
-                myAchievment.myName.substring(0, 2),
+                myAchievment.myName.substring(0, 1),
               ),
             ],
           ),
