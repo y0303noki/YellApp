@@ -174,7 +174,7 @@ class ButtonWidget {
                     left: 10,
                     top: 5,
                   ),
-                  child: Text('選択中の応援メッセージ')),
+                  child: const Text('選択中の応援メッセージ')),
             ],
           ),
           TextWidget.headLineText6(text),
