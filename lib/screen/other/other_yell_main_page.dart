@@ -26,7 +26,7 @@ class OtherYellMainPage extends ConsumerWidget {
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.home),
         ),
         actions: [],
       ),
