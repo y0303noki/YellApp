@@ -1,6 +1,4 @@
-/**
- * 自分の目標設定のモデル
- */
+/// 自分の目標設定のモデル
 class MyGoalModel {
   String id;
   String goalTitle = '';

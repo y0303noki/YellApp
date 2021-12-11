@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/widget/button_widget.dart';
-import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/model/invite.dart';
@@ -15,6 +12,8 @@ import 'package:yell_app/state/start_my_setting_provider.dart';
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class StartMySettingConfirmPage extends ConsumerWidget {
+  const StartMySettingConfirmPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startMySetting = ref.watch(startMySettingProvider);
@@ -48,7 +47,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   child: TextField(
                     enabled: false,
                     controller: _textEditingController,
-                    style: TextStyle(),
+                    style: const TextStyle(),
                     maxLines: 1,
                   ),
                 ),
@@ -57,17 +56,13 @@ class StartMySettingConfirmPage extends ConsumerWidget {
             Column(
               children: [
                 TextWidget.headLineText5('日にち or　回数'),
-                Container(
-                  child: Text(startMySetting.selectedUnit.toString()),
-                ),
+                Text(startMySetting.selectedUnit.toString()),
               ],
             ),
             Column(
               children: [
                 TextWidget.headLineText5('あなたのなまえ'),
-                Container(
-                  child: Text(startMySetting.myName),
-                ),
+                Text(startMySetting.myName),
               ],
             ),
             Column(
@@ -93,11 +88,12 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
+                      myAchievment.refresh = true;
                       sendMyGoalData(startMySetting, myAchievment, invite);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyAchievementPage(),
+                          builder: (context) => const MyAchievementPage(),
                         ),
                       );
                     },

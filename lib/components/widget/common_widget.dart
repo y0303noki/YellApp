@@ -52,4 +52,28 @@ class CommonWidget {
   static Color? otherDefaultColor() {
     return Colors.lightBlue[100];
   }
+
+  static String quickAction0() {
+    return 'いいね!';
+  }
+
+  static String quickAction1() {
+    return 'えらい!';
+  }
+
+  static String quickAction2() {
+    return 'すごくえらい!';
+  }
+
+  static String quickAction3() {
+    return '次もがんばろう';
+  }
+
+  static String quickAction4() {
+    return 'またあした';
+  }
+
+  static String quickAction5() {
+    return 'おつかれさま';
+  }
 }

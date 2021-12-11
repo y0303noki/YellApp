@@ -16,7 +16,7 @@ class MyGoalFirebase {
   final MemberFirebase _memberFirebase = MemberFirebase();
   final YellMessageFirebase _yellMessageFirebase = YellMessageFirebase();
 
-  Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
 
   // コレクション名前
   final String myGoals = 'my_goals';
@@ -57,19 +57,27 @@ class MyGoalFirebase {
       final UserAuth _userAuth = UserAuth();
       userId = _userAuth.user != null ? _userAuth.user!.uid : '';
     }
-    final QuerySnapshot snapshots = await _firestore
-        .collection(myGoals)
-        .where('userId', isEqualTo: userId)
-        .where('isDeleted', isEqualTo: false)
-        .get();
+    List<QueryDocumentSnapshot> docs = [];
+    try {
+      final QuerySnapshot snapshots = await _firestore
+          .collection(myGoals)
+          .where('userId', isEqualTo: userId)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-    List<QueryDocumentSnapshot> docs = snapshots.docs;
+      docs = snapshots.docs;
+    } catch (e) {
+      print(e);
+    }
+
     if (docs.isEmpty) {
       return null;
     }
     Map<String, dynamic> data = docs.first.data() as Map<String, dynamic>;
+    String docId = docs.first.id;
     final _myGoalModel = MyGoalModel(
-      id: data['id'],
+      id: docId,
       goalTitle: data['title'] ?? '',
       myName: data['myName'] ?? '',
       unitType: data['unitType'] ?? 0,
@@ -98,13 +106,19 @@ class MyGoalFirebase {
       return [];
     }
     List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
-    final QuerySnapshot snapshots = await _firestore
-        .collection(myGoals)
-        .where('id', whereIn: goalIds)
-        .where('isDeleted', isEqualTo: false)
-        .get();
+    List<QueryDocumentSnapshot> docs = [];
+    try {
+      final QuerySnapshot snapshots = await _firestore
+          .collection(myGoals)
+          .where('id', whereIn: goalIds)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-    List<QueryDocumentSnapshot> docs = snapshots.docs;
+      docs = snapshots.docs;
+    } catch (e) {
+      print(e);
+    }
 
     List<MyGoalModel> goalList = [];
     for (QueryDocumentSnapshot doc in docs) {
@@ -162,7 +176,7 @@ class MyGoalFirebase {
           await _firestore.collection(myGoals).add(addObject);
       final data = await result.get();
       final String docId = data.id;
-      CommonFirebase().updateDocId(myGoals, docId);
+      await CommonFirebase().updateDocId(myGoals, docId);
 
       InviteModel? _inviteModel =
           await _inviteFirebase.insertInviteData(inviteDocId);

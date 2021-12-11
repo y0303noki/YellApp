@@ -97,6 +97,21 @@ class ButtonWidget {
   }
 
   // 円形のウィジット。アイコン
+  static iconBigMainWidget(String text) {
+    return Container(
+      width: 120,
+      height: 120,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue, width: 5),
+        borderRadius: BorderRadius.circular(120 / 2),
+      ),
+      child: Center(
+        child: TextWidget.headLineText3(text),
+      ),
+    );
+  }
+
+  // 円形のウィジット。アイコン
   static iconMainWidget(String text) {
     return Container(
       width: 80,
@@ -106,7 +121,7 @@ class ButtonWidget {
         borderRadius: BorderRadius.circular(80 / 2),
       ),
       child: Center(
-        child: Text(text),
+        child: TextWidget.headLineText5(text),
       ),
     );
   }
@@ -159,7 +174,7 @@ class ButtonWidget {
                     left: 10,
                     top: 5,
                   ),
-                  child: Text('選択中の応援メッセージ')),
+                  child: const Text('選択中の応援メッセージ')),
             ],
           ),
           TextWidget.headLineText6(text),

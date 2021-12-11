@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
-import 'package:yell_app/screen/my/start_my_setting_myname_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_selectunit_page.dart';
-import 'package:yell_app/state/counter_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 final disabledProvider = StateProvider((ref) => true);
@@ -40,7 +36,7 @@ class StartMySettingPage extends ConsumerWidget {
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,
-                  style: TextStyle(),
+                  style: const TextStyle(),
                   maxLines: 1,
                   decoration: InputDecoration(
                     hintText: '（例）筋トレ、勉強',

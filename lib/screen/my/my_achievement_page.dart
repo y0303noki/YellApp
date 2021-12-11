@@ -12,18 +12,17 @@ import 'package:yell_app/screen/my/invite_main_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
+import 'package:share/share.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class MyAchievementPage extends ConsumerWidget {
+  const MyAchievementPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final myAchievment = ref.watch(myAchievmentProvider);
     final invite = ref.watch(inviteProvider);
-
-    TextEditingController _textEditingController =
-        TextEditingController(text: myAchievment.goalTitle);
-    final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +89,7 @@ class MyAchievementPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InviteMainPage(),
+                    builder: (context) => const InviteMainPage(),
                   ),
                 );
               },
@@ -144,7 +143,7 @@ class MyAchievementPage extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => InviteMainPage(),
+                builder: (context) => const InviteMainPage(),
               ),
             );
           },
@@ -158,7 +157,7 @@ class MyAchievementPage extends ConsumerWidget {
   Widget _selectYellMessage(MyAchievment myAchievment) {
     if (myAchievment.selectedMemberId == '' ||
         myAchievment.yellMessages.isEmpty) {
-      return const Text('メッセージなし', textAlign: TextAlign.left);
+      return const Text('', textAlign: TextAlign.left);
     }
     YellMessage? selectedMessage = myAchievment.yellMessages.firstWhere(
         (message) => message.memberId == myAchievment.selectedMemberId,
@@ -185,27 +184,33 @@ class MyAchievementPage extends ConsumerWidget {
   List<Widget> _memberIconWidget(MyAchievment myAchievment) {
     List<Widget> row = <Widget>[];
     // 一番左のウィジット
-    Widget memberFirstWidget = Container(
-      margin: const EdgeInsets.only(
-        left: 5,
-        right: 5,
+    Widget memberFirstWidget = InkWell(
+      onTap: () {
+        myAchievment.selectMemberId('');
+      },
+      child: Container(
+        margin: const EdgeInsets.only(
+          left: 5,
+          right: 5,
+        ),
+        padding: const EdgeInsets.only(
+          top: 5,
+          bottom: 5,
+          left: 5,
+          right: 5,
+        ),
+        color: Colors.white,
+        child: const Text('選択'),
       ),
-      padding: const EdgeInsets.only(
-        top: 5,
-        bottom: 5,
-        left: 5,
-        right: 5,
-      ),
-      color: Colors.white,
-      child: const Text('選択'),
     );
 
     row.add(memberFirstWidget);
 
     List<String> memberIdList = myAchievment.memberIdList;
     for (String memberId in memberIdList) {
-      MemberModel member = myAchievment.yellMembers
-          .firstWhere((mem) => mem.memberUserId == memberId);
+      MemberModel member = myAchievment.yellMembers.firstWhere(
+          (mem) => mem.memberUserId == memberId,
+          orElse: () => MemberModel());
       Widget tempWidget = InkWell(
         onTap: () {
           myAchievment.selectMemberId(memberId);
@@ -279,13 +284,20 @@ class MyAchievementPage extends ConsumerWidget {
                 child: Text('エラーがおきました'),
               );
             }
-            MyGoalModel goalData = _data['goal'] as MyGoalModel;
-            List<MemberModel> memberDatas =
-                _data['members'] as List<MemberModel>;
-            // 応援メッセージ
-            List<YellMessage> messages = _data['messages'] as List<YellMessage>;
+            MyGoalModel goalData = _data.containsKey('goal')
+                ? _data['goal'] as MyGoalModel
+                : MyGoalModel();
 
-            // 既に登録ずみ
+            List<MemberModel> memberDatas = _data.containsKey('members')
+                ? _data['members'] as List<MemberModel>
+                : [];
+
+            // 応援メッセージ
+            List<YellMessage> messages = _data.containsKey('messages')
+                ? _data['messages'] as List<YellMessage>
+                : [];
+
+            // データをセット
             if (!goalData.isDeleted) {
               goalData.memberIds = memberDatas.map((e) => e.id).toList();
               myAchievment.setInitialData(goalData, memberDatas, messages);
@@ -300,6 +312,7 @@ class MyAchievementPage extends ConsumerWidget {
     }
   }
 
+  // ui部分
   Widget _body(BuildContext context, MyAchievment myAchievment) {
     final deviceSize = MediaQuery.of(context).size;
     return Container(
@@ -314,23 +327,13 @@ class MyAchievementPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 1,
-                  right: 1,
-                ),
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 5),
-                  borderRadius: BorderRadius.circular(120 / 2),
-                ),
-                child: Center(
-                  child: Text('a'),
-                ),
+              // 自分のでかいアイコン
+              ButtonWidget.iconBigMainWidget(
+                myAchievment.myName.substring(0, 1),
               ),
             ],
           ),
+          // 目標タイトル
           Container(
             margin: const EdgeInsets.only(
               left: 10,
@@ -346,9 +349,79 @@ class MyAchievementPage extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   // スナックバー表示
-                  String message = 'おつかれさまです！';
+                  String xDayMessage = '';
+                  int showDayOrTime = 0;
+                  // タップしてたら1減らす
+                  if (myAchievment.isTapedToday) {
+                    showDayOrTime = myAchievment.currentDayOrTime - 1;
+                  } else {
+                    showDayOrTime = myAchievment.currentDayOrTime;
+                  }
+                  // タイプによってメッセージを変更
+                  if (myAchievment.unitType == 0) {
+                    xDayMessage = '$showDayOrTime日目';
+                  } else {
+                    xDayMessage = '$showDayOrTime回目';
+                  }
+                  xDayMessage += 'おめでとう';
+                  String message = '今回の記録をSNSでシェアしますか？';
                   final snackBar = SnackBar(
-                    content: Text(message),
+                    backgroundColor: Colors.yellow[50],
+                    elevation: 30,
+                    content: SizedBox(
+                      height: 200.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Icon(
+                                Icons.emoji_people,
+                                size: 40,
+                              ),
+                              TextWidget.snackBarText(xDayMessage),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextWidget.snackBarText(message),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                },
+                                child: TextWidget.snackBarText('しない'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _shareSns(xDayMessage);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: CommonWidget.myDefaultColor(),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: TextWidget.snackBarText('シェアする'),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     duration: const Duration(seconds: 5),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -416,5 +489,9 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
-  // モーダルシートを表示
+  /// SNSにシェア
+  Future _shareSns(String _text) async {
+    _text += '#今日もえらい！';
+    await Share.share(_text);
+  }
 }

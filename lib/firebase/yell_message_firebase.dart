@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
-import 'package:uuid/uuid.dart';
 
 class YellMessageFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Uuid _uuid = Uuid();
 
   // コレクション名前
   final String yellMessage = 'yell_messages';
@@ -31,6 +29,24 @@ class YellMessageFirebase {
         .collection(yellMessage)
         .where('goalId', isEqualTo: goalId)
         .where('dayOrTimes', whereIn: list)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+
+    List<QueryDocumentSnapshot> docs = snapshots.docs;
+    return _mapYellMEssageFromDocs(docs);
+  }
+
+  /// 自分が送信したメッセージがあるか検索
+  Future<List<YellMessage>> fetchSendMyMessage(
+      String goalId, int dayOrTimes) async {
+    final UserAuth _userAuth = UserAuth();
+    final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
+
+    final QuerySnapshot snapshots = await _firestore
+        .collection(yellMessage)
+        .where('goalId', isEqualTo: goalId)
+        .where('memberId', isEqualTo: _userId)
+        .where('dayOrTimes', isEqualTo: dayOrTimes)
         .where('isDeleted', isEqualTo: false)
         .get();
 
@@ -79,6 +95,38 @@ class YellMessageFirebase {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  /// メッセージを更新する
+  Future<YellMessage?> updateYellMessageData(
+      String docId, YellMessage yellMessageModel) async {
+    // ドキュメント作成
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+
+    updateData['message'] = yellMessageModel.message;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(yellMessage).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // メッセージを送信。送信済みなら更新
+  Future<YellMessage?> insertOrUpdateYellMessageData(
+      YellMessage yellMessageModel) async {
+    List<YellMessage> yellMessages = await fetchSendMyMessage(
+        yellMessageModel.goalId, yellMessageModel.dayOrTimes);
+    if (yellMessages.isEmpty) {
+      // 新規作成
+      await insertYellMessageData(yellMessageModel);
+    } else {
+      // 更新
+      YellMessage message = yellMessages[0];
+      await updateYellMessageData(message.id, yellMessageModel);
     }
   }
 

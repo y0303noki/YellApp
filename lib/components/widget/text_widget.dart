@@ -49,4 +49,28 @@ class TextWidget {
       overflow: TextOverflow.clip,
     );
   }
+
+  static subTitleText2(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 14),
+      overflow: TextOverflow.clip,
+    );
+  }
+
+  static subTitleText3(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 12),
+      overflow: TextOverflow.clip,
+    );
+  }
+
+  static snackBarText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 16, color: Colors.black),
+      overflow: TextOverflow.clip,
+    );
+  }
 }

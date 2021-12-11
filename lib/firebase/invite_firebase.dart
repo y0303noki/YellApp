@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class InviteFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
 
   // コレクション名前
   final String invite = 'invites';

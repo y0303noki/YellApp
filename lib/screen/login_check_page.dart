@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/screen/start_page.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 
 /// ログイン中に表示する画面
 class LoginCheckPage extends ConsumerWidget {
+  const LoginCheckPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAuth = ref.watch(userAuthProvider);
