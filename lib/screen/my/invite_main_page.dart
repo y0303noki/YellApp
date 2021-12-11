@@ -73,21 +73,22 @@ class InviteMainPage extends ConsumerWidget {
                             ),
                           ),
                           onPressed: () async {
-                            // 更新
-                            InviteModel? _inviteModel = await inviteFirebase
-                                .updateInviteCode(invite.id);
+                            _updateInviteCode(invite);
+                            // // 更新
+                            // InviteModel? _inviteModel = await inviteFirebase
+                            //     .updateInviteCode(invite.id);
 
-                            if (_inviteModel == null) {
-                              // ありえない
-                              return;
-                            }
-                            // stateにセット
-                            invite.id = _inviteModel.id;
-                            invite.setExpiredAt(
-                                _inviteModel.code, _inviteModel.expiredAt);
+                            // if (_inviteModel == null) {
+                            //   // ありえない
+                            //   return;
+                            // }
+                            // // stateにセット
+                            // invite.id = _inviteModel.id;
+                            // invite.setExpiredAt(
+                            //     _inviteModel.code, _inviteModel.expiredAt);
                           },
                         ),
-                        Text('更新'),
+                        const Text('更新'),
                       ],
                     ),
                   ],
@@ -123,6 +124,21 @@ class InviteMainPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // 招待コード更新
+  void _updateInviteCode(Invite invite) async {
+    // 更新
+    InviteModel? _inviteModel =
+        await inviteFirebase.updateInviteCode(invite.id);
+
+    if (_inviteModel == null) {
+      // ありえない
+      return;
+    }
+    // stateにセット
+    invite.id = _inviteModel.id;
+    invite.setExpiredAt(_inviteModel.code, _inviteModel.expiredAt);
   }
 
   Widget _inviteCodeWidget(Invite invite) {
