@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
-import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/screen/my/start_my_setting_confirm_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_myname_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 class StartMySettingSelectUnitPage extends ConsumerWidget {
-  // final startMySetting = ref.watch(startMySettingProvider);
   final double bodyPaddingLeft = 10;
   final double bodyPaddingRight = 10;
+
+  const StartMySettingSelectUnitPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startMySetting = ref.watch(startMySettingProvider);
@@ -115,7 +112,7 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettinMynamePage(),
+                          builder: (context) => const StartMySettinMynamePage(),
                         ),
                       );
                     },
@@ -226,39 +223,5 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  // 1 ~ 7 のwidget
-  List<Widget> weekDayWidget(StartMySetting startMySetting) {
-    List<Widget> row = <Widget>[];
-    List<String> weekDays = ['1', '2', '3', '4', '5', '6', '7'];
-    List<int> weekDaysNum = [1, 2, 3, 4, 5, 6, 7];
-    for (int num in weekDaysNum) {
-      Widget tempWidget = InkWell(
-        onTap: () {
-          startMySetting.selectHowManyTime(num);
-        },
-        child: Container(
-          margin: const EdgeInsets.only(
-            left: 1,
-            right: 1,
-          ),
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: startMySetting.selectedHowManyTime == num
-                    ? Colors.red
-                    : Colors.blue),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Text(num.toString()),
-          ),
-        ),
-      );
-      row.add(tempWidget);
-    }
-    return row;
   }
 }

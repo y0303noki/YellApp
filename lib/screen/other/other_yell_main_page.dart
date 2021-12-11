@@ -13,6 +13,8 @@ YellMessageFirebase yellMessageFirebase = YellMessageFirebase();
 bool isFirstFetchYellMessage = false;
 
 class OtherYellMainPage extends ConsumerWidget {
+  const OtherYellMainPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
@@ -28,7 +30,7 @@ class OtherYellMainPage extends ConsumerWidget {
           },
           icon: const Icon(Icons.home),
         ),
-        actions: [],
+        actions: const [],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -163,36 +165,33 @@ class OtherYellMainPage extends ConsumerWidget {
     return showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          // height: 400,
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GridView.count(
-                    crossAxisSpacing: 5.0,
-                    mainAxisSpacing: 5.0,
-                    scrollDirection: Axis.vertical,
-                    crossAxisCount: 3,
-                    children: _quickAction(context, otherAchievment),
-                  ),
+        return Column(
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisSpacing: 5.0,
+                  mainAxisSpacing: 5.0,
+                  scrollDirection: Axis.vertical,
+                  crossAxisCount: 3,
+                  children: _quickAction(context, otherAchievment),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 5,
-                  bottom: 30,
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: TextWidget.subTitleText1('キャンセル'),
-                ),
-              )
-            ],
-          ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 5,
+                bottom: 30,
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: TextWidget.subTitleText1('キャンセル'),
+              ),
+            )
+          ],
         );
       },
     );
@@ -409,28 +408,19 @@ Widget _futureMessage(OtherAchievment otherAchievment) {
             searchDayOrTime = otherAchievment.currentDayOrTime;
           }
 
-          // -okの部分を削除。
-          // 現在オーナー側に表示されている数字を取得できる
-
-          // int messageDayOrTime = int.parse(otherAchievment.achievedDayOrTime
-          //     .substring(0, otherAchievment.achievedDayOrTime.length - 3));
-
           List<YellMessage> _data = snapshot.data;
           if (_data.isEmpty) {}
 
-          int dayOrTimes = 0;
           YellMessage? myMessage;
           for (YellMessage yellMessage in _data) {
             // 既に応援メッセージを送信ずみ
             if (yellMessage.dayOrTimes == searchDayOrTime) {
               myMessage = yellMessage;
-              print(myMessage.message);
               otherAchievment.yellMessage = myMessage.message;
               break;
             }
           }
           if (myMessage == null) {
-            print('NO MEssage');
             otherAchievment.yellMessage = '';
           }
           return Row(
@@ -440,8 +430,6 @@ Widget _futureMessage(OtherAchievment otherAchievment) {
               ButtonWidget.iconMainWidget('a'),
             ],
           );
-
-          // return _textEdit(otherAchievment);
         }
         return const Center(
           child: Text('エラーがおきました'),

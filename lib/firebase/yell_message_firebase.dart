@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
-import 'package:uuid/uuid.dart';
 
 class YellMessageFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Uuid _uuid = Uuid();
 
   // コレクション名前
   final String yellMessage = 'yell_messages';
@@ -106,9 +104,6 @@ class YellMessageFirebase {
     // ドキュメント作成
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
-
-    final UserAuth _userAuth = UserAuth();
-    final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
 
     updateData['message'] = yellMessageModel.message;
     updateData['updatedAt'] = now;

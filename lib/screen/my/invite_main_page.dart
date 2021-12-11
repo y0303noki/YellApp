@@ -10,6 +10,8 @@ InviteFirebase inviteFirebase = InviteFirebase();
 
 /// 招待ページ
 class InviteMainPage extends ConsumerWidget {
+  const InviteMainPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final invite = ref.watch(inviteProvider);
@@ -176,21 +178,17 @@ class InviteMainPage extends ConsumerWidget {
 
           if (_data.isDeleted || _data.expiredAt == null) {
             // 無効な招待コード
-            return Container(
-              child: Text('無効です'),
-            );
+            return const Text('無効です');
           } else if (now.isAfter(_data.expiredAt as DateTime)) {
             // 有効期限切れ
-            return Container(
-              child: Text('有効期限切れです'),
-            );
+            return const Text('有効期限切れです');
           } else {
             // その他は有効な招待コードがある
             invite.code = _data.code;
             return Container(
               child: Column(
                 children: [
-                  Text('招待コード'),
+                  const Text('招待コード'),
                   TextField(
                     textAlign: TextAlign.center,
                     enabled: false,
@@ -215,7 +213,7 @@ class InviteMainPage extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('有効期限'),
+                      const Text('有効期限'),
                       Text(invite.expiredAtStr),
                     ],
                   ),
@@ -224,9 +222,7 @@ class InviteMainPage extends ConsumerWidget {
             );
           }
         }
-        return Container(
-          child: Text('無効です'),
-        );
+        return const Text('無効です');
       },
     );
   }

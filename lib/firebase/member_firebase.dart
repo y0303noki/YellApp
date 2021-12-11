@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
-import 'package:uuid/uuid.dart';
 
 // Ownerとその応援する人を紐づける
 class MemberFirebase {

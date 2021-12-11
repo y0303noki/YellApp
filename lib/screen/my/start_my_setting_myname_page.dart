@@ -1,19 +1,15 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
-import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/my/start_my_setting_confirm_page.dart';
-import 'package:yell_app/screen/my/start_my_setting_selectunit_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 final errorTextProvider = StateProvider((ref) => '');
 
 class StartMySettinMynamePage extends ConsumerWidget {
+  const StartMySettinMynamePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deviceSize = MediaQuery.of(context).size;
@@ -47,7 +43,7 @@ class StartMySettinMynamePage extends ConsumerWidget {
                     TextField(
                       controller: _textEditingController,
                       maxLength: 10,
-                      style: TextStyle(),
+                      style: const TextStyle(),
                       maxLines: 1,
                       decoration: InputDecoration(
                         hintText: 'ニックネーム',
@@ -95,7 +91,8 @@ class StartMySettinMynamePage extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => StartMySettingConfirmPage(),
+                              builder: (context) =>
+                                  const StartMySettingConfirmPage(),
                             ),
                           );
                         },

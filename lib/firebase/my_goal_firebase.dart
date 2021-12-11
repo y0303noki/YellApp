@@ -16,7 +16,7 @@ class MyGoalFirebase {
   final MemberFirebase _memberFirebase = MemberFirebase();
   final YellMessageFirebase _yellMessageFirebase = YellMessageFirebase();
 
-  Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
 
   // コレクション名前
   final String myGoals = 'my_goals';

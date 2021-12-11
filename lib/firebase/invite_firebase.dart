@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 class InviteFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
 
   // コレクション名前
   final String invite = 'invites';

@@ -17,12 +17,12 @@ import 'package:share/share.dart';
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class MyAchievementPage extends ConsumerWidget {
+  const MyAchievementPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final myAchievment = ref.watch(myAchievmentProvider);
     final invite = ref.watch(inviteProvider);
-
-    final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -89,7 +89,7 @@ class MyAchievementPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InviteMainPage(),
+                    builder: (context) => const InviteMainPage(),
                   ),
                 );
               },
@@ -143,7 +143,7 @@ class MyAchievementPage extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => InviteMainPage(),
+                builder: (context) => const InviteMainPage(),
               ),
             );
           },
@@ -368,7 +368,7 @@ class MyAchievementPage extends ConsumerWidget {
                   final snackBar = SnackBar(
                     backgroundColor: Colors.yellow[50],
                     elevation: 30,
-                    content: Container(
+                    content: SizedBox(
                       height: 200.0,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
