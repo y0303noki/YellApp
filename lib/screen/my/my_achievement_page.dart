@@ -12,6 +12,7 @@ import 'package:yell_app/screen/my/invite_main_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
+import 'package:share/share.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -348,7 +349,21 @@ class MyAchievementPage extends ConsumerWidget {
               InkWell(
                 onTap: () async {
                   // スナックバー表示
-                  String xDayMessage = 'x日おめでとうございます';
+                  String xDayMessage = '';
+                  int showDayOrTime = 0;
+                  // タップしてたら1減らす
+                  if (myAchievment.isTapedToday) {
+                    showDayOrTime = myAchievment.currentDayOrTime - 1;
+                  } else {
+                    showDayOrTime = myAchievment.currentDayOrTime;
+                  }
+                  // タイプによってメッセージを変更
+                  if (myAchievment.unitType == 0) {
+                    xDayMessage = '$showDayOrTime日目';
+                  } else {
+                    xDayMessage = '$showDayOrTime回目';
+                  }
+                  xDayMessage += 'おめでとう';
                   String message = '今回の記録をSNSでシェアしますか？';
                   final snackBar = SnackBar(
                     backgroundColor: Colors.yellow[50],
@@ -385,7 +400,9 @@ class MyAchievementPage extends ConsumerWidget {
                                 child: TextWidget.snackBarText('しない'),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _shareSns(xDayMessage);
+                                },
                                 child: Container(
                                   padding: const EdgeInsets.only(
                                     left: 10,
@@ -472,5 +489,9 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
-  // モーダルシートを表示
+  /// SNSにシェア
+  Future _shareSns(String _text) async {
+    _text += '#今日もえらい！';
+    await Share.share(_text);
+  }
 }
