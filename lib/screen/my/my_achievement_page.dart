@@ -21,8 +21,6 @@ class MyAchievementPage extends ConsumerWidget {
     final myAchievment = ref.watch(myAchievmentProvider);
     final invite = ref.watch(inviteProvider);
 
-    TextEditingController _textEditingController =
-        TextEditingController(text: myAchievment.goalTitle);
     final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -158,7 +156,7 @@ class MyAchievementPage extends ConsumerWidget {
   Widget _selectYellMessage(MyAchievment myAchievment) {
     if (myAchievment.selectedMemberId == '' ||
         myAchievment.yellMessages.isEmpty) {
-      return const Text('メッセージなし', textAlign: TextAlign.left);
+      return const Text('', textAlign: TextAlign.left);
     }
     YellMessage? selectedMessage = myAchievment.yellMessages.firstWhere(
         (message) => message.memberId == myAchievment.selectedMemberId,
@@ -185,27 +183,33 @@ class MyAchievementPage extends ConsumerWidget {
   List<Widget> _memberIconWidget(MyAchievment myAchievment) {
     List<Widget> row = <Widget>[];
     // 一番左のウィジット
-    Widget memberFirstWidget = Container(
-      margin: const EdgeInsets.only(
-        left: 5,
-        right: 5,
+    Widget memberFirstWidget = InkWell(
+      onTap: () {
+        myAchievment.selectMemberId('');
+      },
+      child: Container(
+        margin: const EdgeInsets.only(
+          left: 5,
+          right: 5,
+        ),
+        padding: const EdgeInsets.only(
+          top: 5,
+          bottom: 5,
+          left: 5,
+          right: 5,
+        ),
+        color: Colors.white,
+        child: const Text('選択'),
       ),
-      padding: const EdgeInsets.only(
-        top: 5,
-        bottom: 5,
-        left: 5,
-        right: 5,
-      ),
-      color: Colors.white,
-      child: const Text('選択'),
     );
 
     row.add(memberFirstWidget);
 
     List<String> memberIdList = myAchievment.memberIdList;
     for (String memberId in memberIdList) {
-      MemberModel member = myAchievment.yellMembers
-          .firstWhere((mem) => mem.memberUserId == memberId);
+      MemberModel member = myAchievment.yellMembers.firstWhere(
+          (mem) => mem.memberUserId == memberId,
+          orElse: () => MemberModel());
       Widget tempWidget = InkWell(
         onTap: () {
           myAchievment.selectMemberId(memberId);
@@ -279,13 +283,20 @@ class MyAchievementPage extends ConsumerWidget {
                 child: Text('エラーがおきました'),
               );
             }
-            MyGoalModel goalData = _data['goal'] as MyGoalModel;
-            List<MemberModel> memberDatas =
-                _data['members'] as List<MemberModel>;
-            // 応援メッセージ
-            List<YellMessage> messages = _data['messages'] as List<YellMessage>;
+            MyGoalModel goalData = _data.containsKey('goal')
+                ? _data['goal'] as MyGoalModel
+                : MyGoalModel();
 
-            // 既に登録ずみ
+            List<MemberModel> memberDatas = _data.containsKey('members')
+                ? _data['members'] as List<MemberModel>
+                : [];
+
+            // 応援メッセージ
+            List<YellMessage> messages = _data.containsKey('messages')
+                ? _data['messages'] as List<YellMessage>
+                : [];
+
+            // データをセット
             if (!goalData.isDeleted) {
               goalData.memberIds = memberDatas.map((e) => e.id).toList();
               myAchievment.setInitialData(goalData, memberDatas, messages);
@@ -300,6 +311,7 @@ class MyAchievementPage extends ConsumerWidget {
     }
   }
 
+  // ui部分
   Widget _body(BuildContext context, MyAchievment myAchievment) {
     final deviceSize = MediaQuery.of(context).size;
     return Container(
@@ -314,11 +326,13 @@ class MyAchievementPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // 自分のでかいアイコン
               ButtonWidget.iconBigMainWidget(
-                myAchievment.myName.substring(0, 1),
+                myAchievment.myName.substring(0, 2),
               ),
             ],
           ),
+          // 目標タイトル
           Container(
             margin: const EdgeInsets.only(
               left: 10,

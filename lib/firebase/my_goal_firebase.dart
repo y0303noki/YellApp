@@ -69,7 +69,7 @@ class MyGoalFirebase {
     }
     Map<String, dynamic> data = docs.first.data() as Map<String, dynamic>;
     final _myGoalModel = MyGoalModel(
-      id: data['id'],
+      id: data['id'] ?? '',
       goalTitle: data['title'] ?? '',
       myName: data['myName'] ?? '',
       unitType: data['unitType'] ?? 0,

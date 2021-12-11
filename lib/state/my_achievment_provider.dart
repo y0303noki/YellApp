@@ -66,7 +66,7 @@ class MyAchievment extends ChangeNotifier {
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;
     unitType = _myGoalModel.unitType;
-    memberIdList = _myGoalModel.memberIds;
+    memberIdList = members.map((mem) => mem.memberUserId).toList();
     refresh = false;
     inviteId = _myGoalModel.inviteId;
     currentDay = _myGoalModel.currentDay;
@@ -98,9 +98,14 @@ class MyAchievment extends ChangeNotifier {
 
   // メンバーを選択
   void selectMemberId(String memberId) {
-    if (memberIdList.contains(memberId)) {
-      selectedMemberId = memberId;
+    if (memberId.isEmpty) {
+      selectedMemberId = '';
+    } else {
+      if (memberIdList.contains(memberId)) {
+        selectedMemberId = memberId;
+      }
     }
+
     notifyListeners();
   }
 

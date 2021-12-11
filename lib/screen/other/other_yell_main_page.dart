@@ -40,7 +40,9 @@ class OtherYellMainPage extends ConsumerWidget {
               Container(
                 child: TextWidget.headLineText3(otherAchievment.goalTitle),
               ),
+              // 現在の継続日
               _achievedCurrent(otherAchievment),
+              // オーナーのアイコンと名前
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
@@ -50,7 +52,9 @@ class OtherYellMainPage extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
+                    // アイコン
                     ButtonWidget.iconMainWidget('a'),
+                    // 名前
                     Container(
                       margin: const EdgeInsets.only(
                         left: 10,
@@ -61,10 +65,10 @@ class OtherYellMainPage extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    // _speechMessage(otherAchievment.ownerAchievedment),
                   ],
                 ),
               ),
+              // ひとことめっせーじ
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
@@ -88,30 +92,52 @@ class OtherYellMainPage extends ConsumerWidget {
                 ),
               ),
 
-              // _speechMessage(otherAchievment.ownerAchievedment),
-
-              // Container(
-              //   margin: const EdgeInsets.only(
-              //     left: 10,
-              //     right: 10,
-              //     top: 5,
-              //     bottom: 10,
-              //   ),
-              //   child: TextWidget.subTitleText1('メッセージを送ろう！'),
-              // ),
-              // _textEdit(otherAchievment),
+              // 応援者のアイコンと名前
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
                   right: 10,
                   top: 5,
-                  bottom: 10,
+                  bottom: 0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _yellMessage(otherAchievment.yellMessage),
+                    // 名前
+                    Container(
+                      margin: const EdgeInsets.only(
+                        right: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          TextWidget.headLineText5(otherAchievment.otherName),
+                        ],
+                      ),
+                    ),
+
                     ButtonWidget.iconMainWidget('a'),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 0,
+                  bottom: 20,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Bubble(
+                        margin: const BubbleEdges.only(top: 20),
+                        padding: const BubbleEdges.only(top: 20, bottom: 20),
+                        nip: BubbleNip.rightTop,
+                        color: CommonWidget.otherDefaultColor(),
+                        child: Text(otherAchievment.yellMessage,
+                            textAlign: TextAlign.left),
+                      ),
+                    ),
                   ],
                 ),
               ),
