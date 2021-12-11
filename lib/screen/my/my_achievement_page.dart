@@ -347,14 +347,6 @@ class MyAchievementPage extends ConsumerWidget {
               // 達成ボタン
               InkWell(
                 onTap: () async {
-                  // スナックバー表示
-                  String message = 'おつかれさまです！';
-                  final snackBar = SnackBar(
-                    content: Text(message),
-                    duration: const Duration(seconds: 5),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
                   if (myAchievment.isTapedToday) {
                     // 達成をキャンセルするとややこしいのでさせない
                     return;
