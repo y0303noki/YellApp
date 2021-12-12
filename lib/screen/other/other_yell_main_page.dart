@@ -205,49 +205,49 @@ class OtherYellMainPage extends ConsumerWidget {
         context,
         otherAchievment,
         CommonWidget.quickAction0(),
-        Icons.thumb_up_alt,
+        'images/iine.png',
         0,
       ),
       _tileContainer(
         context,
         otherAchievment,
         CommonWidget.quickAction1(),
-        Icons.mood,
+        'images/erai.png',
         1,
       ),
       _tileContainer(
         context,
         otherAchievment,
         CommonWidget.quickAction2(),
-        Icons.tag_faces,
+        'images/sugokuerai.png',
         2,
       ),
       _tileContainer(
         context,
         otherAchievment,
         CommonWidget.quickAction3(),
-        Icons.sentiment_satisfied_alt,
+        'images/tugimoganbarou.png',
         3,
       ),
       _tileContainer(
         context,
         otherAchievment,
         CommonWidget.quickAction4(),
-        Icons.sentiment_very_dissatisfied,
+        'images/mataasita.png',
         4,
       ),
       _tileContainer(
         context,
         otherAchievment,
         CommonWidget.quickAction5(),
-        Icons.emoji_people,
+        'images/otukaresama.png',
         5,
       ),
     ];
   }
 
   Widget _tileContainer(BuildContext context, OtherAchievment otherAchievment,
-      String _text, IconData _iconData, int _index) {
+      String _text, String _imagePath, int _index) {
     return GestureDetector(
       child: GridTile(
         child: Container(
@@ -258,9 +258,9 @@ class OtherYellMainPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Icon(
-                _iconData,
-                size: 30,
+              Image.asset(
+                _imagePath,
+                width: 30,
               ),
               Center(
                 child: TextWidget.subTitleText2(_text),
