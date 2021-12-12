@@ -37,6 +37,12 @@ class MyAchievment extends ChangeNotifier {
   String sliderLabel = 'これを右に'; // スライダーラベル
   bool achieved = false; // スライダーで達成処理ずみ
 
+  String achieveComment = ''; // 達成コメント
+  void updatedAchieveComment(String _comment) {
+    achieveComment = _comment;
+    notifyListeners();
+  }
+
   void updateSliderValue(double _value) {
     sliderValue = _value;
     String label = '';
@@ -127,6 +133,11 @@ class MyAchievment extends ChangeNotifier {
         achieved = false;
       } else {
         achieved = true;
+      }
+
+      // 達成前（日付が変わった）ならひとことコメントを初期化
+      if (!achieved) {
+        achieveComment = '';
       }
     }
   }

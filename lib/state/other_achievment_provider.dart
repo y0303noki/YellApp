@@ -15,7 +15,7 @@ class OtherAchievment extends ChangeNotifier {
   String ownerName = ''; // 持ち主の名前
   String otherName = ''; // 応援している自分の名前
   List<String> memberIdList = []; // 応援しているメンバー
-  bool isTapedToday = false; // 本日の分達成ずみフラグ
+  bool achieved = false; // 本日の分達成ずみフラグ
   String ownerAchievedment = ''; // オーナーが達成したときのひとこと
 
   int unitType = 0; // 0:日 1:回数
@@ -28,6 +28,27 @@ class OtherAchievment extends ChangeNotifier {
 
   int messageType = 0; // 0 or 1 or 2
   String yellMessage = ''; // 今回のメッセージ
+
+  // 全部リセット
+  void resetData() {
+    goalId = '';
+    goalTitle = '';
+    code = '';
+    errorText = '';
+    ownerName = '';
+    otherName = '';
+    memberIdList = [];
+    achieved = false;
+    ownerAchievedment = '';
+    unitType = 0;
+    currentDay = 1;
+    currentTime = 1;
+    updateCurrentDayOrTime = null;
+    achievedDayOrTime = '';
+    refresh = false;
+    messageType = 0;
+    yellMessage = '';
+  }
 
   // 達成済みか否か
   bool get isAchieved {
