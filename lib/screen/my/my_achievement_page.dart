@@ -103,52 +103,6 @@ class MyAchievementPage extends ConsumerWidget {
     // メンバーがいるとき
     return Column(
       children: [
-        // Container(
-        //   margin: const EdgeInsets.only(
-        //     left: 20,
-        //     right: 20,
-        //     bottom: 10,
-        //   ),
-        //   padding: const EdgeInsets.only(top: 5, bottom: 5),
-        //   decoration: BoxDecoration(
-        //     color: Colors.grey[200],
-        //     borderRadius: BorderRadius.circular(10),
-        //   ),
-        //   child: SingleChildScrollView(
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.start,
-        //       children: _memberIconWidget(myAchievment),
-        //     ),
-        //   ),
-        // ),
-        // メンバーの応援メッセージ
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: Bubble(
-        //         margin: const BubbleEdges.only(left: 10, right: 10),
-        //         padding: const BubbleEdges.only(top: 20, bottom: 20),
-        //         nip: BubbleNip.leftTop,
-        //         color: CommonWidget.otherDefaultColor(),
-        //         child: _selectYellMessage(myAchievment),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-
-        // メンバー追加ボタン
-        TextButton(
-          onPressed: () {
-            // 招待ページに遷移
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const InviteMainPage(),
-              ),
-            );
-          },
-          child: TextWidget.subTitleText1('メンバーを追加する'),
-        ),
         Container(
           width: double.infinity,
           height: 40,
@@ -165,6 +119,24 @@ class MyAchievementPage extends ConsumerWidget {
                 ),
               ),
             ],
+          ),
+        ),
+        // メンバー追加ボタン
+
+        Container(
+          width: double.infinity,
+          color: Colors.grey[300],
+          child: TextButton(
+            onPressed: () {
+              // 招待ページに遷移
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const InviteMainPage(),
+                ),
+              );
+            },
+            child: TextWidget.subTitleText1('メンバーを追加する'),
           ),
         ),
         Container(
@@ -364,7 +336,7 @@ class MyAchievementPage extends ConsumerWidget {
               const Divider(
                 color: Colors.grey,
               ),
-              TextWidget.headLineText5('応援中の仲間'),
+              TextWidget.headLineText5('応援してくれる人'),
               _memberWidget(context, myAchievment),
             ],
           ),
