@@ -98,61 +98,66 @@ class MyAchievementPage extends ConsumerWidget {
           ],
         ),
       );
-    }
-
-    // メンバーがいるとき
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.grey[500],
-            border: Border.all(color: Colors.grey, width: 2.0),
-          ),
-          child: Row(
-            children: const [
-              Text(
-                'コメント',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+    } else {
+      // メンバーがいるとき
+      return Container(
+        margin: const EdgeInsets.only(
+          top: 10,
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[500],
+                border: Border.all(color: Colors.grey, width: 2.0),
               ),
-            ],
-          ),
-        ),
-        // メンバー追加ボタン
+              child: Row(
+                children: const [
+                  Text(
+                    '応援コメント',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // メンバー追加ボタン
 
-        Container(
-          width: double.infinity,
-          color: Colors.grey[300],
-          child: TextButton(
-            onPressed: () {
-              // 招待ページに遷移
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const InviteMainPage(),
-                ),
-              );
-            },
-            child: TextWidget.subTitleText1('メンバーを追加する'),
-          ),
+            Container(
+              width: double.infinity,
+              color: Colors.grey[300],
+              child: TextButton(
+                onPressed: () {
+                  // 招待ページに遷移
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const InviteMainPage(),
+                    ),
+                  );
+                },
+                child: TextWidget.subTitleText1('メンバーを追加する'),
+              ),
+            ),
+            Container(
+              color: Colors.grey[300],
+              height: 300,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: myAchievment.yellMembers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _memberComment(
+                      myAchievment, myAchievment.yellMembers[index]);
+                },
+              ),
+            ),
+          ],
         ),
-        Container(
-          color: Colors.grey[300],
-          height: 400,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: myAchievment.yellMembers.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _memberComment(
-                  myAchievment, myAchievment.yellMembers[index]);
-            },
-          ),
-        ),
-      ],
-    );
+      );
+    }
   }
 
   // コメント
@@ -253,7 +258,6 @@ class MyAchievementPage extends ConsumerWidget {
 
   // ui部分
   Widget _body(BuildContext context, MyAchievment myAchievment) {
-    final deviceSize = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(
         top: 20,
@@ -263,15 +267,15 @@ class MyAchievementPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     // 自分のでかいアイコン
-          //     ButtonWidget.iconBigMainWidget(
-          //       myAchievment.myName.substring(0, 1),
-          //     ),
-          //   ],
-          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 自分のでかいアイコン
+              ButtonWidget.iconBigMainWidget(
+                myAchievment.myName.substring(0, 1),
+              ),
+            ],
+          ),
           // 目標タイトル
           Container(
             margin: const EdgeInsets.only(
@@ -284,7 +288,17 @@ class MyAchievementPage extends ConsumerWidget {
           ),
           Column(
             children: [
-              Text('達成したらスライダーを右まで引っぱってください'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/yazirusi.png',
+                    width: 60,
+                  ),
+                  const Text('右まで引っ張ると達成済みになります'),
+                ],
+              ),
+
               Slider(
                 label: myAchievment.sliderLabel,
                 min: 0,
@@ -333,14 +347,10 @@ class MyAchievementPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Divider(
-                color: Colors.grey,
-              ),
-              TextWidget.headLineText5('応援してくれる人'),
-              _memberWidget(context, myAchievment),
             ],
           ),
-          Column(),
+          // コメント一覧
+          _memberWidget(context, myAchievment),
         ],
       ),
     );
