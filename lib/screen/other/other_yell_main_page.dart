@@ -44,55 +44,58 @@ class OtherYellMainPage extends ConsumerWidget {
               ),
               // 現在の継続日
               _achievedCurrent(otherAchievment),
-              // オーナーのアイコンと名前
               Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 0,
-                  bottom: 0,
-                ),
                 child: Row(
                   children: [
                     // アイコン
                     ButtonWidget.iconMainWidget('a'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                          ),
+                          child: TextWidget.subTitleText1(
+                              otherAchievment.ownerName),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                          ),
+                          child: otherAchievment.ownerAchievedment.isEmpty
+                              ? const Text(
+                                  '達成時コメントがここに表示されます',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15,
+                                  ),
+                                )
+                              : Text(
+                                  otherAchievment.ownerAchievedment,
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                     // 名前
-                    Container(
-                      margin: const EdgeInsets.only(
-                        left: 10,
-                      ),
-                      child: Column(
-                        children: [
-                          TextWidget.headLineText5(otherAchievment.ownerName),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
-              // ひとことめっせーじ
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 0,
-                  bottom: 20,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Bubble(
-                        margin: const BubbleEdges.only(top: 20),
-                        padding: const BubbleEdges.only(top: 20, bottom: 20),
-                        nip: BubbleNip.leftTop,
-                        color: CommonWidget.myDefaultColor(),
-                        child: Text(otherAchievment.ownerAchievedment,
-                            textAlign: TextAlign.left),
-                      ),
+              // 達成したらコメントを残すように促す
+              suggestSendMessage(otherAchievment),
+              // コメント残すボタン
+              !otherAchievment.achieved
+                  ? Container()
+                  : ElevatedButton(
+                      child: const Text('メッセージを選択'),
+                      onPressed: () {
+                        _showModalBottomSheat(context, otherAchievment);
+                      },
                     ),
-                  ],
-                ),
-              ),
 
               // 応援者のアイコンと名前
               Container(
@@ -105,7 +108,18 @@ class OtherYellMainPage extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // 名前
+                    // メッセージ
+                    Expanded(
+                      child: Bubble(
+                        margin: const BubbleEdges.only(top: 20),
+                        padding: const BubbleEdges.only(top: 20, bottom: 20),
+                        nip: BubbleNip.rightTop,
+                        color: CommonWidget.otherDefaultColor(),
+                        child: Text(otherAchievment.yellMessage,
+                            textAlign: TextAlign.right),
+                      ),
+                    ),
+                    // 名前とアイコン
                     Container(
                       margin: const EdgeInsets.only(
                         right: 10,
@@ -121,38 +135,7 @@ class OtherYellMainPage extends ConsumerWidget {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 0,
-                  bottom: 20,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Bubble(
-                        margin: const BubbleEdges.only(top: 20),
-                        padding: const BubbleEdges.only(top: 20, bottom: 20),
-                        nip: BubbleNip.rightTop,
-                        color: CommonWidget.otherDefaultColor(),
-                        child: Text(otherAchievment.yellMessage,
-                            textAlign: TextAlign.left),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                child: const Text('メッセージを送る'),
-                style: ElevatedButton.styleFrom(
-                  onPrimary: Colors.black,
-                  shape: const StadiumBorder(),
-                ),
-                onPressed: () {
-                  _showModalBottomSheat(context, otherAchievment);
-                },
-              ),
+
               // const Text('過去のメッセージ'),
             ],
           ),
@@ -161,6 +144,56 @@ class OtherYellMainPage extends ConsumerWidget {
     );
   }
 
+  /// 達成したのでメッセージを送るか表示ウィジット
+  Widget suggestSendMessage(OtherAchievment otherAchievment) {
+    if (!otherAchievment.achieved) {
+      // 挑戦中
+      return Container(
+        margin: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.yellow[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Text('今回の分を達成したらひとこと残してあげましょう。'),
+      );
+    } else {
+      String _text = '${otherAchievment.ownerName}さんが';
+      if (otherAchievment.unitType == 0) {
+        _text += '${otherAchievment.currentDayOrTime}日目達成しました。';
+      } else if (otherAchievment.unitType == 1) {
+        _text += '${otherAchievment.currentDayOrTime}回目達成しました。';
+      } else {
+        _text += '達成したようです？';
+      }
+      _text += '\nひとこと伝えませんか？';
+
+      return Container(
+        margin: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.yellow[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'images/erai.png',
+              width: 30,
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Text(_text, overflow: TextOverflow.clip),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  // メッセージを送る
   _showModalBottomSheat(BuildContext context, OtherAchievment otherAchievment) {
     return showModalBottomSheet<void>(
       context: context,
@@ -303,6 +336,7 @@ class OtherYellMainPage extends ConsumerWidget {
     int showDayOrTime = 0;
     String showStr = ''; // X日目（回目）挑戦中（達成済み）
     if (updateAt == null) {
+      otherAchievment.achieved = false;
       showDayOrTime = 1;
       str = '挑戦中';
       if (otherAchievment.unitType == 0) {
@@ -313,6 +347,7 @@ class OtherYellMainPage extends ConsumerWidget {
     } else {
       if (otherAchievment.isAchieved) {
         // 達成済み
+        otherAchievment.achieved = true;
         str = '達成済み';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay - 1;
@@ -323,6 +358,7 @@ class OtherYellMainPage extends ConsumerWidget {
         }
       } else {
         // 挑戦中
+        otherAchievment.achieved = false;
         str = '挑戦中';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay;

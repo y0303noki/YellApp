@@ -138,6 +138,9 @@ class StartOtherYellListPage extends ConsumerWidget {
             '${Utility.toDateFormatted(myGoalModel.createdAt!)} ~'),
 
         onTap: () async {
+          // 選択したらデータをセット
+          _otherAchievment.resetData();
+          // リセット後にデータを付け直す
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
