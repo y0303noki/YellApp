@@ -27,67 +27,70 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
           left: 10,
           right: 10,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      child: Text('a'),
-                    ),
-                  ],
-                ),
-                TextWidget.headLineText4('${otherAchievment.ownerName}さんを'),
-                TextWidget.headLineText4('応援しますか？'),
-                TextWidget.headLineText4('やること'),
-                TextWidget.headLineText4(otherAchievment.goalTitle),
-              ],
-            ),
-            // TODO
-            Container(
-              child: Text(
-                'イラストとか説明が入る予定',
-              ),
-            ),
-            // 戻る、次へ
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                bottom: 50,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextWidget.headLineText5('戻る'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StartOtherSettingYourinfoPage(),
+                  Row(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(40),
                         ),
-                      );
-                    },
-                    child: TextWidget.headLineText5('次へ'),
-                  )
+                        child: Text('a'),
+                      ),
+                    ],
+                  ),
+                  TextWidget.headLineText4('${otherAchievment.ownerName}さんを'),
+                  TextWidget.headLineText4('応援しますか？'),
+                  TextWidget.headLineText4('やること'),
+                  TextWidget.headLineText4(otherAchievment.goalTitle),
                 ],
               ),
-            ),
-          ],
+              // TODO
+              Container(
+                child: Text(
+                  'イラストとか説明が入る予定',
+                ),
+              ),
+              // 戻る、次へ
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  bottom: 50,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: TextWidget.headLineText5('戻る'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                StartOtherSettingYourinfoPage(),
+                          ),
+                        );
+                      },
+                      child: TextWidget.headLineText5('次へ'),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
