@@ -324,15 +324,15 @@ class MyAchievementPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 自分のでかいアイコン
-              ButtonWidget.iconBigMainWidget(
-                myAchievment.myName.substring(0, 1),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     // 自分のでかいアイコン
+          //     ButtonWidget.iconBigMainWidget(
+          //       myAchievment.myName.substring(0, 1),
+          //     ),
+          //   ],
+          // ),
           // 目標タイトル
           Container(
             margin: const EdgeInsets.only(
@@ -345,108 +345,26 @@ class MyAchievementPage extends ConsumerWidget {
           ),
           Column(
             children: [
-              // 達成ボタン
-              InkWell(
-                onTap: () async {
-                  // スナックバー表示
-                  String xDayMessage = '';
-                  int showDayOrTime = 0;
-                  // タップしてたら1減らす
-                  if (myAchievment.isTapedToday) {
-                    showDayOrTime = myAchievment.currentDayOrTime - 1;
-                  } else {
-                    showDayOrTime = myAchievment.currentDayOrTime;
-                  }
-                  // タイプによってメッセージを変更
-                  if (myAchievment.unitType == 0) {
-                    xDayMessage = '$showDayOrTime日目';
-                  } else {
-                    xDayMessage = '$showDayOrTime回目';
-                  }
-                  xDayMessage += 'おめでとう';
-                  String message = '今回の記録をSNSでシェアしますか？';
-                  final snackBar = SnackBar(
-                    backgroundColor: Colors.yellow[50],
-                    elevation: 30,
-                    content: SizedBox(
-                      height: 200.0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Icon(
-                                Icons.emoji_people,
-                                size: 40,
-                              ),
-                              TextWidget.snackBarText(xDayMessage),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextWidget.snackBarText(message),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                },
-                                child: TextWidget.snackBarText('しない'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  _shareSns(xDayMessage);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
-                                    top: 10,
-                                    bottom: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: CommonWidget.myDefaultColor(),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: TextWidget.snackBarText('シェアする'),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    duration: const Duration(seconds: 5),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                  if (myAchievment.isTapedToday) {
-                    // 達成をキャンセルするとややこしいのでさせない
-                    return;
-                  }
-                  myAchievment.tapToday();
-                  int dayOrTime = myAchievment.currentDayOrTime;
-
-                  // 一言コメント
-                  String achievedMyMessage =
-                      await DialogWidget().achievedMyMessagelDialog(context);
-
-                  await _myGoalFirebase.updateAchieveCurrentDayOrTime(
-                      myAchievment.goalId,
-                      myAchievment.unitType,
-                      dayOrTime,
-                      myAchievment.achievedDayOrTime,
-                      achievedMyMessage);
-                },
-                child: myAchievment.isTapedToday
-                    ? ButtonWidget.achievementedToday(deviceSize.width)
-                    : ButtonWidget.yetAchievementToday(deviceSize.width),
+              Text('達成したらスライダーを右まで引っぱってください'),
+              Slider(
+                label: myAchievment.sliderLabel,
+                min: 0,
+                max: 5,
+                value: myAchievment.achieved
+                    ? MyAchievment.sliderMaxValue
+                    : myAchievment.sliderValue,
+                activeColor: Colors.orange,
+                inactiveColor: Colors.blueAccent,
+                divisions: 5,
+                onChanged: myAchievment.achieved
+                    ? null
+                    : (double _value) {
+                        myAchievment.updateSliderValue(_value);
+                        // 右まで到達したら達成処理
+                        if (_value == MyAchievment.sliderMaxValue) {
+                          _achievementFunc(context, myAchievment);
+                        }
+                      },
               ),
               // 継続何日目？
               Container(
@@ -465,7 +383,7 @@ class MyAchievementPage extends ConsumerWidget {
                         left: 5,
                         right: 5,
                       ),
-                      child: myAchievment.isTapedToday
+                      child: myAchievment.achieved
                           ? TextWidget.headLineText4(
                               '${myAchievment.currentDayOrTime - 1}')
                           : TextWidget.headLineText4(
@@ -493,5 +411,103 @@ class MyAchievementPage extends ConsumerWidget {
   Future _shareSns(String _text) async {
     _text += '#今日もえらい！';
     await Share.share(_text);
+  }
+
+  /// 達成時の処理
+  void _achievementFunc(BuildContext context, MyAchievment myAchievment) async {
+    if (myAchievment.achieved) {
+      // 達成をキャンセルするとややこしいのでさせない
+      return;
+    }
+    myAchievment.tapToday();
+    int dayOrTime = myAchievment.currentDayOrTime;
+
+    // 一言コメント
+    String achievedMyMessage =
+        await DialogWidget().achievedMyMessagelDialog(context);
+
+    await _myGoalFirebase.updateAchieveCurrentDayOrTime(
+        myAchievment.goalId,
+        myAchievment.unitType,
+        dayOrTime,
+        myAchievment.achievedDayOrTime,
+        achievedMyMessage);
+
+    // スナックバー表示
+    String xDayMessage = '';
+    int showDayOrTime = 0;
+    // タップしてたら1減らす
+    if (myAchievment.achieved) {
+      showDayOrTime = myAchievment.currentDayOrTime - 1;
+    } else {
+      showDayOrTime = myAchievment.currentDayOrTime;
+    }
+    // タイプによってメッセージを変更
+    if (myAchievment.unitType == 0) {
+      xDayMessage = '$showDayOrTime日目';
+    } else {
+      xDayMessage = '$showDayOrTime回目';
+    }
+    xDayMessage += 'おめでとう';
+    String message = '今回の記録をSNSでシェアしますか？';
+    final snackBar = SnackBar(
+      backgroundColor: Colors.yellow[50],
+      elevation: 30,
+      content: SizedBox(
+        height: 200.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Icon(
+                  Icons.emoji_people,
+                  size: 40,
+                ),
+                TextWidget.snackBarText(xDayMessage),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextWidget.snackBarText(message),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                  child: TextWidget.snackBarText('しない'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _shareSns(xDayMessage);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: CommonWidget.myDefaultColor(),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextWidget.snackBarText('シェアする'),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+      duration: const Duration(seconds: 5),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

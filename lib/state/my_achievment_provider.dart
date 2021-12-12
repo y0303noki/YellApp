@@ -8,6 +8,10 @@ import 'package:yell_app/utility/utility.dart';
 final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
 
 class MyAchievment extends ChangeNotifier {
+  // スライダーのmaxとmin
+  static double sliderMaxValue = 5.0;
+  static double sliderMinValue = 0.0;
+
   String goalId = ''; // firestoreに格納されているid
   String goalTitle = '';
   String myName = '';
@@ -17,7 +21,7 @@ class MyAchievment extends ChangeNotifier {
   List<String> memberIdList = [];
   List<MemberModel> yellMembers = [];
 
-  bool isTapedToday = false;
+  // bool isTapedToday = false;
   String inviteId = ''; // 招待コードのid
 
   int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
@@ -28,6 +32,32 @@ class MyAchievment extends ChangeNotifier {
   DateTime? updatedCurrentDayAt; // 最後に達成ボタンを押した日付
 
   List<YellMessage> yellMessages = []; // 自分宛の応援メッセージ
+
+  double sliderValue = 0.0; // スライダー
+  String sliderLabel = 'これを右に'; // スライダーラベル
+  bool achieved = false; // スライダーで達成処理ずみ
+
+  void updateSliderValue(double _value) {
+    sliderValue = _value;
+    String label = '';
+    if (sliderValue == sliderMinValue) {
+      label = 'これを右に';
+    } else if (sliderValue == 1) {
+      label = 'そうそう';
+    } else if (sliderValue == 2) {
+      label = 'その調子';
+    } else if (sliderValue == 3) {
+      label = 'いいね';
+    } else if (sliderValue == 4) {
+      label = 'もう少し';
+    } else if (sliderValue == sliderMaxValue) {
+      label = 'えらい！';
+    } else {
+      label = 'あれ？';
+    }
+    sliderLabel = label;
+    notifyListeners();
+  }
 
   // 達成済みか否か
   bool get isAchieved {
@@ -84,7 +114,7 @@ class MyAchievment extends ChangeNotifier {
     // 達成ボタンを押した日付と現在の日付が同じか比較
     if (_myGoalModel.createdAt != null) {
       if (_myGoalModel.updatedCurrentDayAt == null) {
-        isTapedToday = false;
+        achieved = false;
         return;
       }
       DateTime now = DateTime.now();
@@ -94,9 +124,9 @@ class MyAchievment extends ChangeNotifier {
           _myGoalModel.updatedCurrentDayAt!.month,
           _myGoalModel.updatedCurrentDayAt!.day);
       if (nowDate.isAfter(tapDate)) {
-        isTapedToday = false;
+        achieved = false;
       } else {
-        isTapedToday = true;
+        achieved = true;
       }
     }
   }
@@ -116,7 +146,7 @@ class MyAchievment extends ChangeNotifier {
 
   // 達成ボタンをタップ
   void tapToday() {
-    if (isTapedToday) {
+    if (achieved) {
       return;
     }
     // インクリメントする前の数字を使う
@@ -128,7 +158,7 @@ class MyAchievment extends ChangeNotifier {
       currentTime++;
     }
 
-    isTapedToday = true;
+    achieved = true;
     notifyListeners();
   }
 
