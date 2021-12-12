@@ -20,11 +20,14 @@ class StartMySettinMynamePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 5,
+        actions: const [],
       ),
       body: Container(
         margin: const EdgeInsets.only(
+          top: 20,
           left: 10,
           right: 10,
         ),
@@ -61,6 +64,23 @@ class StartMySettinMynamePage extends ConsumerWidget {
                   height:
                       CommonWidget.defaultDescriptionHeight(deviceSize.width),
                   decoration: CommonWidget.defaultDescriptionDecoration(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'images/me.png',
+                        width: 80,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: TextWidget.subTitleText2(
+                            '応援してくれる\n人たちに表示されます。\n本名である必要はありません'),
+                      ),
+                    ],
+                  ),
                 ),
                 // 戻る、次へ
                 Container(

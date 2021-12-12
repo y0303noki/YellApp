@@ -8,6 +8,7 @@ import 'package:yell_app/state/start_my_setting_provider.dart';
 class StartMySettingSelectUnitPage extends ConsumerWidget {
   final double bodyPaddingLeft = 10;
   final double bodyPaddingRight = 10;
+  final double bodyPaddingTop = 20;
 
   const StartMySettingSelectUnitPage({Key? key}) : super(key: key);
   @override
@@ -16,11 +17,14 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
+        elevation: 5,
+        actions: const [],
       ),
       body: Container(
         margin: EdgeInsets.only(
+          top: bodyPaddingTop,
           left: bodyPaddingLeft,
           right: bodyPaddingRight,
         ),
@@ -35,15 +39,15 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
                   onTap: () {
                     startMySetting.selectUnit(0);
                   },
-                  child: unitDayContaner(
-                      deviceSize.width, '日 / days', startMySetting),
+                  child: unitDayContaner(deviceSize.width, Icons.date_range,
+                      'days', '1日、2日・・・', startMySetting),
                 ),
                 GestureDetector(
                   onTap: () {
                     startMySetting.selectUnit(1);
                   },
-                  child: unitTimeContaner(
-                      deviceSize.width, '回 / times', startMySetting),
+                  child: unitTimeContaner(deviceSize.width, Icons.timelapse,
+                      'times', '1回、2回・・・', startMySetting),
                 ),
               ],
             ),
@@ -85,13 +89,6 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
                     deviceSize.width, startMySetting),
               ],
             ),
-
-            // TODO
-            // Container(
-            //   child: Text(
-            //     'イラストとか説明が入る予定',
-            //   ),
-            // ),
             Container(
               margin: const EdgeInsets.only(
                 left: 10,
@@ -128,38 +125,59 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
   }
 
   // 日
-  Widget unitDayContaner(
-      double deviceSizeWidth, String _text, StartMySetting startMySetting) {
-    return Container(
-      width: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
-          bodyPaddingLeft,
-      height: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
-          bodyPaddingLeft,
-      decoration: BoxDecoration(
-        color: startMySetting.selectedUnit == 0 ? Colors.red : Colors.grey,
-        border: Border.all(color: Colors.red),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: TextWidget.headLineText4(_text),
+  Widget unitDayContaner(double deviceSizeWidth, IconData _iconData,
+      String _title, String _text, StartMySetting startMySetting) {
+    return Material(
+      elevation: startMySetting.selectedUnit == 0 ? 1 : 10,
+      child: Container(
+        width: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
+            bodyPaddingLeft,
+        height: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
+            bodyPaddingLeft,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              _iconData,
+              color: Colors.red[300],
+              size: 40,
+            ),
+            TextWidget.headLineText4(_title),
+            TextWidget.subTitleText1(_text),
+          ],
+        ),
       ),
     );
   }
 
   // 回数
-  Widget unitTimeContaner(
-      double deviceSizeWidth, String _text, StartMySetting startMySetting) {
-    return Container(
-      width: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
-          bodyPaddingLeft,
-      height: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
-          bodyPaddingLeft,
-      decoration: BoxDecoration(
-        color: startMySetting.selectedUnit == 1 ? Colors.red : Colors.grey,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: TextWidget.headLineText4(_text),
+  Widget unitTimeContaner(double deviceSizeWidth, IconData _iconData,
+      String _title, String _text, StartMySetting startMySetting) {
+    return Material(
+      elevation: startMySetting.selectedUnit == 1 ? 1 : 10,
+      child: Container(
+        width: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
+            bodyPaddingLeft,
+        height: (deviceSizeWidth - bodyPaddingLeft - bodyPaddingRight) / 2 -
+            bodyPaddingLeft,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              _iconData,
+              color: Colors.blue[300],
+              size: 40,
+            ),
+            TextWidget.headLineText4(_title),
+            TextWidget.subTitleText1(_text),
+          ],
+        ),
       ),
     );
   }

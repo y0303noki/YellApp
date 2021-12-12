@@ -208,12 +208,8 @@ class MyGoalFirebase {
   }
 
   /// 達成ボタンを押して継続日付（回数）を更新
-  Future<void> updateAchieveCurrentDayOrTime(
-      String docId,
-      int unitType,
-      int newDayOrTime,
-      String achievedDayOrTime,
-      String achievedMyComment) async {
+  Future<void> updateAchieveCurrentDayOrTime(String docId, int unitType,
+      int newDayOrTime, String achievedDayOrTime) async {
     // 新しい日付に更新
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
@@ -223,8 +219,23 @@ class MyGoalFirebase {
       updateData['currentTimes'] = newDayOrTime;
     }
     updateData['achievedDayOrTime'] = achievedDayOrTime;
-    updateData['achievedMyComment'] = achievedMyComment;
     updateData['updatedCurrentDayAt'] = now;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(myGoals).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// コメントを更新
+  Future<void> updateAchievecomment(String docId, String comment) async {
+    // 新しい日付に更新
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+
+    updateData['achievedMyComment'] = comment;
     updateData['updatedAt'] = now;
 
     try {

@@ -45,6 +45,9 @@ class OtherYellMainPage extends ConsumerWidget {
               // 現在の継続日
               _achievedCurrent(otherAchievment),
               Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                ),
                 child: Row(
                   children: [
                     // アイコン
@@ -161,9 +164,9 @@ class OtherYellMainPage extends ConsumerWidget {
     } else {
       String _text = '${otherAchievment.ownerName}さんが';
       if (otherAchievment.unitType == 0) {
-        _text += '${otherAchievment.currentDayOrTime}日目達成しました。';
+        _text += '${otherAchievment.currentDayOrTime - 1}日目達成しました。';
       } else if (otherAchievment.unitType == 1) {
-        _text += '${otherAchievment.currentDayOrTime}回目達成しました。';
+        _text += '${otherAchievment.currentDayOrTime - 1}回目達成しました。';
       } else {
         _text += '達成したようです？';
       }
@@ -340,9 +343,9 @@ class OtherYellMainPage extends ConsumerWidget {
       showDayOrTime = 1;
       str = '挑戦中';
       if (otherAchievment.unitType == 0) {
-        showStr = '$showDayOrTime日目$str';
+        showStr = '日目$str';
       } else {
-        showStr = '$showDayOrTime回目$str';
+        showStr = '回目$str';
       }
     } else {
       if (otherAchievment.isAchieved) {
@@ -351,10 +354,10 @@ class OtherYellMainPage extends ConsumerWidget {
         str = '達成済み';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay - 1;
-          showStr = '$showDayOrTime日目$str';
+          showStr = '日目$str';
         } else {
           showDayOrTime = otherAchievment.currentTime - 1;
-          showStr = '$showDayOrTime回目$str';
+          showStr = '回目$str';
         }
       } else {
         // 挑戦中
@@ -362,10 +365,10 @@ class OtherYellMainPage extends ConsumerWidget {
         str = '挑戦中';
         if (otherAchievment.unitType == 0) {
           showDayOrTime = otherAchievment.currentDay;
-          showStr = '$showDayOrTime日目$str';
+          showStr = '日目$str';
         } else {
           showDayOrTime = otherAchievment.currentTime;
-          showStr = '$showDayOrTime回目$str';
+          showStr = '回目$str';
         }
       }
     }
@@ -377,7 +380,19 @@ class OtherYellMainPage extends ConsumerWidget {
         top: 5,
         bottom: 10,
       ),
-      child: TextWidget.headLineText4(showStr),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: TextWidget.headLineText3(showDayOrTime.toString()),
+          ),
+          TextWidget.headLineText6(showStr),
+        ],
+      ),
     );
   }
 }

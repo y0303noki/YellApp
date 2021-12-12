@@ -268,14 +268,38 @@ class MyAchievementPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // 自分のでかいアイコン
               ButtonWidget.iconBigMainWidget(
                 myAchievment.myName.substring(0, 1),
               ),
+              Expanded(
+                child: Bubble(
+                  margin: const BubbleEdges.only(top: 10),
+                  color: CommonWidget.myDefaultColor(),
+                  stick: true,
+                  nip: BubbleNip.leftCenter,
+                  child: Text(
+                    myAchievment.achieveComment,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.clip,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
             ],
           ),
+          TextButton(
+              onPressed: () async {
+                // ひとことコメント
+                String achievedMyMessage =
+                    await DialogWidget().achievedMyMessagelDialog(context);
+                await _myGoalFirebase.updateAchievecomment(
+                    myAchievment.goalId, achievedMyMessage);
+                myAchievment.updatedAchieveComment(achievedMyMessage);
+              },
+              child: const Text('ひとこと残す')),
           // 目標タイトル
           Container(
             margin: const EdgeInsets.only(
@@ -332,14 +356,14 @@ class MyAchievementPage extends ConsumerWidget {
                   children: [
                     TextWidget.headLineText5('継続'),
                     Container(
-                      padding: const EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         left: 5,
                         right: 5,
                       ),
                       child: myAchievment.achieved
-                          ? TextWidget.headLineText4(
+                          ? TextWidget.headLineText3(
                               '${myAchievment.currentDayOrTime - 1}')
-                          : TextWidget.headLineText4(
+                          : TextWidget.headLineText3(
                               '${myAchievment.currentDayOrTime}'),
                     ),
                     TextWidget.headLineText5(
@@ -371,16 +395,8 @@ class MyAchievementPage extends ConsumerWidget {
     myAchievment.tapToday();
     int dayOrTime = myAchievment.currentDayOrTime;
 
-    // 一言コメント
-    String achievedMyMessage =
-        await DialogWidget().achievedMyMessagelDialog(context);
-
-    await _myGoalFirebase.updateAchieveCurrentDayOrTime(
-        myAchievment.goalId,
-        myAchievment.unitType,
-        dayOrTime,
-        myAchievment.achievedDayOrTime,
-        achievedMyMessage);
+    await _myGoalFirebase.updateAchieveCurrentDayOrTime(myAchievment.goalId,
+        myAchievment.unitType, dayOrTime, myAchievment.achievedDayOrTime);
 
     // スナックバー表示
     String xDayMessage = '';
