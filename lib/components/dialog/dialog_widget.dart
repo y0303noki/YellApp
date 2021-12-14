@@ -46,9 +46,17 @@ class DialogWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('ひとこと残しますか？'),
-          content: TextField(
-            controller: _textController,
-            decoration: const InputDecoration(hintText: "ここに入力"),
+          content: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 100.0),
+            child: Column(
+              children: [
+                const Text('メンバーにコメントを残します'),
+                TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(hintText: "ここに入力"),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(

@@ -101,50 +101,67 @@ class MyAchievementPage extends ConsumerWidget {
     } else {
       // メンバーがいるとき
       return Container(
-        margin: const EdgeInsets.only(
-          top: 10,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
         child: Column(
           children: [
             Container(
               width: double.infinity,
               height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[500],
-                border: Border.all(color: Colors.grey, width: 2.0),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
               child: Row(
-                children: const [
-                  Text(
-                    '応援コメント',
-                    style: TextStyle(
-                      color: Colors.white,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: const Text(
+                      '応援コメント',
+                      // style: TextStyle(
+                      //   color: Colors.white,
+                      // ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      right: 5,
+                    ),
+                    child: IconButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        // 招待ページに遷移
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InviteMainPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.person_add_alt,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            // メンバー追加ボタン
-
             Container(
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: TextButton(
-                onPressed: () {
-                  // 招待ページに遷移
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InviteMainPage(),
-                    ),
-                  );
-                },
-                child: TextWidget.subTitleText1('メンバーを追加する'),
-              ),
-            ),
-            Container(
-              color: Colors.grey[300],
               height: 300,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+              ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: myAchievment.yellMembers.length,
@@ -275,30 +292,38 @@ class MyAchievementPage extends ConsumerWidget {
                 myAchievment.myName.substring(0, 1),
               ),
               Expanded(
-                child: Bubble(
-                  margin: const BubbleEdges.only(top: 10),
-                  color: CommonWidget.myDefaultColor(),
-                  stick: true,
-                  nip: BubbleNip.leftCenter,
-                  child: Text(
-                    myAchievment.achieveComment,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(fontSize: 20),
+                child: Tooltip(
+                  message: '応援してくれるメンバーにコメントが表示されます',
+                  child: Bubble(
+                    margin: const BubbleEdges.only(
+                      top: 10,
+                      right: 10,
+                    ),
+                    borderColor: CommonWidget.myDefaultColor(),
+                    stick: true,
+                    nip: BubbleNip.leftCenter,
+                    child: Text(
+                      myAchievment.achieveComment,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           TextButton(
-              onPressed: () async {
-                // ひとことコメント
-                String achievedMyMessage =
-                    await DialogWidget().achievedMyMessagelDialog(context);
-                await _myGoalFirebase.updateAchievecomment(
-                    myAchievment.goalId, achievedMyMessage);
-                myAchievment.updatedAchieveComment(achievedMyMessage);
-              },
+              onPressed: !myAchievment.achieved
+                  ? null
+                  : () async {
+                      // ひとことコメント
+                      String achievedMyMessage = await DialogWidget()
+                          .achievedMyMessagelDialog(context);
+                      await _myGoalFirebase.updateAchievecomment(
+                          myAchievment.goalId, achievedMyMessage);
+                      myAchievment.updatedAchieveComment(achievedMyMessage);
+                    },
               child: const Text('ひとこと残す')),
           // 目標タイトル
           Container(
