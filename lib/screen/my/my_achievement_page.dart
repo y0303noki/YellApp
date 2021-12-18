@@ -9,6 +9,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/screen/my/select_log_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
@@ -285,6 +286,48 @@ class MyAchievementPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // タイトル
+              Expanded(
+                child: Center(
+                  child: TextWidget.headLineText4(myAchievment.goalTitle),
+                ),
+              ),
+              // ロゴ
+              InkWell(
+                onTap: () {
+                  print('tap');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectLogoPage(),
+                    ),
+                  ).then(
+                    (value) {
+                      // myAchievment.refreshNotifyListeners();
+                    },
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Image.asset(
+                    'images/sumaho.png',
+                    width: 60,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // 自分のでかいアイコン
@@ -318,11 +361,16 @@ class MyAchievementPage extends ConsumerWidget {
                   ? null
                   : () async {
                       // ひとことコメント
-                      String achievedMyMessage = await DialogWidget()
-                          .achievedMyMessagelDialog(context);
-                      await _myGoalFirebase.updateAchievecomment(
-                          myAchievment.goalId, achievedMyMessage);
-                      myAchievment.updatedAchieveComment(achievedMyMessage);
+                      String? achievedMyMessage = await DialogWidget()
+                          .achievedMyMessagelDialog(
+                              context, myAchievment.achieveComment);
+                      if (achievedMyMessage == null) {
+                        return;
+                      } else {
+                        await _myGoalFirebase.updateAchievecomment(
+                            myAchievment.goalId, achievedMyMessage);
+                        myAchievment.updatedAchieveComment(achievedMyMessage);
+                      }
                     },
               child: const Text('ひとこと残す')),
           // 目標タイトル

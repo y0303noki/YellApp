@@ -36,11 +36,13 @@ class DialogWidget {
   }
 
   // 達成ときにひとことメッセージのためのダイアログ
-  Future<String> achievedMyMessagelDialog(
+  Future<String?> achievedMyMessagelDialog(
     BuildContext dialogContext,
+    String beforeText,
   ) async {
     TextEditingController _textController = TextEditingController();
-    String result = '';
+    _textController.text = beforeText;
+    String? result = '';
     await DialogUtil.show(
       context: dialogContext,
       builder: (BuildContext context) {
@@ -62,7 +64,7 @@ class DialogWidget {
             TextButton(
               child: const Text('キャンセル'),
               onPressed: () {
-                result = '';
+                result = null;
                 Navigator.of(context).pop('NO');
               },
             ),
