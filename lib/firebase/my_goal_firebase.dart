@@ -87,6 +87,7 @@ class MyGoalFirebase {
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       achievedDayOrTime: data['tempGoalModel'] ?? '',
       achievedMyComment: data['achievedMyComment'] ?? '',
+      logoImageNumber: data['logoImageNumber'] ?? -1,
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -236,6 +237,22 @@ class MyGoalFirebase {
     DateTime now = DateTime.now();
 
     updateData['achievedMyComment'] = comment;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(myGoals).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// ロゴ画像を更新
+  Future<void> updateLogoImageNumber(String docId, int logoImageNumber) async {
+    // 新しい日付に更新
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+
+    updateData['logoImageNumber'] = logoImageNumber;
     updateData['updatedAt'] = now;
 
     try {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
-import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/my_goal_firebase.dart';
+import 'package:yell_app/state/my_achievment_provider.dart';
+
+MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 ///  ロゴ選択ページ
 class SelectLogoPage extends ConsumerWidget {
@@ -9,6 +12,8 @@ class SelectLogoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final myAchievment = ref.watch(myAchievmentProvider);
+
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.white,
@@ -31,7 +36,7 @@ class SelectLogoPage extends ConsumerWidget {
                   mainAxisSpacing: 5.0,
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
-                  children: _logItem(context),
+                  children: _logItem(context, myAchievment),
                 ),
               ),
             ),
@@ -41,40 +46,46 @@ class SelectLogoPage extends ConsumerWidget {
     );
   }
 
-  _logItem(BuildContext context) {
+  _logItem(BuildContext context, MyAchievment myAchievment) {
     return [
       _tileContainer(
         context,
+        myAchievment,
         'RUN',
         'images/run.png',
         0,
       ),
       _tileContainer(
         context,
+        myAchievment,
         '掃除',
         'images/souzi.png',
         1,
       ),
       _tileContainer(
         context,
+        myAchievment,
         '勉強',
         'images/benkyou.png',
         2,
       ),
       _tileContainer(
         context,
+        myAchievment,
         '筋トレ',
         'images/kintore.png',
         3,
       ),
       _tileContainer(
         context,
+        myAchievment,
         'PC',
         'images/pc.png',
         4,
       ),
       _tileContainer(
         context,
+        myAchievment,
         'スマホ',
         'images/sumaho.png',
         5,
@@ -82,8 +93,8 @@ class SelectLogoPage extends ConsumerWidget {
     ];
   }
 
-  Widget _tileContainer(
-      BuildContext context, String _text, String _imagePath, int _index) {
+  Widget _tileContainer(BuildContext context, MyAchievment myAchievment,
+      String _text, String _imagePath, int _index) {
     return GestureDetector(
       child: GridTile(
         child: Container(
@@ -102,8 +113,11 @@ class SelectLogoPage extends ConsumerWidget {
           ),
         ),
       ),
-      onTap: () {
-        Navigator.pop(context);
+      onTap: () async {
+        // ロゴを更新
+        await _myGoalFirebase.updateLogoImageNumber(
+            myAchievment.goalId, _index);
+        Navigator.of(context).pop(true);
       },
     );
   }

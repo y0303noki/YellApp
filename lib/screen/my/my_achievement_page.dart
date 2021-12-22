@@ -305,25 +305,15 @@ class MyAchievementPage extends ConsumerWidget {
                     ),
                   ).then(
                     (value) {
-                      // myAchievment.refreshNotifyListeners();
+                      print(value);
+                      if (value != null && value) {
+                        myAchievment.refresh = true;
+                        myAchievment.refreshNotifyListeners();
+                      }
                     },
                   );
                 },
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.only(
-                    left: 10,
-                    right: 20,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Image.asset(
-                    'images/sumaho.png',
-                    width: 60,
-                  ),
-                ),
+                child: _logoByNumber(myAchievment.logoImageNumber),
               ),
             ],
           ),
@@ -449,6 +439,49 @@ class MyAchievementPage extends ConsumerWidget {
           // コメント一覧
           _memberWidget(context, myAchievment),
         ],
+      ),
+    );
+  }
+
+  Widget _logoByNumber(int _num) {
+    String _imagePath = '';
+    switch (_num) {
+      case 0:
+        _imagePath = 'images/run.png';
+        break;
+      case 1:
+        _imagePath = 'images/souzi.png';
+        break;
+      case 2:
+        _imagePath = 'images/benkyou.png';
+        break;
+      case 3:
+        _imagePath = 'images/kintore.png';
+        break;
+      case 4:
+        _imagePath = 'images/pc.png';
+        break;
+      case 5:
+        _imagePath = 'images/sumaho.png';
+        break;
+      default:
+        _imagePath = 'images/kintore.png';
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(
+        left: 10,
+        right: 20,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Image.asset(
+        _imagePath,
+        width: 60,
       ),
     );
   }
