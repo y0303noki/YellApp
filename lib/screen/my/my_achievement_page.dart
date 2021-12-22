@@ -9,6 +9,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/screen/my/select_log_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
@@ -101,50 +102,67 @@ class MyAchievementPage extends ConsumerWidget {
     } else {
       // メンバーがいるとき
       return Container(
-        margin: const EdgeInsets.only(
-          top: 10,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
         child: Column(
           children: [
             Container(
               width: double.infinity,
               height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[500],
-                border: Border.all(color: Colors.grey, width: 2.0),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
               child: Row(
-                children: const [
-                  Text(
-                    '応援コメント',
-                    style: TextStyle(
-                      color: Colors.white,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: const Text(
+                      '応援コメント',
+                      // style: TextStyle(
+                      //   color: Colors.white,
+                      // ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      right: 5,
+                    ),
+                    child: IconButton(
+                      color: Colors.blue,
+                      onPressed: () {
+                        // 招待ページに遷移
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InviteMainPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.person_add_alt,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            // メンバー追加ボタン
-
             Container(
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: TextButton(
-                onPressed: () {
-                  // 招待ページに遷移
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InviteMainPage(),
-                    ),
-                  );
-                },
-                child: TextWidget.subTitleText1('メンバーを追加する'),
-              ),
-            ),
-            Container(
-              color: Colors.grey[300],
               height: 300,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+              ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: myAchievment.yellMembers.length,
@@ -268,6 +286,38 @@ class MyAchievementPage extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // タイトル
+              Expanded(
+                child: Center(
+                  child: TextWidget.headLineText4(myAchievment.goalTitle),
+                ),
+              ),
+              // ロゴ
+              InkWell(
+                onTap: () {
+                  print('tap');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectLogoPage(),
+                    ),
+                  ).then(
+                    (value) {
+                      // ロゴを選択してたらリロードする
+                      if (value != null && value) {
+                        myAchievment.refresh = true;
+                        myAchievment.refreshNotifyListeners();
+                      }
+                    },
+                  );
+                },
+                child: _logoByNumber(myAchievment.logoImageNumber),
+              ),
+            ],
+          ),
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // 自分のでかいアイコン
@@ -275,30 +325,43 @@ class MyAchievementPage extends ConsumerWidget {
                 myAchievment.myName.substring(0, 1),
               ),
               Expanded(
-                child: Bubble(
-                  margin: const BubbleEdges.only(top: 10),
-                  color: CommonWidget.myDefaultColor(),
-                  stick: true,
-                  nip: BubbleNip.leftCenter,
-                  child: Text(
-                    myAchievment.achieveComment,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.clip,
-                    style: const TextStyle(fontSize: 20),
+                child: Tooltip(
+                  message: '応援してくれるメンバーにコメントが表示されます',
+                  child: Bubble(
+                    margin: const BubbleEdges.only(
+                      top: 10,
+                      right: 10,
+                    ),
+                    borderColor: CommonWidget.myDefaultColor(),
+                    stick: true,
+                    nip: BubbleNip.leftCenter,
+                    child: Text(
+                      myAchievment.achieveComment,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
           TextButton(
-              onPressed: () async {
-                // ひとことコメント
-                String achievedMyMessage =
-                    await DialogWidget().achievedMyMessagelDialog(context);
-                await _myGoalFirebase.updateAchievecomment(
-                    myAchievment.goalId, achievedMyMessage);
-                myAchievment.updatedAchieveComment(achievedMyMessage);
-              },
+              onPressed: !myAchievment.achieved
+                  ? null
+                  : () async {
+                      // ひとことコメント
+                      String? achievedMyMessage = await DialogWidget()
+                          .achievedMyMessagelDialog(
+                              context, myAchievment.achieveComment);
+                      if (achievedMyMessage == null) {
+                        return;
+                      } else {
+                        await _myGoalFirebase.updateAchievecomment(
+                            myAchievment.goalId, achievedMyMessage);
+                        myAchievment.updatedAchieveComment(achievedMyMessage);
+                      }
+                    },
               child: const Text('ひとこと残す')),
           // 目標タイトル
           Container(
@@ -376,6 +439,49 @@ class MyAchievementPage extends ConsumerWidget {
           // コメント一覧
           _memberWidget(context, myAchievment),
         ],
+      ),
+    );
+  }
+
+  Widget _logoByNumber(int _num) {
+    String _imagePath = '';
+    switch (_num) {
+      case 0:
+        _imagePath = 'images/run.png';
+        break;
+      case 1:
+        _imagePath = 'images/souzi.png';
+        break;
+      case 2:
+        _imagePath = 'images/benkyou.png';
+        break;
+      case 3:
+        _imagePath = 'images/kintore.png';
+        break;
+      case 4:
+        _imagePath = 'images/pc.png';
+        break;
+      case 5:
+        _imagePath = 'images/sumaho.png';
+        break;
+      default:
+        _imagePath = 'images/kintore.png';
+        break;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(
+        left: 10,
+        right: 20,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Image.asset(
+        _imagePath,
+        width: 60,
       ),
     );
   }

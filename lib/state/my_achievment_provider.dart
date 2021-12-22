@@ -37,6 +37,8 @@ class MyAchievment extends ChangeNotifier {
   String sliderLabel = 'これを右に'; // スライダーラベル
   bool achieved = false; // スライダーで達成処理ずみ
 
+  int logoImageNumber = -1; // ロゴ画像（0 ~ 5)
+
   String achieveComment = ''; // 達成コメント
   void updatedAchieveComment(String _comment) {
     achieveComment = _comment;
@@ -112,6 +114,8 @@ class MyAchievment extends ChangeNotifier {
     inviteId = _myGoalModel.inviteId;
     currentDay = _myGoalModel.currentDay;
     currentTime = _myGoalModel.currentTimes;
+    // ロゴ
+    logoImageNumber = _myGoalModel.logoImageNumber;
     // メンバー
     yellMembers = members;
     // メッセージ
