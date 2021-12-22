@@ -305,7 +305,7 @@ class MyAchievementPage extends ConsumerWidget {
                     ),
                   ).then(
                     (value) {
-                      print(value);
+                      // ロゴを選択してたらリロードする
                       if (value != null && value) {
                         myAchievment.refresh = true;
                         myAchievment.refreshNotifyListeners();
@@ -476,7 +476,7 @@ class MyAchievementPage extends ConsumerWidget {
         right: 20,
       ),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
+        border: Border.all(),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Image.asset(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
+import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 
@@ -27,7 +28,13 @@ class SelectLogoPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('ロゴ選択'),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 10,
+                bottom: 5,
+              ),
+              child: TextWidget.headLineText5('ロゴを変更'),
+            ),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(16.0),
@@ -99,7 +106,9 @@ class SelectLogoPage extends ConsumerWidget {
       child: GridTile(
         child: Container(
           decoration: BoxDecoration(
-            color: CommonWidget.otherDefaultColor()!,
+            border: Border.all(
+                // color: CommonWidget.otherDefaultColor()!,
+                ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
