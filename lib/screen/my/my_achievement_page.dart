@@ -285,6 +285,7 @@ class MyAchievementPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          TextWidget.headLineText4('# ${myAchievment.currentDayOrTime}'),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -297,7 +298,6 @@ class MyAchievementPage extends ConsumerWidget {
               // ロゴ
               InkWell(
                 onTap: () {
-                  print('tap');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -363,29 +363,8 @@ class MyAchievementPage extends ConsumerWidget {
                       }
                     },
               child: const Text('ひとこと残す')),
-          // 目標タイトル
-          Container(
-            margin: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              top: 10,
-              bottom: 10,
-            ),
-            child: TextWidget.headLineText4(myAchievment.goalTitle),
-          ),
           Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'images/yazirusi.png',
-                    width: 60,
-                  ),
-                  const Text('右まで引っ張ると達成済みになります'),
-                ],
-              ),
-
               Slider(
                 label: myAchievment.sliderLabel,
                 min: 0,
@@ -406,33 +385,15 @@ class MyAchievementPage extends ConsumerWidget {
                         }
                       },
               ),
-              // 継続何日目？
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 10,
-                  bottom: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextWidget.headLineText5('継続'),
-                    Container(
-                      margin: const EdgeInsets.only(
-                        left: 5,
-                        right: 5,
-                      ),
-                      child: myAchievment.achieved
-                          ? TextWidget.headLineText3(
-                              '${myAchievment.currentDayOrTime - 1}')
-                          : TextWidget.headLineText3(
-                              '${myAchievment.currentDayOrTime}'),
-                    ),
-                    TextWidget.headLineText5(
-                        myAchievment.unitType == 0 ? '日目' : '回目'),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/yazirusi.png',
+                    width: 60,
+                  ),
+                  const Text('右まで引っ張って達成'),
+                ],
               ),
             ],
           ),
@@ -465,8 +426,27 @@ class MyAchievementPage extends ConsumerWidget {
         _imagePath = 'images/sumaho.png';
         break;
       default:
-        _imagePath = 'images/kintore.png';
+        _imagePath = '';
         break;
+    }
+
+    if (_imagePath.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(
+          left: 10,
+          right: 20,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const SizedBox(
+          width: 60,
+          height: 60,
+          child: Center(child: Text('ロゴなし')),
+        ),
+      );
     }
 
     return Container(

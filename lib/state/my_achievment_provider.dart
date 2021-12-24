@@ -24,7 +24,7 @@ class MyAchievment extends ChangeNotifier {
   // bool isTapedToday = false;
   String inviteId = ''; // 招待コードのid
 
-  int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
+  int currentDay = 0; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
   int currentTime = 0; // 何回目？
   String achievedDayOrTime = ''; // 2日目達成 = '2-ok'
 
@@ -100,6 +100,9 @@ class MyAchievment extends ChangeNotifier {
 
   void setInitialData(MyGoalModel _myGoalModel, List<MemberModel> members,
       List<YellMessage> messages) {
+    // 初期化
+    sliderValue = 0.0;
+
     goalId = _myGoalModel.id;
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;

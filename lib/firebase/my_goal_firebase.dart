@@ -81,8 +81,8 @@ class MyGoalFirebase {
       goalTitle: data['title'] ?? '',
       myName: data['myName'] ?? '',
       unitType: data['unitType'] ?? 0,
-      currentDay: data['currentDay'] ?? 1,
-      currentTimes: data['currentTimes'] ?? 1,
+      currentDay: data['currentDay'] ?? 0,
+      currentTimes: data['currentTimes'] ?? 0,
       inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       achievedDayOrTime: data['tempGoalModel'] ?? '',
@@ -131,8 +131,8 @@ class MyGoalFirebase {
       tempGoalModel.goalTitle = data['title'] ?? '';
       tempGoalModel.myName = data['myName'] ?? '';
       tempGoalModel.unitType = data['unitType'] ?? 0;
-      tempGoalModel.currentDay = data['currentDay'] ?? 1;
-      tempGoalModel.currentTimes = data['currentTimes'] ?? 1;
+      tempGoalModel.currentDay = data['currentDay'] ?? 0;
+      tempGoalModel.currentTimes = data['currentTimes'] ?? 0;
       tempGoalModel.inviteId = data['inviteId'] ?? '';
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
@@ -158,8 +158,8 @@ class MyGoalFirebase {
     addObject['title'] = myGoalModel.goalTitle;
     addObject['myName'] = myGoalModel.myName;
     addObject['unitType'] = myGoalModel.unitType;
-    addObject['currentDay'] = myGoalModel.unitType == 0 ? 1 : -1;
-    addObject['currentTimes'] = myGoalModel.unitType == 1 ? 1 : -1;
+    addObject['currentDay'] = myGoalModel.unitType == 0 ? 0 : 0;
+    addObject['currentTimes'] = myGoalModel.unitType == 1 ? 0 : 0;
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
     addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;

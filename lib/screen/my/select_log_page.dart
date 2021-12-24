@@ -17,8 +17,8 @@ class SelectLogoPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Colors.blueGrey,
+        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.only(
@@ -44,6 +44,24 @@ class SelectLogoPage extends ConsumerWidget {
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,
                   children: _logItem(context, myAchievment),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 5,
+                bottom: 50,
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  // ロゴ削除
+                  await _myGoalFirebase.updateLogoImageNumber(
+                      myAchievment.goalId, -1);
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text(
+                  'ロゴを消す',
+                  style: TextStyle(color: Colors.red),
                 ),
               ),
             ),
