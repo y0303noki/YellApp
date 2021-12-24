@@ -19,7 +19,8 @@ class MemberFirebase {
         .collection(members)
         .where('memberUserId', isEqualTo: userId)
         .where('isDeleted', isEqualTo: false)
-        .limit(20) // 20個までにしておく
+        .orderBy('updatedAt', descending: true)
+        .limit(10) // 10個までにしておく
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;

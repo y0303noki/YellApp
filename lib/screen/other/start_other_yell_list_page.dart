@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
-import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
-import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
-import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
-import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
-import 'package:yell_app/state/other_setting_code_provider.dart';
 import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
@@ -25,8 +19,6 @@ class StartOtherYellListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
-    TextEditingController _textEditingController =
-        TextEditingController(text: '');
 
     return Scaffold(
       appBar: AppBar(

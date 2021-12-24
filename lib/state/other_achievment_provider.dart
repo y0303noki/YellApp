@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/utility/utility.dart';
 
 final otherAchievmentProvider =
     ChangeNotifierProvider((ref) => OtherAchievment());
