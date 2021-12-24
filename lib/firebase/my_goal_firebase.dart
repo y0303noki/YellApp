@@ -103,15 +103,27 @@ class MyGoalFirebase {
   // 自分が登録ずみの他人の目標一覧
   Future<Map<String, Object?>?> fetchRegistedOtherGoals() async {
     Map<String, Object?> result = {};
-    // Future<List<MyGoalModel>> fetchRegistedOtherGoals() async {
     List<MemberModel> members = await _memberFirebase.fetchMemberDatas();
     if (members.isEmpty) {
       return result;
     }
+
+    // 無効なgoalIdは削除しておく
+    for (MemberModel member in members) {
+      MyGoalModel? myGoal = await _fetchMyGoalDataByGoalId(member.ownerGoalId);
+      if (myGoal != null && !myGoal.isDeleted) {
+        // 有効なので何もしない
+      } else {
+        // 無効なので削除
+        members.remove(member);
+        // dbからも
+        await _memberFirebase.deleteMemberData(member.id);
+      }
+    }
     result['members'] = members;
 
-    List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
     List<QueryDocumentSnapshot> docs = [];
+    List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
     try {
       final QuerySnapshot snapshots = await _firestore
           .collection(myGoals)
@@ -131,7 +143,6 @@ class MyGoalFirebase {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
       tempGoalModel.id = data['id'] ?? '';
-      tempGoalModel.id = data['id'];
       tempGoalModel.goalTitle = data['title'] ?? '';
       tempGoalModel.myName = data['myName'] ?? '';
       tempGoalModel.unitType = data['unitType'] ?? 0;
@@ -150,6 +161,46 @@ class MyGoalFirebase {
     result['goals'] = goalList;
 
     return result;
+  }
+
+  Future<MyGoalModel?> _fetchMyGoalDataByGoalId(String goalId) async {
+    try {
+      final QuerySnapshot snapshots = await _firestore
+          .collection(myGoals)
+          .where('id', isEqualTo: goalId)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      List<QueryDocumentSnapshot> docs = snapshots.docs;
+      if (docs.isEmpty) {
+        return null;
+      }
+
+      Map<String, dynamic> data = docs.first.data() as Map<String, dynamic>;
+      String docId = docs.first.id;
+      final _myGoalModel = MyGoalModel(
+        id: docId,
+        goalTitle: data['title'] ?? '',
+        myName: data['myName'] ?? '',
+        unitType: data['unitType'] ?? 0,
+        currentDay: data['currentDay'] ?? 0,
+        currentTimes: data['currentTimes'] ?? 0,
+        inviteId: data['inviteId'] ?? '',
+        updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
+        achievedDayOrTime: data['tempGoalModel'] ?? '',
+        achievedMyComment: data['achievedMyComment'] ?? '',
+        logoImageNumber: data['logoImageNumber'] ?? -1,
+        isDeleted: data['isDeleted'] ?? false,
+        createdAt: data['createdAt'].toDate(),
+        updatedAt: data['updatedAt'].toDate(),
+      );
+
+      return _myGoalModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 
   /// 自分の目標をfirestoreに格納
