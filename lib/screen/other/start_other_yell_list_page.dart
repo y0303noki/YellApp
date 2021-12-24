@@ -4,6 +4,7 @@ import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
@@ -12,6 +13,7 @@ import 'package:yell_app/state/other_achievment_provider.dart';
 import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
+MemberFirebase memberFirebase = MemberFirebase();
 
 class StartOtherYellListPage extends ConsumerWidget {
   const StartOtherYellListPage({Key? key}) : super(key: key);
@@ -57,7 +59,25 @@ class StartOtherYellListPage extends ConsumerWidget {
 
         // 成功処理
         if (snapshot.connectionState == ConnectionState.done) {
-          List<MyGoalModel> _goals = snapshot.data;
+          Map<String, Object?>? _data = snapshot.data;
+          if (_data == null) {
+            // データがない、おかしい
+            return const Center(
+              child: Text('エラーがおきました'),
+            );
+          }
+          List<MyGoalModel> goalDatas = _data.containsKey('goals')
+              ? _data['goals'] as List<MyGoalModel>
+              : [];
+
+          List<MemberModel> memberDatas = _data.containsKey('members')
+              ? _data['members'] as List<MemberModel>
+              : [];
+
+          otherAchievment.myGoalList = goalDatas;
+          otherAchievment.memberList = memberDatas;
+
+          List<MyGoalModel> _goals = goalDatas;
           if (_goals.isEmpty) {
             return Center(
               child: TextButton(
@@ -155,9 +175,17 @@ class StartOtherYellListPage extends ConsumerWidget {
               builder: (context) => OtherYellMainPage(),
             ),
           );
-        }, // タップ
+        },
+        // ロングタップ
         onLongPress: () {
-          print("onLongTap called.");
+          // 長押しで削除
+          MemberModel findMemberModel = _otherAchievment.memberList.firstWhere(
+              (member) => member.ownerGoalId == myGoalModel.id,
+              orElse: () => MemberModel());
+          String memberId = findMemberModel.id;
+          if (memberId.isNotEmpty) {
+            memberFirebase.deleteMemberData(memberId);
+          }
         }, // 長押し
       ),
     );

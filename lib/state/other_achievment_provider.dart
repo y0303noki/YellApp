@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 
 final otherAchievmentProvider =
@@ -27,6 +28,8 @@ class OtherAchievment extends ChangeNotifier {
 
   int messageType = 0; // 0 or 1 or 2
   String yellMessage = ''; // 今回のメッセージ
+  List<MemberModel> memberList = []; // メンバー
+  List<MyGoalModel> myGoalList = []; // 目標
 
   // 全部リセット
   void resetData() {

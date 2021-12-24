@@ -101,11 +101,15 @@ class MyGoalFirebase {
   }
 
   // 自分が登録ずみの他人の目標一覧
-  Future<List<MyGoalModel>> fetchRegistedOtherGoals() async {
+  Future<Map<String, Object?>?> fetchRegistedOtherGoals() async {
+    Map<String, Object?> result = {};
+    // Future<List<MyGoalModel>> fetchRegistedOtherGoals() async {
     List<MemberModel> members = await _memberFirebase.fetchMemberDatas();
     if (members.isEmpty) {
-      return [];
+      return result;
     }
+    result['members'] = members;
+
     List<String> goalIds = members.map((e) => e.ownerGoalId).toList();
     List<QueryDocumentSnapshot> docs = [];
     try {
@@ -142,7 +146,10 @@ class MyGoalFirebase {
       tempGoalModel.updatedAt = data['updatedAt'].toDate();
       goalList.add(tempGoalModel);
     }
-    return goalList;
+
+    result['goals'] = goalList;
+
+    return result;
   }
 
   /// 自分の目標をfirestoreに格納

@@ -109,4 +109,9 @@ class MemberFirebase {
       return {};
     }
   }
+
+  /// 指定されたidのメンバーデータを物理削除する
+  Future<void> deleteMemberData(String memberId) async {
+    _firestore.collection(members).doc(memberId).delete();
+  }
 }
