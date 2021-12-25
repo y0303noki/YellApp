@@ -7,6 +7,7 @@ import 'package:yell_app/firebase/yell_message_firebase.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
+import 'package:yell_app/utility/utility.dart';
 
 TextEditingController _textEditingController = TextEditingController(text: '');
 YellMessageFirebase yellMessageFirebase = YellMessageFirebase();
@@ -18,6 +19,7 @@ class OtherYellMainPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
+    print('名前：${otherAchievment.ownerName}');
 
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +53,9 @@ class OtherYellMainPage extends ConsumerWidget {
                 child: Row(
                   children: [
                     // アイコン
-                    ButtonWidget.iconMainWidget('a'),
+                    ButtonWidget.iconMainWidget(
+                      Utility.substring1or2(otherAchievment.ownerName),
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -134,7 +138,9 @@ class OtherYellMainPage extends ConsumerWidget {
                       ),
                     ),
 
-                    ButtonWidget.iconMainWidget('a'),
+                    ButtonWidget.iconMainWidget(
+                      Utility.substring1or2(otherAchievment.otherName),
+                    ),
                   ],
                 ),
               ),
@@ -145,6 +151,18 @@ class OtherYellMainPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String substring1or2(String _str) {
+    print(_str);
+    if (_str.isEmpty) {
+      return '';
+    }
+    if (_str.length == 1) {
+      return _str.substring(0, 1);
+    } else {
+      return _str.substring(0, 2);
+    }
   }
 
   /// 達成したのでメッセージを送るか表示ウィジット

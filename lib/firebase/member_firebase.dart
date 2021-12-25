@@ -35,6 +35,7 @@ class MemberFirebase {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
       tempMemberModel.id = data['id'] ?? '';
+      tempMemberModel.memberName = data['memberName'] ?? '';
       tempMemberModel.memberUserId = data['memberUserId'] ?? '';
       tempMemberModel.ownerGoalId = data['ownerGoalId'] ?? '';
       tempMemberModel.isDeleted = data['isDeleted'] ?? false;

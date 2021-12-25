@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
@@ -19,78 +20,65 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blueGrey,
         elevation: 0,
       ),
       body: Container(
         margin: const EdgeInsets.only(
+          top: 10,
           left: 10,
           right: 10,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(
+                top: 10,
+              ),
+              child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: Text('a'),
-                      ),
-                    ],
-                  ),
-                  TextWidget.headLineText4('${otherAchievment.ownerName}さんを'),
-                  TextWidget.headLineText4('応援しますか？'),
-                  TextWidget.headLineText4('やること'),
-                  TextWidget.headLineText4(otherAchievment.goalTitle),
+                  TextWidget.headLineText5('${otherAchievment.ownerName}さんを'),
+                  TextWidget.headLineText5('応援しますか？'),
+                  TextWidget.headLineText5(
+                      '${otherAchievment.goalTitle}を続けています'),
                 ],
               ),
-              // TODO
-              Container(
-                child: Text(
-                  'イラストとか説明が入る予定',
-                ),
+            ),
+            CommonWidget.descriptionWidget(
+                CommonWidget.lightbulbIcon(), '間違えている場合は「戻る」を押してください。'),
+
+            // 戻る、次へ
+            Container(
+              margin: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                bottom: 50,
               ),
-              // 戻る、次へ
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 50,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: TextWidget.headLineText5('戻る'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                StartOtherSettingYourinfoPage(),
-                          ),
-                        );
-                      },
-                      child: TextWidget.headLineText5('次へ'),
-                    )
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: TextWidget.headLineText5('戻る'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StartOtherSettingYourinfoPage(),
+                        ),
+                      );
+                    },
+                    child: TextWidget.headLineText5('次へ'),
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

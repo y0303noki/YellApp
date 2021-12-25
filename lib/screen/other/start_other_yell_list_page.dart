@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
@@ -10,6 +11,7 @@ import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
+import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
@@ -79,18 +81,23 @@ class StartOtherYellListPage extends ConsumerWidget {
 
           List<MyGoalModel> _goals = goalDatas;
           if (_goals.isEmpty) {
-            return Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartOtherSettingCodePage(),
-                    ),
-                  );
-                },
-                child: TextWidget.headLineText6('招待コードを入力する'),
-              ),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StartOtherSettingCodePage(),
+                        ),
+                      );
+                    },
+                    child: TextWidget.headLineText6('招待コードを入力する'),
+                  ),
+                ),
+              ],
             );
           } else {
             return Column(
@@ -152,11 +159,19 @@ class StartOtherYellListPage extends ConsumerWidget {
         onTap: () async {
           // 選択したらデータをセット
           _otherAchievment.resetData();
+
+          // 自分の名前を取得
+          final UserAuth _userAuth = UserAuth();
+          final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
+          MemberModel myMemberModel = _otherAchievment.memberList
+              .firstWhere((member) => member.memberUserId == _userId);
+
           // リセット後にデータを付け直す
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
           _otherAchievment.unitType = myGoalModel.unitType;
+          _otherAchievment.otherName = myMemberModel.memberName;
           _otherAchievment.updateCurrentDayOrTime =
               myGoalModel.updatedCurrentDayAt;
           _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;

@@ -9,7 +9,7 @@ final myAchievmentProvider = ChangeNotifierProvider((ref) => MyAchievment());
 
 class MyAchievment extends ChangeNotifier {
   // スライダーのmaxとmin
-  static double sliderMaxValue = 5.0;
+  static double sliderMaxValue = 3.0;
   static double sliderMinValue = 0.0;
 
   String goalId = ''; // firestoreに格納されているid
@@ -55,10 +55,6 @@ class MyAchievment extends ChangeNotifier {
     } else if (sliderValue == 2) {
       label = 'その調子';
     } else if (sliderValue == 3) {
-      label = 'いいね';
-    } else if (sliderValue == 4) {
-      label = 'もう少し';
-    } else if (sliderValue == sliderMaxValue) {
       label = 'えらい！';
     } else {
       label = 'あれ？';

@@ -14,6 +14,7 @@ import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
 import 'package:share/share.dart';
+import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -204,7 +205,7 @@ class MyAchievementPage extends ConsumerWidget {
           border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
       child: ListTile(
         leading: ButtonWidget.iconMainMiniWidget(
-          _substring1or2(memberModel.memberName),
+          Utility.substring1or2(memberModel.memberName),
         ),
         title: TextWidget.subTitleText3(memberModel.memberName),
         subtitle: commentText,
@@ -356,7 +357,7 @@ class MyAchievementPage extends ConsumerWidget {
             children: [
               // 自分のでかいアイコン
               ButtonWidget.iconBigMainWidget(
-                _substring1or2(myAchievment.myName),
+                Utility.substring1or2(myAchievment.myName),
               ),
               Expanded(
                 child: Tooltip(
@@ -401,8 +402,8 @@ class MyAchievementPage extends ConsumerWidget {
             children: [
               Slider(
                 label: myAchievment.sliderLabel,
-                min: 0,
-                max: 5,
+                min: MyAchievment.sliderMinValue,
+                max: MyAchievment.sliderMaxValue,
                 value: myAchievment.achieved
                     ? MyAchievment.sliderMaxValue
                     : myAchievment.sliderValue,
@@ -412,6 +413,7 @@ class MyAchievementPage extends ConsumerWidget {
                 onChanged: myAchievment.achieved
                     ? null
                     : (double _value) {
+                        print(_value);
                         myAchievment.updateSliderValue(_value);
                         // 右まで到達したら達成処理
                         if (_value == MyAchievment.sliderMaxValue) {
@@ -500,18 +502,6 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
-  // 頭文字を2文字切り取る。1文字だったら1文字だけ
-  String _substring1or2(String _str) {
-    if (_str.isEmpty) {
-      return '';
-    }
-    if (_str.length == 1) {
-      return _str.substring(0, 1);
-    } else {
-      return _str.substring(0, 2);
-    }
-  }
-
   /// SNSにシェア
   Future _shareSns(String _text) async {
     _text += '#今日もえらい！';
@@ -532,20 +522,18 @@ class MyAchievementPage extends ConsumerWidget {
 
     // スナックバー表示
     String xDayMessage = '';
-    int showDayOrTime = 0;
-    // タップしてたら1減らす
-    if (myAchievment.achieved) {
-      showDayOrTime = myAchievment.currentDayOrTime - 1;
+    bool is10times = myAchievment.currentDayOrTime % 10 == 0; //10の倍数
+    // 初めて
+    if (myAchievment.currentDayOrTime == 1) {
+      xDayMessage = 'はじめての達成おめでとうございます！\nこれからも続けてみましょう！';
+    } else if (is10times) {
+      xDayMessage = '${myAchievment.currentDayOrTime}回続きました、すごい！';
     } else {
-      showDayOrTime = myAchievment.currentDayOrTime;
+      xDayMessage = '達成おめでとう！';
     }
-    // タイプによってメッセージを変更
-    if (myAchievment.unitType == 0) {
-      xDayMessage = '$showDayOrTime日目';
-    } else {
-      xDayMessage = '$showDayOrTime回目';
-    }
-    xDayMessage += 'おめでとう';
+
+    String snsShareText =
+        '${myAchievment.goalTitle}を${myAchievment.currentDayOrTime}回目の達成です。今日もえらい！\n#今日もえらい\nhttp:googlecom;';
     String message = '今回の記録をSNSでシェアしますか？';
     final snackBar = SnackBar(
       backgroundColor: Colors.yellow[50],
@@ -559,10 +547,20 @@ class MyAchievementPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Icon(
-                  Icons.emoji_people,
-                  size: 40,
+                  Icons.thumb_up_alt_outlined,
+                  size: 60,
                 ),
-                TextWidget.snackBarText(xDayMessage),
+                Flexible(
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                    ),
+                    child: Center(
+                      child: TextWidget.snackBarText(xDayMessage),
+                    ),
+                  ),
+                ),
               ],
             ),
             Row(
@@ -582,7 +580,7 @@ class MyAchievementPage extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    _shareSns(xDayMessage);
+                    _shareSns(snsShareText);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
@@ -603,7 +601,7 @@ class MyAchievementPage extends ConsumerWidget {
           ],
         ),
       ),
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 10),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

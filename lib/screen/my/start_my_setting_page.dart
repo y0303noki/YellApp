@@ -14,6 +14,7 @@ class StartMySettingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final deviceSize = MediaQuery.of(context).size;
     String errorText = ref.watch(errorTextProvider);
     final startMySetting = ref.watch(startMySettingProvider);
     TextEditingController _textEditingController =
@@ -32,79 +33,88 @@ class StartMySettingPage extends ConsumerWidget {
           left: 10,
           right: 10,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: deviceSize.height - 100,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextWidget.headLineText5('続けるえらいこと'),
-                TextField(
-                  controller: _textEditingController,
-                  maxLength: 20,
-                  style: const TextStyle(),
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    hintText: '（例）筋トレ、勉強、読書',
-                    errorText: errorText.isEmpty ? null : errorText,
+                Column(
+                  children: [
+                    TextWidget.headLineText5('続けるえらいこと'),
+                    TextField(
+                      controller: _textEditingController,
+                      maxLength: 20,
+                      style: const TextStyle(),
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        hintText: '（例）筋トレ、勉強、読書',
+                        errorText: errorText.isEmpty ? null : errorText,
+                      ),
+                      onSubmitted: (text) {
+                        startMySetting.goalTitle = text;
+                      },
+                    ),
+                  ],
+                ),
+
+                // 説明
+                Column(
+                  children: [
+                    CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
+                        'これから続けたいこと、既に続けていることを入力してください。'),
+                    Image.asset(
+                      'images/study.png',
+                      width: 200,
+                    ),
+                  ],
+                ),
+
+                // 戻る、次へ
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    bottom: 50,
                   ),
-                  onSubmitted: (text) {
-                    startMySetting.goalTitle = text;
-                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: TextWidget.headLineText5('戻る'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (_textEditingController.text.isEmpty) {
+                            // エラーを出す
+                            startMySetting.errorText = '入力してください。';
+                            return;
+                          } else {
+                            startMySetting.errorText = '';
+                          }
+                          startMySetting.goalTitle =
+                              _textEditingController.text;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const StartMySettinMynamePage(),
+                            ),
+                          );
+                        },
+                        child: TextWidget.headLineText5('次へ'),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
-
-            // 説明
-            Column(
-              children: [
-                CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
-                    'これから続けたいこと、既に続けていることを入力してください。'),
-                Image.asset(
-                  'images/study.png',
-                  width: 200,
-                ),
-              ],
-            ),
-
-            // 戻る、次へ
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                bottom: 50,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextWidget.headLineText5('戻る'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (_textEditingController.text.isEmpty) {
-                        // エラーを出す
-                        startMySetting.errorText = '入力してください。';
-                        return;
-                      } else {
-                        startMySetting.errorText = '';
-                      }
-                      startMySetting.goalTitle = _textEditingController.text;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const StartMySettinMynamePage(),
-                        ),
-                      );
-                    },
-                    child: TextWidget.headLineText5('次へ'),
-                  )
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

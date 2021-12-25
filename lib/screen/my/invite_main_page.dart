@@ -100,19 +100,8 @@ class InviteMainPage extends ConsumerWidget {
                 ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              width: CommonWidget.defaultDescriptionWidth(deviceSize.width),
-              height: CommonWidget.defaultDescriptionHeight(deviceSize.width),
-              decoration: CommonWidget.defaultDescriptionDecoration(),
-              child: Center(
-                child:
-                    TextWidget.subTitleText1('トップページの「応援する」から招待コードを入力してもらいます。'),
-              ),
-            ),
+            CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
+                'トップページの「応援する」から招待コードを入力してもらいます。'),
           ],
         ),
       ),
