@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/screen/my/start_my_setting_myname_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_selectunit_page.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
@@ -35,14 +37,14 @@ class StartMySettingPage extends ConsumerWidget {
           children: [
             Column(
               children: [
-                TextWidget.headLineText4('続けたいこと'),
+                TextWidget.headLineText5('続けるえらいこと'),
                 TextField(
                   controller: _textEditingController,
                   maxLength: 20,
                   style: const TextStyle(),
                   maxLines: 1,
                   decoration: InputDecoration(
-                    hintText: '（例）筋トレ、勉強',
+                    hintText: '（例）筋トレ、勉強、読書',
                     errorText: errorText.isEmpty ? null : errorText,
                   ),
                   onSubmitted: (text) {
@@ -51,12 +53,19 @@ class StartMySettingPage extends ConsumerWidget {
                 ),
               ],
             ),
-            // TODO
-            Container(
-              child: Text(
-                'イラストとか説明が入る予定',
-              ),
+
+            // 説明
+            Column(
+              children: [
+                CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
+                    'これから続けたいこと、既に続けていることを入力してください。'),
+                Image.asset(
+                  'images/study.png',
+                  width: 200,
+                ),
+              ],
             ),
+
             // 戻る、次へ
             Container(
               margin: const EdgeInsets.only(
@@ -77,16 +86,16 @@ class StartMySettingPage extends ConsumerWidget {
                     onPressed: () {
                       if (_textEditingController.text.isEmpty) {
                         // エラーを出す
-                        errorText = '入力してください。';
+                        startMySetting.errorText = '入力してください。';
                         return;
                       } else {
-                        errorText = '';
+                        startMySetting.errorText = '';
                       }
                       startMySetting.goalTitle = _textEditingController.text;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartMySettingSelectUnitPage(),
+                          builder: (context) => const StartMySettinMynamePage(),
                         ),
                       );
                     },

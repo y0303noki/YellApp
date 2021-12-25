@@ -102,7 +102,7 @@ class ButtonWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue, width: 5),
+        border: Border.all(color: Colors.black, width: 5),
         borderRadius: BorderRadius.circular(120 / 2),
       ),
       child: Center(

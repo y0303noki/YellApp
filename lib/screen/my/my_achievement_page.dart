@@ -204,7 +204,7 @@ class MyAchievementPage extends ConsumerWidget {
           border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey))),
       child: ListTile(
         leading: ButtonWidget.iconMainMiniWidget(
-          memberModel.memberName.substring(0, 1),
+          _substring1or2(memberModel.memberName),
         ),
         title: TextWidget.subTitleText3(memberModel.memberName),
         subtitle: commentText,
@@ -285,44 +285,78 @@ class MyAchievementPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          TextWidget.headLineText4('# ${myAchievment.currentDayOrTime}'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // タイトル
-              Expanded(
-                child: Center(
-                  child: TextWidget.headLineText4(myAchievment.goalTitle),
+          Container(
+            margin: const EdgeInsets.only(
+              top: 20,
+              bottom: 20,
+              left: 10,
+              right: 10,
+            ),
+            padding: const EdgeInsets.only(
+              top: 20,
+              bottom: 20,
+              left: 10,
+              right: 10,
+            ),
+            decoration: BoxDecoration(
+              color: CommonWidget.myDefaultColor(),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                    left: 5,
+                    bottom: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      TextWidget.headLineText5(
+                          '# ${myAchievment.currentDayOrTime}'),
+                    ],
+                  ),
                 ),
-              ),
-              // ロゴ
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SelectLogoPage(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // タイトル
+                    Expanded(
+                      child: Center(
+                        child: TextWidget.headLineText4(myAchievment.goalTitle),
+                      ),
                     ),
-                  ).then(
-                    (value) {
-                      // ロゴを選択してたらリロードする
-                      if (value != null && value) {
-                        myAchievment.refresh = true;
-                        myAchievment.refreshNotifyListeners();
-                      }
-                    },
-                  );
-                },
-                child: _logoByNumber(myAchievment.logoImageNumber),
-              ),
-            ],
+                    // ロゴ
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SelectLogoPage(),
+                          ),
+                        ).then(
+                          (value) {
+                            // ロゴを選択してたらリロードする
+                            if (value != null && value) {
+                              myAchievment.refresh = true;
+                              myAchievment.refreshNotifyListeners();
+                            }
+                          },
+                        );
+                      },
+                      child: _logoByNumber(myAchievment.logoImageNumber),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // 自分のでかいアイコン
               ButtonWidget.iconBigMainWidget(
-                myAchievment.myName.substring(0, 1),
+                _substring1or2(myAchievment.myName),
               ),
               Expanded(
                 child: Tooltip(
@@ -362,7 +396,7 @@ class MyAchievementPage extends ConsumerWidget {
                         myAchievment.updatedAchieveComment(achievedMyMessage);
                       }
                     },
-              child: const Text('ひとこと残す')),
+              child: const Text('達成したのでひとこと残す')),
           Column(
             children: [
               Slider(
@@ -438,7 +472,7 @@ class MyAchievementPage extends ConsumerWidget {
           right: 20,
         ),
         decoration: BoxDecoration(
-          border: Border.all(),
+          color: Colors.grey[200],
           borderRadius: BorderRadius.circular(10),
         ),
         child: const SizedBox(
@@ -456,7 +490,7 @@ class MyAchievementPage extends ConsumerWidget {
         right: 20,
       ),
       decoration: BoxDecoration(
-        border: Border.all(),
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Image.asset(
@@ -464,6 +498,18 @@ class MyAchievementPage extends ConsumerWidget {
         width: 60,
       ),
     );
+  }
+
+  // 頭文字を2文字切り取る。1文字だったら1文字だけ
+  String _substring1or2(String _str) {
+    if (_str.isEmpty) {
+      return '';
+    }
+    if (_str.length == 1) {
+      return _str.substring(0, 1);
+    } else {
+      return _str.substring(0, 2);
+    }
   }
 
   /// SNSにシェア

@@ -41,15 +41,14 @@ class StartMySettinMynamePage extends ConsumerWidget {
               children: [
                 Column(
                   children: [
-                    TextWidget.headLineText5('最後にあなたの'),
-                    TextWidget.headLineText5('ニックネームを教えてください'),
+                    TextWidget.headLineText5('あなたのニックネーム'),
                     TextField(
                       controller: _textEditingController,
                       maxLength: 10,
                       style: const TextStyle(),
                       maxLines: 1,
                       decoration: InputDecoration(
-                        hintText: 'ニックネーム',
+                        hintText: 'ニックネームを入力',
                         errorText: errorText.isEmpty ? null : errorText,
                       ),
                       onSubmitted: (text) {
@@ -58,30 +57,18 @@ class StartMySettinMynamePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // TODO
-                Container(
-                  width: CommonWidget.defaultDescriptionWidth(deviceSize.width),
-                  height:
-                      CommonWidget.defaultDescriptionHeight(deviceSize.width),
-                  decoration: CommonWidget.defaultDescriptionDecoration(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'images/me.png',
-                        width: 80,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: TextWidget.subTitleText2(
-                            '応援してくれる\n人たちに表示されます。\n本名である必要はありません'),
-                      ),
-                    ],
-                  ),
+                // 説明
+                Column(
+                  children: [
+                    CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
+                        '応援してくれる人たちに表示されます。\n頭文字2文字がアイコンになります。'),
+                    Image.asset(
+                      'images/yell.png',
+                      width: 200,
+                    ),
+                  ],
                 ),
+
                 // 戻る、次へ
                 Container(
                   margin: const EdgeInsets.only(

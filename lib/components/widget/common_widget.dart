@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yell_app/components/widget/text_widget.dart';
 
 class CommonWidget {
   // dateピッカーを表示して選択したDateTimeを返す
@@ -75,5 +76,54 @@ class CommonWidget {
 
   static String quickAction5() {
     return 'おつかれさま';
+  }
+
+  static Widget descriptionWidget(Widget _leftWidget, String _text) {
+    return // 説明
+        Container(
+      padding: const EdgeInsets.only(
+        top: 20,
+        bottom: 20,
+        left: 10,
+        right: 10,
+      ),
+      decoration: CommonWidget.defaultDescriptionDecoration(),
+      child: Row(
+        children: [
+          _leftWidget,
+          Flexible(
+            child: Center(
+              child: TextWidget.subTitleText1(_text),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget lightbulbIcon() {
+    return Container(
+      padding: const EdgeInsets.only(
+        top: 5,
+        bottom: 5,
+        left: 5,
+        right: 5,
+      ),
+      margin: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Icon(
+        Icons.lightbulb,
+        color: Colors.yellow[300],
+        size: 40,
+      ),
+    );
   }
 }
