@@ -170,17 +170,13 @@ class StartOtherYellListPage extends ConsumerWidget {
           _otherAchievment.goalTitle = myGoalModel.goalTitle;
           _otherAchievment.goalId = myGoalModel.id;
           _otherAchievment.ownerName = myGoalModel.myName;
-          _otherAchievment.unitType = myGoalModel.unitType;
           _otherAchievment.otherName = myMemberModel.memberName;
           _otherAchievment.updateCurrentDayOrTime =
               myGoalModel.updatedCurrentDayAt;
           _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
           _otherAchievment.ownerAchievedment = myGoalModel.achievedMyComment;
-          if (_otherAchievment.unitType == 0) {
-            _otherAchievment.currentDay = myGoalModel.currentDay;
-          } else {
-            _otherAchievment.currentTime = myGoalModel.currentTimes;
-          }
+          _otherAchievment.continuationCount = myGoalModel.continuationCount;
+
           // メッセージを取得
           await selectYellMessage(_otherAchievment);
 
@@ -214,9 +210,9 @@ Future<void> selectYellMessage(OtherAchievment _otherAchievment) async {
 
   int searchDayOrTime = 0;
   if (_otherAchievment.isAchieved) {
-    searchDayOrTime = _otherAchievment.currentDayOrTime - 1;
+    searchDayOrTime = _otherAchievment.continuationCount - 1;
   } else {
-    searchDayOrTime = _otherAchievment.currentDayOrTime;
+    searchDayOrTime = _otherAchievment.continuationCount;
   }
 
   YellMessage? myMessage;

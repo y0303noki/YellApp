@@ -36,12 +36,8 @@ class MyGoalFirebase {
 
     // メンバーデータがあれば応援メッセージも取得
     if (members.isNotEmpty) {
-      int dayOrTimes = 0;
-      if (goalData.unitType == 0) {
-        dayOrTimes = goalData.currentDay;
-      } else {
-        dayOrTimes = goalData.currentTimes;
-      }
+      int dayOrTimes = goalData.continuationCount;
+
       // 対象となる日付のメッセージだけ取得
       List<YellMessage> messages = await _yellMessageFirebase
           .fetchMyGoalYellMessageByGoalIdAndNowTime(goalData.id, dayOrTimes);
@@ -80,9 +76,7 @@ class MyGoalFirebase {
       id: docId,
       goalTitle: data['title'] ?? '',
       myName: data['myName'] ?? '',
-      unitType: data['unitType'] ?? 0,
-      currentDay: data['currentDay'] ?? 0,
-      currentTimes: data['currentTimes'] ?? 0,
+      continuationCount: data['continuationCount'] ?? 0,
       inviteId: data['inviteId'] ?? '',
       updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
       achievedDayOrTime: data['tempGoalModel'] ?? '',
@@ -145,10 +139,9 @@ class MyGoalFirebase {
       tempGoalModel.id = data['id'] ?? '';
       tempGoalModel.goalTitle = data['title'] ?? '';
       tempGoalModel.myName = data['myName'] ?? '';
-      tempGoalModel.unitType = data['unitType'] ?? 0;
-      tempGoalModel.currentDay = data['currentDay'] ?? 0;
-      tempGoalModel.currentTimes = data['currentTimes'] ?? 0;
+      tempGoalModel.continuationCount = data['continuationCount'] ?? 0;
       tempGoalModel.inviteId = data['inviteId'] ?? '';
+      tempGoalModel.logoImageNumber = data['logoImageNumber'] ?? -1;
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
       tempGoalModel.achievedMyComment = data['achievedMyComment'] ?? '';
@@ -183,9 +176,7 @@ class MyGoalFirebase {
         id: docId,
         goalTitle: data['title'] ?? '',
         myName: data['myName'] ?? '',
-        unitType: data['unitType'] ?? 0,
-        currentDay: data['currentDay'] ?? 0,
-        currentTimes: data['currentTimes'] ?? 0,
+        continuationCount: data['continuationCount'] ?? 0,
         inviteId: data['inviteId'] ?? '',
         updatedCurrentDayAt: data['updatedCurrentDayAt']?.toDate(),
         achievedDayOrTime: data['tempGoalModel'] ?? '',
@@ -215,9 +206,7 @@ class MyGoalFirebase {
     addObject['userId'] = _userId;
     addObject['title'] = myGoalModel.goalTitle;
     addObject['myName'] = myGoalModel.myName;
-    addObject['unitType'] = myGoalModel.unitType;
-    addObject['currentDay'] = myGoalModel.unitType == 0 ? 0 : 0;
-    addObject['currentTimes'] = myGoalModel.unitType == 1 ? 0 : 0;
+    addObject['continuationCount'] = myGoalModel.continuationCount;
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
     addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;
@@ -245,9 +234,7 @@ class MyGoalFirebase {
         id: docId,
         goalTitle: addObject['title'],
         myName: addObject['myName'],
-        unitType: addObject['unitType'],
-        currentDay: addObject['currentDay'],
-        currentTimes: addObject['currentTimes'],
+        continuationCount: addObject['continuationCount'],
         inviteId: addObject['inviteId'],
         updatedCurrentDayAt: addObject['updatedCurrentDayAt'],
         achievedDayOrTime: addObject['achievedDayOrTime'],
@@ -267,16 +254,12 @@ class MyGoalFirebase {
   }
 
   /// 達成ボタンを押して継続日付（回数）を更新
-  Future<void> updateAchieveCurrentDayOrTime(String docId, int unitType,
-      int newDayOrTime, String achievedDayOrTime) async {
+  Future<void> updateAchieveCurrentDayOrTime(
+      String docId, int increment, String achievedDayOrTime) async {
     // 新しい日付に更新
     Map<String, dynamic> updateData = {};
     DateTime now = DateTime.now();
-    if (unitType == 0) {
-      updateData['currentDay'] = newDayOrTime;
-    } else if (unitType == 1) {
-      updateData['currentTimes'] = newDayOrTime;
-    }
+    updateData['continuationCount'] = increment;
     updateData['achievedDayOrTime'] = achievedDayOrTime;
     updateData['updatedCurrentDayAt'] = now;
     updateData['updatedAt'] = now;

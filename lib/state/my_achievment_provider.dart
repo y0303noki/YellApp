@@ -15,7 +15,6 @@ class MyAchievment extends ChangeNotifier {
   String goalId = ''; // firestoreに格納されているid
   String goalTitle = '';
   String myName = '';
-  int unitType = 0; // 0:日 1:回数
   String selectedMemberId = '';
   // メンバー
   List<String> memberIdList = [];
@@ -23,9 +22,7 @@ class MyAchievment extends ChangeNotifier {
 
   // bool isTapedToday = false;
   String inviteId = ''; // 招待コードのid
-
-  int currentDay = 0; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
-  int currentTime = 0; // 何回目？
+  int continuationCount = 0; // 何回目？
   String achievedDayOrTime = ''; // 2日目達成 = '2-ok'
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
@@ -85,15 +82,6 @@ class MyAchievment extends ChangeNotifier {
     }
   }
 
-  // day or time
-  int get currentDayOrTime {
-    if (unitType == 0) {
-      return currentDay;
-    } else {
-      return currentTime;
-    }
-  }
-
   void setInitialData(MyGoalModel _myGoalModel, List<MemberModel> members,
       List<YellMessage> messages) {
     // 初期化
@@ -102,7 +90,6 @@ class MyAchievment extends ChangeNotifier {
     goalId = _myGoalModel.id;
     goalTitle = _myGoalModel.goalTitle;
     myName = _myGoalModel.myName;
-    unitType = _myGoalModel.unitType;
     if (members.isEmpty) {
       memberIdList = [];
     } else {
@@ -111,8 +98,8 @@ class MyAchievment extends ChangeNotifier {
 
     refresh = false;
     inviteId = _myGoalModel.inviteId;
-    currentDay = _myGoalModel.currentDay;
-    currentTime = _myGoalModel.currentTimes;
+    continuationCount = _myGoalModel.continuationCount;
+
     // ロゴ
     logoImageNumber = _myGoalModel.logoImageNumber;
     // メンバー
@@ -163,14 +150,14 @@ class MyAchievment extends ChangeNotifier {
     if (achieved) {
       return;
     }
-    // インクリメントする前の数字を使う
-    if (unitType == 0) {
-      achievedDayOrTime = '$currentDay-ok';
-      currentDay++;
-    } else if (unitType == 1) {
-      achievedDayOrTime = '$currentTime-ok';
-      currentTime++;
-    }
+    // // インクリメントする前の数字を使う
+    // if (unitType == 0) {
+    //   achievedDayOrTime = '$currentDay-ok';
+    //   currentDay++;
+    // } else if (unitType == 1) {
+    //   achievedDayOrTime = '$currentTime-ok';
+    //   currentTime++;
+    // }
 
     achieved = true;
     notifyListeners();

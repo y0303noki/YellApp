@@ -3,9 +3,7 @@ class MyGoalModel {
   String id;
   String goalTitle = '';
   String myName = '';
-  int unitType = 0; // 0: 日　1:回数
-  int currentDay = 0; // 何日目？
-  int currentTimes = 0; // 何回目？
+  int continuationCount = 0;
   DateTime? updatedCurrentDayAt; // 完了した日付
   String achievedDayOrTime = ''; // 2日目が完了 '2-ok'
   String achievedMyComment = '';
@@ -19,9 +17,7 @@ class MyGoalModel {
     this.id = '',
     this.goalTitle = '',
     this.myName = '',
-    this.unitType = 0,
-    this.currentDay = 0,
-    this.currentTimes = 0,
+    this.continuationCount = 0,
     this.updatedCurrentDayAt,
     this.achievedDayOrTime = '',
     this.achievedMyComment = '',

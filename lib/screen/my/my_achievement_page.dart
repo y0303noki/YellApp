@@ -286,70 +286,10 @@ class MyAchievementPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            margin: const EdgeInsets.only(
-              top: 20,
-              bottom: 20,
-              left: 10,
-              right: 10,
-            ),
-            padding: const EdgeInsets.only(
-              top: 20,
-              bottom: 20,
-              left: 10,
-              right: 10,
-            ),
-            decoration: BoxDecoration(
-              color: CommonWidget.myDefaultColor(),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 5,
-                    bottom: 10,
-                  ),
-                  child: Row(
-                    children: [
-                      TextWidget.headLineText5(
-                          '# ${myAchievment.currentDayOrTime}'),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // タイトル
-                    Expanded(
-                      child: Center(
-                        child: TextWidget.headLineText4(myAchievment.goalTitle),
-                      ),
-                    ),
-                    // ロゴ
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SelectLogoPage(),
-                          ),
-                        ).then(
-                          (value) {
-                            // ロゴを選択してたらリロードする
-                            if (value != null && value) {
-                              myAchievment.refresh = true;
-                              myAchievment.refreshNotifyListeners();
-                            }
-                          },
-                        );
-                      },
-                      child: _logoByNumber(myAchievment.logoImageNumber),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          CommonWidget.achieveTitleWidget(
+            myAchievment,
+            null,
+            _logoWidget(myAchievment, context),
           ),
 
           Row(
@@ -409,15 +349,19 @@ class MyAchievementPage extends ConsumerWidget {
                     : myAchievment.sliderValue,
                 activeColor: Colors.orange,
                 inactiveColor: Colors.blueAccent,
-                divisions: 5,
+                divisions: 3,
                 onChanged: myAchievment.achieved
                     ? null
-                    : (double _value) {
-                        print(_value);
+                    : (double _value) async {
                         myAchievment.updateSliderValue(_value);
                         // 右まで到達したら達成処理
                         if (_value == MyAchievment.sliderMaxValue) {
-                          _achievementFunc(context, myAchievment);
+                          bool result =
+                              await _achievementFunc(context, myAchievment);
+                          if (result) {
+                            myAchievment.refresh = true;
+                            myAchievment.refreshNotifyListeners();
+                          }
                         }
                       },
               ),
@@ -440,65 +384,25 @@ class MyAchievementPage extends ConsumerWidget {
     );
   }
 
-  Widget _logoByNumber(int _num) {
-    String _imagePath = '';
-    switch (_num) {
-      case 0:
-        _imagePath = 'images/run.png';
-        break;
-      case 1:
-        _imagePath = 'images/souzi.png';
-        break;
-      case 2:
-        _imagePath = 'images/benkyou.png';
-        break;
-      case 3:
-        _imagePath = 'images/kintore.png';
-        break;
-      case 4:
-        _imagePath = 'images/pc.png';
-        break;
-      case 5:
-        _imagePath = 'images/sumaho.png';
-        break;
-      default:
-        _imagePath = '';
-        break;
-    }
-
-    if (_imagePath.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(
-          left: 10,
-          right: 20,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const SizedBox(
-          width: 60,
-          height: 60,
-          child: Center(child: Text('ロゴなし')),
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(
-        left: 10,
-        right: 20,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Image.asset(
-        _imagePath,
-        width: 60,
-      ),
+  Widget _logoWidget(MyAchievment _myAchievment, BuildContext _context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          _context,
+          MaterialPageRoute(
+            builder: (context) => const SelectLogoPage(),
+          ),
+        ).then(
+          (value) {
+            // ロゴを選択してたらリロードする
+            if (value != null && value) {
+              _myAchievment.refresh = true;
+              _myAchievment.refreshNotifyListeners();
+            }
+          },
+        );
+      },
+      child: CommonWidget.logoByNumber(_myAchievment.logoImageNumber),
     );
   }
 
@@ -509,31 +413,33 @@ class MyAchievementPage extends ConsumerWidget {
   }
 
   /// 達成時の処理
-  void _achievementFunc(BuildContext context, MyAchievment myAchievment) async {
+  /// true:成功 false:失敗
+  Future<bool> _achievementFunc(
+      BuildContext context, MyAchievment myAchievment) async {
     if (myAchievment.achieved) {
       // 達成をキャンセルするとややこしいのでさせない
-      return;
+      return false;
     }
     myAchievment.tapToday();
-    int dayOrTime = myAchievment.currentDayOrTime;
+    int increment = myAchievment.continuationCount + 1;
 
-    await _myGoalFirebase.updateAchieveCurrentDayOrTime(myAchievment.goalId,
-        myAchievment.unitType, dayOrTime, myAchievment.achievedDayOrTime);
+    await _myGoalFirebase.updateAchieveCurrentDayOrTime(
+        myAchievment.goalId, increment, myAchievment.achievedDayOrTime);
 
     // スナックバー表示
     String xDayMessage = '';
-    bool is10times = myAchievment.currentDayOrTime % 10 == 0; //10の倍数
+    bool is10times = myAchievment.continuationCount % 10 == 0; //10の倍数
     // 初めて
-    if (myAchievment.currentDayOrTime == 1) {
+    if (increment == 1) {
       xDayMessage = 'はじめての達成おめでとうございます！\nこれからも続けてみましょう！';
     } else if (is10times) {
-      xDayMessage = '${myAchievment.currentDayOrTime}回続きました、すごい！';
+      xDayMessage = '$increment回続きました、すごい！';
     } else {
       xDayMessage = '達成おめでとう！';
     }
 
     String snsShareText =
-        '${myAchievment.goalTitle}を${myAchievment.currentDayOrTime}回目の達成です。今日もえらい！\n#今日もえらい\nhttp:googlecom;';
+        '${myAchievment.goalTitle}を$increment回目の達成です。今日もえらい！\n#今日もえらい\nhttp:googlecom;';
     String message = '今回の記録をSNSでシェアしますか？';
     final snackBar = SnackBar(
       backgroundColor: Colors.yellow[50],
@@ -604,5 +510,7 @@ class MyAchievementPage extends ConsumerWidget {
       duration: const Duration(seconds: 10),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    return true;
   }
 }

@@ -41,11 +41,16 @@ class OtherYellMainPage extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              Container(
-                child: TextWidget.headLineText3(otherAchievment.goalTitle),
+              CommonWidget.achieveTitleWidget(
+                null,
+                otherAchievment,
+                _logoWidget(otherAchievment, context),
               ),
-              // 現在の継続日
-              _achievedCurrent(otherAchievment),
+              // Container(
+              //   child: TextWidget.headLineText3(otherAchievment.goalTitle),
+              // ),
+              // // 現在の継続日
+              // _achievedCurrent(otherAchievment),
               Container(
                 margin: const EdgeInsets.only(
                   left: 10,
@@ -181,13 +186,9 @@ class OtherYellMainPage extends ConsumerWidget {
       );
     } else {
       String _text = '${otherAchievment.ownerName}さんが';
-      if (otherAchievment.unitType == 0) {
-        _text += '${otherAchievment.currentDayOrTime - 1}日目達成しました。';
-      } else if (otherAchievment.unitType == 1) {
-        _text += '${otherAchievment.currentDayOrTime - 1}回目達成しました。';
-      } else {
-        _text += '達成したようです？';
-      }
+
+      _text += '${otherAchievment.continuationCount - 1}日目達成しました。';
+
       _text += '\nひとこと伝えませんか？';
 
       return Container(
@@ -332,9 +333,9 @@ class OtherYellMainPage extends ConsumerWidget {
         );
         // x日目 or x回目
         if (otherAchievment.isAchieved) {
-          yellMessageModel.dayOrTimes = otherAchievment.currentDayOrTime - 1;
+          yellMessageModel.dayOrTimes = otherAchievment.continuationCount - 1;
         } else {
-          yellMessageModel.dayOrTimes = otherAchievment.currentDayOrTime;
+          yellMessageModel.dayOrTimes = otherAchievment.continuationCount;
         }
 
         yellMessageFirebase.insertOrUpdateYellMessageData(yellMessageModel);
@@ -360,34 +361,19 @@ class OtherYellMainPage extends ConsumerWidget {
       otherAchievment.achieved = false;
       showDayOrTime = 1;
       str = '挑戦中';
-      if (otherAchievment.unitType == 0) {
-        showStr = '日目$str';
-      } else {
-        showStr = '回目$str';
-      }
     } else {
       if (otherAchievment.isAchieved) {
         // 達成済み
         otherAchievment.achieved = true;
         str = '達成済み';
-        if (otherAchievment.unitType == 0) {
-          showDayOrTime = otherAchievment.currentDay - 1;
-          showStr = '日目$str';
-        } else {
-          showDayOrTime = otherAchievment.currentTime - 1;
-          showStr = '回目$str';
-        }
+        showDayOrTime = otherAchievment.continuationCount - 1;
+        showStr = '日目$str';
       } else {
         // 挑戦中
         otherAchievment.achieved = false;
         str = '挑戦中';
-        if (otherAchievment.unitType == 0) {
-          showDayOrTime = otherAchievment.currentDay;
-          showStr = '日目$str';
-        } else {
-          showDayOrTime = otherAchievment.currentTime;
-          showStr = '回目$str';
-        }
+        showDayOrTime = otherAchievment.continuationCount;
+        showStr = '日目$str';
       }
     }
 
@@ -412,6 +398,10 @@ class OtherYellMainPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget _logoWidget(OtherAchievment _otherAchievment, BuildContext _context) {
+    return CommonWidget.logoByNumber(_otherAchievment.logoImageNumber);
   }
 }
 
@@ -472,9 +462,9 @@ Widget _futureMessage(OtherAchievment otherAchievment) {
           isFirstFetchYellMessage = true;
           int searchDayOrTime = 0;
           if (otherAchievment.isAchieved) {
-            searchDayOrTime = otherAchievment.currentDayOrTime - 1;
+            searchDayOrTime = otherAchievment.continuationCount - 1;
           } else {
-            searchDayOrTime = otherAchievment.currentDayOrTime;
+            searchDayOrTime = otherAchievment.continuationCount;
           }
 
           List<YellMessage> _data = snapshot.data;
@@ -553,10 +543,10 @@ Widget _textEdit(OtherAchievment otherAchievment) {
                       // x日目 or x回目
                       if (otherAchievment.isAchieved) {
                         yellMessageModel.dayOrTimes =
-                            otherAchievment.currentDayOrTime - 1;
+                            otherAchievment.continuationCount - 1;
                       } else {
                         yellMessageModel.dayOrTimes =
-                            otherAchievment.currentDayOrTime;
+                            otherAchievment.continuationCount;
                       }
 
                       // yellMessageFirebase
