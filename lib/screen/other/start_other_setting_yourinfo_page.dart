@@ -99,6 +99,7 @@ class StartOtherSettingYourinfoPage extends ConsumerWidget {
                           _memberModel.memberName = otherAchievment.otherName;
                           _memberModel.ownerGoalId = otherAchievment.goalId;
                           addMemberData(_memberModel);
+                          otherAchievment.otherName = _memberModel.memberName;
 
                           Navigator.push(
                             context,

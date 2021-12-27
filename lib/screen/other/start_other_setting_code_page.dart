@@ -85,12 +85,16 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                         onPressed: () async {
                           // 招待コードを検索
                           // 正しいコードなら次に遷移
-                          await _searchInviteByCode(otherAchievment);
+                          MyGoalModel? myGoalModel =
+                              await _searchInviteByCode(otherAchievment);
+                          if (myGoalModel != null) {
+                            otherAchievment.setInitialData(myGoalModel);
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StartOtherSettingConfirmPage(),
+                                  const StartOtherSettingConfirmPage(),
                             ),
                           );
                         },
@@ -107,20 +111,21 @@ class StartOtherSettingCodePage extends ConsumerWidget {
     );
   }
 
-  _searchInviteByCode(OtherAchievment _otherAchievment) async {
+  Future<MyGoalModel?> _searchInviteByCode(
+      OtherAchievment _otherAchievment) async {
     DateTime now = DateTime.now();
     InviteModel? inviteModel =
         await inviteFirebase.fetchInviteByCode(_otherAchievment.code);
     // コードが存在しない
     if (inviteModel == null) {
       print('コードが不正');
-      return;
+      return null;
     }
     // 有効期限切れ
     if (now.isAfter(inviteModel.expiredAt as DateTime) ||
         inviteModel.isDeleted) {
       print('有効期限切れ');
-      return;
+      return null;
     }
     // 有効なコード
     // 持ち主の名前を取得
@@ -130,11 +135,12 @@ class StartOtherSettingCodePage extends ConsumerWidget {
     if (ownerGoalModel == null) {
       // 持ち主のユーザーidが不正
       print('持ち主がいない');
-      return;
+      return null;
     }
     // セット
     _otherAchievment.goalTitle = ownerGoalModel.goalTitle;
     _otherAchievment.goalId = ownerGoalModel.id;
     _otherAchievment.ownerName = ownerGoalModel.myName;
+    return ownerGoalModel;
   }
 }

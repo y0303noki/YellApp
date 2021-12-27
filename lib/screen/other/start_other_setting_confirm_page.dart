@@ -15,8 +15,6 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
-    TextEditingController _textEditingController =
-        TextEditingController(text: '');
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +67,8 @@ class StartOtherSettingConfirmPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartOtherSettingYourinfoPage(),
+                          builder: (context) =>
+                              const StartOtherSettingYourinfoPage(),
                         ),
                       );
                     },

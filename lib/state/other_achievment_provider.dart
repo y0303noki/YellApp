@@ -76,6 +76,8 @@ class OtherAchievment extends ChangeNotifier {
     goalId = _ownerGoalModel.id;
     goalTitle = _ownerGoalModel.goalTitle;
     ownerName = _ownerGoalModel.myName;
+    updateCurrentDayOrTime = _ownerGoalModel.updatedCurrentDayAt;
+    ownerAchievedment = _ownerGoalModel.achievedMyComment;
     memberIdList = _ownerGoalModel.memberIds;
     logoImageNumber = _ownerGoalModel.logoImageNumber;
     continuationCount = _ownerGoalModel.continuationCount;

@@ -119,7 +119,8 @@ class StartOtherYellListPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartOtherSettingCodePage(),
+                          builder: (context) =>
+                              const StartOtherSettingCodePage(),
                         ),
                       );
                     },
@@ -167,15 +168,8 @@ class StartOtherYellListPage extends ConsumerWidget {
               .firstWhere((member) => member.memberUserId == _userId);
 
           // リセット後にデータを付け直す
-          _otherAchievment.goalTitle = myGoalModel.goalTitle;
-          _otherAchievment.goalId = myGoalModel.id;
-          _otherAchievment.ownerName = myGoalModel.myName;
+          _otherAchievment.setInitialData(myGoalModel);
           _otherAchievment.otherName = myMemberModel.memberName;
-          _otherAchievment.updateCurrentDayOrTime =
-              myGoalModel.updatedCurrentDayAt;
-          _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
-          _otherAchievment.ownerAchievedment = myGoalModel.achievedMyComment;
-          _otherAchievment.continuationCount = myGoalModel.continuationCount;
 
           // メッセージを取得
           await selectYellMessage(_otherAchievment);
