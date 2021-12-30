@@ -52,7 +52,7 @@ class DialogWidget {
             constraints: const BoxConstraints(maxHeight: 100.0),
             child: Column(
               children: [
-                const Text('メンバーにコメントを残します'),
+                const Text('おともだちにコメントを残します'),
                 TextField(
                   controller: _textController,
                   decoration: const InputDecoration(hintText: "ここに入力"),

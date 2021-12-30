@@ -16,6 +16,7 @@ class StartMySetting extends ChangeNotifier {
   int selectedHowManyTime = 7; // 週に何回
   int selectedUnit = -1; // 日 or 回数
 
+  String errorText = ''; // その画面で表示するエラーテキスト
   // データを初期化
   void resetData() {
     goalTitle = '';

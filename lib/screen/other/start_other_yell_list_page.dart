@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
@@ -11,13 +10,12 @@ import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/other/other_yell_main_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_code_page.dart';
-import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
-import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
-import 'package:yell_app/state/other_setting_code_provider.dart';
+import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:yell_app/utility/utility.dart';
 
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
+MemberFirebase memberFirebase = MemberFirebase();
 
 class StartOtherYellListPage extends ConsumerWidget {
   const StartOtherYellListPage({Key? key}) : super(key: key);
@@ -25,8 +23,6 @@ class StartOtherYellListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final otherAchievment = ref.watch(otherAchievmentProvider);
-    TextEditingController _textEditingController =
-        TextEditingController(text: '');
 
     return Scaffold(
       appBar: AppBar(
@@ -65,20 +61,43 @@ class StartOtherYellListPage extends ConsumerWidget {
 
         // 成功処理
         if (snapshot.connectionState == ConnectionState.done) {
-          List<MyGoalModel> _goals = snapshot.data;
+          Map<String, Object?>? _data = snapshot.data;
+          if (_data == null) {
+            // データがない、おかしい
+            return const Center(
+              child: Text('エラーがおきました'),
+            );
+          }
+          List<MyGoalModel> goalDatas = _data.containsKey('goals')
+              ? _data['goals'] as List<MyGoalModel>
+              : [];
+
+          List<MemberModel> memberDatas = _data.containsKey('members')
+              ? _data['members'] as List<MemberModel>
+              : [];
+
+          otherAchievment.myGoalList = goalDatas;
+          otherAchievment.memberList = memberDatas;
+
+          List<MyGoalModel> _goals = goalDatas;
           if (_goals.isEmpty) {
-            return Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartOtherSettingCodePage(),
-                    ),
-                  );
-                },
-                child: TextWidget.headLineText6('招待コードを入力する'),
-              ),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StartOtherSettingCodePage(),
+                        ),
+                      );
+                    },
+                    child: TextWidget.headLineText6('招待コードを入力する'),
+                  ),
+                ),
+              ],
             );
           } else {
             return Column(
@@ -100,7 +119,8 @@ class StartOtherYellListPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartOtherSettingCodePage(),
+                          builder: (context) =>
+                              const StartOtherSettingCodePage(),
                         ),
                       );
                     },
@@ -140,20 +160,17 @@ class StartOtherYellListPage extends ConsumerWidget {
         onTap: () async {
           // 選択したらデータをセット
           _otherAchievment.resetData();
+
+          // 自分の名前を取得
+          final UserAuth _userAuth = UserAuth();
+          final _userId = _userAuth.user != null ? _userAuth.user!.uid : '';
+          MemberModel myMemberModel = _otherAchievment.memberList
+              .firstWhere((member) => member.memberUserId == _userId);
+
           // リセット後にデータを付け直す
-          _otherAchievment.goalTitle = myGoalModel.goalTitle;
-          _otherAchievment.goalId = myGoalModel.id;
-          _otherAchievment.ownerName = myGoalModel.myName;
-          _otherAchievment.unitType = myGoalModel.unitType;
-          _otherAchievment.updateCurrentDayOrTime =
-              myGoalModel.updatedCurrentDayAt;
-          _otherAchievment.achievedDayOrTime = myGoalModel.achievedDayOrTime;
-          _otherAchievment.ownerAchievedment = myGoalModel.achievedMyComment;
-          if (_otherAchievment.unitType == 0) {
-            _otherAchievment.currentDay = myGoalModel.currentDay;
-          } else {
-            _otherAchievment.currentTime = myGoalModel.currentTimes;
-          }
+          _otherAchievment.setInitialData(myGoalModel);
+          _otherAchievment.otherName = myMemberModel.memberName;
+
           // メッセージを取得
           await selectYellMessage(_otherAchievment);
 
@@ -163,9 +180,17 @@ class StartOtherYellListPage extends ConsumerWidget {
               builder: (context) => OtherYellMainPage(),
             ),
           );
-        }, // タップ
+        },
+        // ロングタップ
         onLongPress: () {
-          print("onLongTap called.");
+          // 長押しで削除
+          MemberModel findMemberModel = _otherAchievment.memberList.firstWhere(
+              (member) => member.ownerGoalId == myGoalModel.id,
+              orElse: () => MemberModel());
+          String memberId = findMemberModel.id;
+          if (memberId.isNotEmpty) {
+            memberFirebase.deleteMemberData(memberId);
+          }
         }, // 長押し
       ),
     );
@@ -179,9 +204,9 @@ Future<void> selectYellMessage(OtherAchievment _otherAchievment) async {
 
   int searchDayOrTime = 0;
   if (_otherAchievment.isAchieved) {
-    searchDayOrTime = _otherAchievment.currentDayOrTime - 1;
+    searchDayOrTime = _otherAchievment.continuationCount - 1;
   } else {
-    searchDayOrTime = _otherAchievment.currentDayOrTime;
+    searchDayOrTime = _otherAchievment.continuationCount;
   }
 
   YellMessage? myMessage;

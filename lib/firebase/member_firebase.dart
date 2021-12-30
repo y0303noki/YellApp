@@ -19,7 +19,8 @@ class MemberFirebase {
         .collection(members)
         .where('memberUserId', isEqualTo: userId)
         .where('isDeleted', isEqualTo: false)
-        .limit(20) // 20個までにしておく
+        .orderBy('updatedAt', descending: true)
+        .limit(10) // 10個までにしておく
         .get();
 
     List<QueryDocumentSnapshot> docs = snapshots.docs;
@@ -34,6 +35,7 @@ class MemberFirebase {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
       tempMemberModel.id = data['id'] ?? '';
+      tempMemberModel.memberName = data['memberName'] ?? '';
       tempMemberModel.memberUserId = data['memberUserId'] ?? '';
       tempMemberModel.ownerGoalId = data['ownerGoalId'] ?? '';
       tempMemberModel.isDeleted = data['isDeleted'] ?? false;
@@ -107,5 +109,10 @@ class MemberFirebase {
       print(e);
       return {};
     }
+  }
+
+  /// 指定されたidのメンバーデータを物理削除する
+  Future<void> deleteMemberData(String memberId) async {
+    _firestore.collection(members).doc(memberId).delete();
   }
 }

@@ -144,7 +144,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
       myName: startMySetting.myName,
-      unitType: startMySetting.selectedUnit,
     );
 
     // データ送信
@@ -164,7 +163,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
     DateTime now = DateTime.now();
     MyGoalModel model = MyGoalModel(
       goalTitle: startMySetting.goalTitle,
-      unitType: startMySetting.selectedUnit,
       createdAt: now,
       updatedAt: now,
     );
@@ -174,7 +172,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
 
     // firebaseから取得したとする
     myAchievment.goalTitle = model.goalTitle;
-    myAchievment.unitType = model.unitType;
 
     // memberIdリストを取得したとする
     myAchievment.memberIdList = ['Amember-1', 'Bmember-2', 'Cmember-3'];

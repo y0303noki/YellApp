@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
-import 'package:yell_app/utility/utility.dart';
 
 final otherAchievmentProvider =
     ChangeNotifierProvider((ref) => OtherAchievment());
@@ -18,9 +18,7 @@ class OtherAchievment extends ChangeNotifier {
   bool achieved = false; // 本日の分達成ずみフラグ
   String ownerAchievedment = ''; // オーナーが達成したときのひとこと
 
-  int unitType = 0; // 0:日 1:回数
-  int currentDay = 1; // 現在の達成日（例：5日目 / 40日 の5日目の部分）
-  int currentTime = 1; // 何回目？
+  int continuationCount = 0; // 継続回数
   DateTime? updateCurrentDayOrTime; // 達成した日付
   String achievedDayOrTime = ''; // 達成したら2-ok
 
@@ -28,6 +26,10 @@ class OtherAchievment extends ChangeNotifier {
 
   int messageType = 0; // 0 or 1 or 2
   String yellMessage = ''; // 今回のメッセージ
+  List<MemberModel> memberList = []; // メンバー
+  List<MyGoalModel> myGoalList = []; // 目標
+
+  int logoImageNumber = -1; // ロゴ画像（0 ~ 5)
 
   // 全部リセット
   void resetData() {
@@ -40,9 +42,7 @@ class OtherAchievment extends ChangeNotifier {
     memberIdList = [];
     achieved = false;
     ownerAchievedment = '';
-    unitType = 0;
-    currentDay = 1;
-    currentTime = 1;
+    continuationCount = 0;
     updateCurrentDayOrTime = null;
     achievedDayOrTime = '';
     refresh = false;
@@ -72,20 +72,15 @@ class OtherAchievment extends ChangeNotifier {
     }
   }
 
-  // 現在の日付or回数を返す
-  int get currentDayOrTime {
-    if (unitType == 0) {
-      return currentDay;
-    } else {
-      return currentTime;
-    }
-  }
-
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;
     goalTitle = _ownerGoalModel.goalTitle;
     ownerName = _ownerGoalModel.myName;
+    updateCurrentDayOrTime = _ownerGoalModel.updatedCurrentDayAt;
+    ownerAchievedment = _ownerGoalModel.achievedMyComment;
     memberIdList = _ownerGoalModel.memberIds;
+    logoImageNumber = _ownerGoalModel.logoImageNumber;
+    continuationCount = _ownerGoalModel.continuationCount;
     refresh = false;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/model/invite.dart';
@@ -15,19 +16,21 @@ class InviteMainPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final invite = ref.watch(inviteProvider);
+    final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Color.fromARGB(255, 29, 35, 37),
+        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.only(
+          top: 10,
           left: 10,
           right: 10,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
               children: [
@@ -97,31 +100,8 @@ class InviteMainPage extends ConsumerWidget {
                 ),
               ],
             ),
-            // TODO
-            Container(
-              child: Text(
-                'イラストとか説明が入る予定',
-              ),
-            ),
-            // 戻る、次へ
-            Container(
-              margin: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                bottom: 50,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: TextWidget.headLineText5('戻る'),
-                  ),
-                ],
-              ),
-            ),
+            CommonWidget.descriptionWidget(CommonWidget.lightbulbIcon(),
+                'トップページの「応援する」から招待コードを入力してもらいます。'),
           ],
         ),
       ),
