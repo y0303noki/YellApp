@@ -141,7 +141,7 @@ class StartOtherYellListPage extends ConsumerWidget {
       OtherAchievment _otherAchievment) {
     String _iconName = '';
     if (myGoalModel.myName.isNotEmpty) {
-      _iconName = myGoalModel.myName.substring(0, 1);
+      _iconName = Utility.substring1or2(myGoalModel.myName);
     }
     return Container(
       decoration: const BoxDecoration(
@@ -157,7 +157,6 @@ class StartOtherYellListPage extends ConsumerWidget {
         leading: ButtonWidget.iconMainMiniWidget(_iconName),
         trailing: TextWidget.subTitleText3(
             '${Utility.toDateFormatted(myGoalModel.createdAt!)} ~'),
-
         onTap: () async {
           // 選択したらデータをセット
           _otherAchievment.resetData();
@@ -178,21 +177,10 @@ class StartOtherYellListPage extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => OtherYellMainPage(),
+              builder: (context) => const OtherYellMainPage(),
             ),
           );
         },
-        // ロングタップ
-        onLongPress: () {
-          // 長押しで削除
-          MemberModel findMemberModel = _otherAchievment.memberList.firstWhere(
-              (member) => member.ownerGoalId == myGoalModel.id,
-              orElse: () => MemberModel());
-          String memberId = findMemberModel.id;
-          if (memberId.isNotEmpty) {
-            memberFirebase.deleteMemberData(memberId);
-          }
-        }, // 長押し
       ),
     );
   }
