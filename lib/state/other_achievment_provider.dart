@@ -19,7 +19,6 @@ class OtherAchievment extends ChangeNotifier {
   String ownerAchievedment = ''; // オーナーが達成したときのひとこと
 
   int continuationCount = 0; // 継続回数
-  DateTime? updateCurrentDayOrTime; // 達成した日付
   String achievedDayOrTime = ''; // 達成したら2-ok
 
   bool refresh = false; // データを通信し直すかどうか。画面を最初に表示したときとリフレッシュしたとき
@@ -30,6 +29,9 @@ class OtherAchievment extends ChangeNotifier {
   List<MyGoalModel> myGoalList = []; // 目標
 
   int logoImageNumber = -1; // ロゴ画像（0 ~ 5)
+
+  DateTime? updatedCurrentDayAt; // 達成した日付
+  int resetHour = 0; // リセットタイム（hour)
 
   // 全部リセット
   void resetData() {
@@ -43,11 +45,12 @@ class OtherAchievment extends ChangeNotifier {
     achieved = false;
     ownerAchievedment = '';
     continuationCount = 0;
-    updateCurrentDayOrTime = null;
     achievedDayOrTime = '';
     refresh = false;
     messageType = 0;
     yellMessage = '';
+    updatedCurrentDayAt = null;
+    resetHour = 0;
   }
 
   // 達成済みか否か
@@ -58,29 +61,19 @@ class OtherAchievment extends ChangeNotifier {
     DateTime nowBefore12h = now.add(
       const Duration(hours: -12),
     );
-    if (updateCurrentDayOrTime == null) {
-      // まだ1つも達成していないので挑戦中
-      return false;
-    }
-
-    if (nowBefore12h.isBefore(updateCurrentDayOrTime!)) {
-      // 達成済み
-      return true;
-    } else {
-      // 挑戦中
-      return false;
-    }
+    return true;
   }
 
   void setInitialData(MyGoalModel _ownerGoalModel) {
     goalId = _ownerGoalModel.id;
     goalTitle = _ownerGoalModel.goalTitle;
     ownerName = _ownerGoalModel.myName;
-    updateCurrentDayOrTime = _ownerGoalModel.updatedCurrentDayAt;
     ownerAchievedment = _ownerGoalModel.achievedMyComment;
     memberIdList = _ownerGoalModel.memberIds;
     logoImageNumber = _ownerGoalModel.logoImageNumber;
     continuationCount = _ownerGoalModel.continuationCount;
+    updatedCurrentDayAt = _ownerGoalModel.updatedCurrentDayAt;
+    resetHour = _ownerGoalModel.resetHour;
     refresh = false;
   }
 

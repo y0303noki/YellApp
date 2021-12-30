@@ -9,6 +9,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/screen/my/reset_time_page.dart';
 import 'package:yell_app/screen/my/select_log_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
@@ -40,7 +41,22 @@ class MyAchievementPage extends ConsumerWidget {
         actions: [
           // リセットタイマー
           IconButton(
-            onPressed: () async {},
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResetTimePage(),
+                ),
+              ).then(
+                (value) {
+                  // ロゴを選択してたらリロードする
+                  if (value != null && value) {
+                    myAchievment.refresh = true;
+                    myAchievment.refreshNotifyListeners();
+                  }
+                },
+              );
+            },
             icon: const Icon(
               Icons.timer,
               color: Colors.yellow,

@@ -36,6 +36,8 @@ class MyAchievment extends ChangeNotifier {
 
   int logoImageNumber = -1; // ロゴ画像（0 ~ 5)
 
+  int resetHour = 0; // リセットタイム（hour)
+
   String achieveComment = ''; // 達成コメント
   void updatedAchieveComment(String _comment) {
     achieveComment = _comment;
@@ -99,6 +101,7 @@ class MyAchievment extends ChangeNotifier {
     refresh = false;
     inviteId = _myGoalModel.inviteId;
     continuationCount = _myGoalModel.continuationCount;
+    resetHour = _myGoalModel.resetHour;
 
     // ロゴ
     logoImageNumber = _myGoalModel.logoImageNumber;
@@ -113,13 +116,21 @@ class MyAchievment extends ChangeNotifier {
         achieved = false;
         return;
       }
+      // リセットタイム
+      int _resetHour = resetHour > 0 ? resetHour : 24;
       DateTime now = DateTime.now();
-      DateTime nowDate = DateTime(now.year, now.month, now.day);
-      DateTime tapDate = DateTime(
-          _myGoalModel.updatedCurrentDayAt!.year,
-          _myGoalModel.updatedCurrentDayAt!.month,
-          _myGoalModel.updatedCurrentDayAt!.day);
-      if (nowDate.isAfter(tapDate)) {
+      DateTime nowhour = DateTime(now.year, now.month, now.day, now.hour);
+
+      // 達成日付
+      DateTime archivedDate = DateTime(
+        _myGoalModel.updatedCurrentDayAt!.year,
+        _myGoalModel.updatedCurrentDayAt!.month,
+        _myGoalModel.updatedCurrentDayAt!.day,
+        _myGoalModel.updatedCurrentDayAt!.hour,
+      );
+
+      DateTime nextResetDate = archivedDate.add(Duration(hours: _resetHour));
+      if (nextResetDate.isBefore(nowhour)) {
         achieved = false;
       } else {
         achieved = true;

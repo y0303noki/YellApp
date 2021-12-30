@@ -82,6 +82,7 @@ class MyGoalFirebase {
       achievedDayOrTime: data['tempGoalModel'] ?? '',
       achievedMyComment: data['achievedMyComment'] ?? '',
       logoImageNumber: data['logoImageNumber'] ?? -1,
+      resetHour: data['resetHour'] ?? 0,
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -145,6 +146,7 @@ class MyGoalFirebase {
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
       tempGoalModel.achievedMyComment = data['achievedMyComment'] ?? '';
+      tempGoalModel.resetHour = data['resetHour'] ?? 0;
       tempGoalModel.isDeleted = data['isDeleted'] ?? false;
       tempGoalModel.createdAt = data['createdAt'].toDate();
       tempGoalModel.updatedAt = data['updatedAt'].toDate();
@@ -182,6 +184,7 @@ class MyGoalFirebase {
         achievedDayOrTime: data['tempGoalModel'] ?? '',
         achievedMyComment: data['achievedMyComment'] ?? '',
         logoImageNumber: data['logoImageNumber'] ?? -1,
+        resetHour: data['resetHour'] ?? 0,
         isDeleted: data['isDeleted'] ?? false,
         createdAt: data['createdAt'].toDate(),
         updatedAt: data['updatedAt'].toDate(),
@@ -210,6 +213,7 @@ class MyGoalFirebase {
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
     addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;
+    addObject['resetHour'] = 24; // デフォルトは24hにしておく
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
     addObject['updatedAt'] = now;
@@ -240,6 +244,7 @@ class MyGoalFirebase {
         achievedDayOrTime: addObject['achievedDayOrTime'],
         achievedMyComment: addObject['achievedMyComment'],
         isDeleted: addObject['isDeleted'] ?? false,
+        resetHour: addObject['resetHour'] ?? 0,
         createdAt: addObject['createdAt'],
         updatedAt: addObject['updatedAt'],
       );
