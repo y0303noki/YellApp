@@ -90,7 +90,8 @@ class StartOtherYellListPage extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StartOtherSettingCodePage(),
+                          builder: (context) =>
+                              const StartOtherSettingCodePage(),
                         ),
                       );
                     },

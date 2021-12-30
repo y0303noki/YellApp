@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:yell_app/components/dialog/dialog_widget.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
+import 'package:yell_app/firebase/user_firebase.dart';
 import 'package:yell_app/firebase/yell_message_firebase.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
@@ -11,6 +15,8 @@ import 'package:yell_app/utility/utility.dart';
 
 TextEditingController _textEditingController = TextEditingController(text: '');
 YellMessageFirebase yellMessageFirebase = YellMessageFirebase();
+MemberFirebase memberFirebase = MemberFirebase();
+UserFirebase userFirebase = UserFirebase();
 bool isFirstFetchYellMessage = false;
 
 class OtherYellMainPage extends ConsumerWidget {
@@ -32,7 +38,32 @@ class OtherYellMainPage extends ConsumerWidget {
           },
           icon: const Icon(Icons.home),
         ),
-        actions: const [],
+        actions: [
+          IconButton(
+            onPressed: () async {
+              String? result = await DialogWidget()
+                  .exitOtherGoal(context, otherAchievment.ownerName);
+              if (result == null || result == 'CANCEL') {
+                return;
+              } else {
+                // 退出する
+                MemberModel? thisMemebrModel =
+                    await memberFirebase.fetchMemberDatasByGoalIdAndMyUserId(
+                        otherAchievment.goalId);
+                if (thisMemebrModel == null) {
+                  // メンバーから既に退出されている状態
+                } else {
+                  memberFirebase.deleteMemberData(thisMemebrModel.id);
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                }
+              }
+            },
+            icon: const Icon(
+              Icons.exit_to_app,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(

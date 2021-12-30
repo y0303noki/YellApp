@@ -7,4 +7,13 @@ class MemberModel {
   bool isDeleted = false;
   DateTime? createdAt;
   DateTime? updatedAt;
+  MemberModel({
+    this.id = '',
+    this.ownerGoalId = '',
+    this.memberUserId = '',
+    this.memberName = '',
+    this.isDeleted = false,
+    this.createdAt,
+    this.updatedAt,
+  });
 }

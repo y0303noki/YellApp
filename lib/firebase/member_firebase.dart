@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yell_app/firebase/common_firebase.dart';
+import 'package:yell_app/firebase/user_firebase.dart';
 import 'package:yell_app/model/member.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 
 // Ownerとその応援する人を紐づける
 class MemberFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final UserFirebase _userFirebase = UserFirebase();
 
   // コレクション名前
   final String members = 'members';
@@ -111,8 +113,38 @@ class MemberFirebase {
     }
   }
 
+  /// 自分の目標に紐づいているメンバーを取得する
+  Future<MemberModel?> fetchMemberDatasByGoalIdAndMyUserId(
+      String goalId) async {
+    String userId = _userFirebase.getMyUserId();
+    final QuerySnapshot snapshots = await _firestore
+        .collection(members)
+        .where('ownerGoalId', isEqualTo: goalId)
+        .where('memberUserId', isEqualTo: userId)
+        .where('isDeleted', isEqualTo: false)
+        .limit(1)
+        .get();
+
+    List<QueryDocumentSnapshot> docs = snapshots.docs;
+    if (docs.isEmpty) {
+      return null;
+    }
+
+    Map<String, dynamic> data = docs.first.data() as Map<String, dynamic>;
+    final _memberModel = MemberModel(
+      id: data['id'] ?? '',
+      memberUserId: data['memberUserId'] ?? '',
+      memberName: data['memberName'] ?? '',
+      ownerGoalId: data['ownerGoalId'] ?? '',
+      isDeleted: data['isDeleted'] ?? false,
+      createdAt: data['createdAt'].toDate(),
+      updatedAt: data['updatedAt'].toDate(),
+    );
+    return _memberModel;
+  }
+
   /// 指定されたidのメンバーデータを物理削除する
-  Future<void> deleteMemberData(String memberId) async {
-    _firestore.collection(members).doc(memberId).delete();
+  Future<void> deleteMemberData(String docId) async {
+    _firestore.collection(members).doc(docId).delete();
   }
 }
