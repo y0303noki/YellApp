@@ -183,11 +183,8 @@ class MyAchievementPage extends ConsumerWidget {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: 300,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-              ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: myAchievment.yellMembers.length,

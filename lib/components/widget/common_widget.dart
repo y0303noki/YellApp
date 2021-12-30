@@ -160,6 +160,14 @@ class CommonWidget {
       decoration: BoxDecoration(
         color: CommonWidget.myDefaultColor(),
         borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1.0,
+            blurRadius: 10.0,
+            offset: Offset(10, 10),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -247,6 +255,14 @@ class CommonWidget {
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1.0,
+            blurRadius: 10.0,
+            offset: Offset(1, 1),
+          ),
+        ],
       ),
       child: Image.asset(
         _imagePath,
