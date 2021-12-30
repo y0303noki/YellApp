@@ -303,6 +303,22 @@ class MyGoalFirebase {
     }
   }
 
+  /// リセットタイマー時間を更新
+  Future<void> updateresetHour(String docId, int resetHour) async {
+    // 新しい日付に更新
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+
+    updateData['resetHour'] = resetHour;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(myGoals).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   /// 指定されたidの目標データを物理削除する
   Future<void> deleteMyGoalData(String goalId) async {
     _firestore.collection(myGoals).doc(goalId).delete();

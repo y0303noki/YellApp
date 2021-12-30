@@ -38,6 +38,14 @@ class MyAchievementPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         actions: [
+          // リセットタイマー
+          IconButton(
+            onPressed: () async {},
+            icon: const Icon(
+              Icons.timer,
+              color: Colors.yellow,
+            ),
+          ),
           // 目標を削除する
           IconButton(
             onPressed: () async {
