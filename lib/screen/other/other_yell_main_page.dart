@@ -234,37 +234,32 @@ class OtherYellMainPage extends ConsumerWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset(
-                  _imagePath,
-                  width: 50,
+                CommonWidget.lightbulbIcon(),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: Text(
+                    _text,
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
-                Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Text(_text, overflow: TextOverflow.clip),
-                    ),
-                    Row(
-                      children: [
-                        // // コメント残すボタン
-                        !otherAchievment.achieved
-                            ? Container()
-                            : TextButton(
-                                child: const Text('伝える'),
-                                onPressed: () {
-                                  _showModalBottomSheat(
-                                      context, otherAchievment);
-                                },
-                              ),
-                      ],
-                    ),
-                  ],
-                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // // コメント残すボタン
+                !otherAchievment.achieved
+                    ? Container()
+                    : TextButton(
+                        child: const Text('伝える'),
+                        onPressed: () {
+                          _showModalBottomSheat(context, otherAchievment);
+                        },
+                      ),
               ],
             ),
           ],

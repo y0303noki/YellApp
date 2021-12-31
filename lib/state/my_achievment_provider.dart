@@ -103,6 +103,8 @@ class MyAchievment extends ChangeNotifier {
     continuationCount = _myGoalModel.continuationCount;
     resetHour = _myGoalModel.resetHour;
 
+    updatedCurrentDayAt = _myGoalModel.updatedCurrentDayAt;
+
     // ロゴ
     logoImageNumber = _myGoalModel.logoImageNumber;
     // メンバー

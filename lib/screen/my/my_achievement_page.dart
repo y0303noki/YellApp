@@ -386,6 +386,10 @@ class MyAchievementPage extends ConsumerWidget {
                         }
                       },
               ),
+              Container(
+                child: Text(
+                    '前回達成：${Utility.toStringddhh(myAchievment.updatedCurrentDayAt)}'),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
