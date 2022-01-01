@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
+import 'package:yell_app/utility/utility.dart';
 
 class CommonWidget {
   // dateピッカーを表示して選択したDateTimeを返す
@@ -130,8 +131,12 @@ class CommonWidget {
   }
 
 //
-  static achieveTitleWidget(MyAchievment? _myAchievment,
-      OtherAchievment? _otherAchievment, Widget _logoWidget) {
+  static achieveTitleWidget(
+    MyAchievment? _myAchievment,
+    OtherAchievment? _otherAchievment,
+    Widget _logoWidget,
+    DateTime _startDateTime,
+  ) {
     int count = -1; // カウント
     String title = ''; // タイトル
 
@@ -160,14 +165,6 @@ class CommonWidget {
       decoration: BoxDecoration(
         color: CommonWidget.myDefaultColor(),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            spreadRadius: 1.0,
-            blurRadius: 10.0,
-            offset: Offset(10, 10),
-          ),
-        ],
       ),
       child: Column(
         children: [
@@ -194,6 +191,19 @@ class CommonWidget {
               // ロゴ
               _logoWidget,
             ],
+          ),
+          const Divider(
+            color: Colors.black,
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextWidget.subTitleText1('はじめた日   '),
+                TextWidget.subTitleText3(
+                    '${Utility.toDateFormatted(_startDateTime)}'),
+              ],
+            ),
           ),
         ],
       ),
@@ -241,7 +251,7 @@ class CommonWidget {
         child: const SizedBox(
           width: 60,
           height: 60,
-          child: Center(child: Text('ロゴなし')),
+          child: Center(child: Text('image')),
         ),
       );
     }

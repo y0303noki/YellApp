@@ -33,6 +33,8 @@ class OtherAchievment extends ChangeNotifier {
   DateTime? updatedCurrentDayAt; // 達成した日付
   int resetHour = 0; // リセットタイム（hour)
 
+  DateTime startDate = DateTime.now(); // 開始日時
+
   // 全部リセット
   void resetData() {
     goalId = '';
@@ -74,6 +76,7 @@ class OtherAchievment extends ChangeNotifier {
     continuationCount = _ownerGoalModel.continuationCount;
     updatedCurrentDayAt = _ownerGoalModel.updatedCurrentDayAt;
     resetHour = _ownerGoalModel.resetHour;
+    startDate = _ownerGoalModel.createdAt!;
     refresh = false;
   }
 

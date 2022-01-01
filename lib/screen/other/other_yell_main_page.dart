@@ -76,6 +76,7 @@ class OtherYellMainPage extends ConsumerWidget {
                 null,
                 otherAchievment,
                 _logoWidget(otherAchievment, context),
+                otherAchievment.startDate,
               ),
               Container(
                 margin: const EdgeInsets.only(

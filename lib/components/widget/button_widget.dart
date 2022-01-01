@@ -12,54 +12,78 @@ class ButtonWidget {
   // メインボタンelevation
   static const double mainButtonElevation = 5.0;
 
-  // スタート画面で設置するボタン
   static startMainButton(
     double deviceWidth,
     String buttonText,
-    IconData iconData,
+    IconData icondata,
     Color color,
   ) {
-    return Material(
-      elevation: mainButtonElevation,
-      child: Container(
-        height: 150,
-        width: deviceWidth * 0.8,
-        decoration: BoxDecoration(
-          color: color,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(
-              iconData,
-              size: mainIconSize,
+    return Container(
+      height: 150,
+      width: deviceWidth * 0.8,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1.0,
+            blurRadius: 10.0,
+            offset: Offset(1, 1),
+          ),
+        ],
+        color: color,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(
+              top: 5,
+              bottom: 5,
+              left: 5,
+              right: 5,
             ),
-            TextWidget.headLineText5(buttonText),
-          ],
-        ),
+            margin: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 10,
+              right: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Icon(
+              icondata,
+              color: color,
+              size: 40,
+            ),
+          ),
+          Center(
+            child: TextWidget.headLineText5(buttonText),
+          ),
+          Container(),
+        ],
       ),
     );
   }
 
-  /// 通信中のスタートメインボタン
   static startMainWaitingButton(
     double deviceWidth,
+    Color color,
   ) {
-    return Material(
-      elevation: mainButtonElevation,
-      child: Container(
-        height: 150,
-        width: deviceWidth * 0.8,
-        decoration: BoxDecoration(
-          color: CommonWidget.myDefaultColor(),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Container(),
-            TextWidget.headLineText5(''),
-          ],
-        ),
+    return Container(
+      height: 150,
+      width: deviceWidth * 0.8,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: color,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(),
+        ],
       ),
     );
   }
@@ -117,7 +141,7 @@ class ButtonWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue, width: 5),
+        border: Border.all(color: Colors.black, width: 2),
         borderRadius: BorderRadius.circular(80 / 2),
       ),
       child: Center(

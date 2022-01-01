@@ -38,6 +38,8 @@ class MyAchievment extends ChangeNotifier {
 
   int resetHour = 0; // リセットタイム（hour)
 
+  DateTime startDate = DateTime.now(); // 開始日時
+
   String achieveComment = ''; // 達成コメント
   void updatedAchieveComment(String _comment) {
     achieveComment = _comment;
@@ -104,6 +106,7 @@ class MyAchievment extends ChangeNotifier {
     resetHour = _myGoalModel.resetHour;
 
     updatedCurrentDayAt = _myGoalModel.updatedCurrentDayAt;
+    startDate = _myGoalModel.createdAt!;
 
     // ロゴ
     logoImageNumber = _myGoalModel.logoImageNumber;

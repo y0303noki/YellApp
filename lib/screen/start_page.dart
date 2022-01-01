@@ -61,9 +61,15 @@ class StartPage extends ConsumerWidget {
                     child: ButtonWidget.startMainButton(
                       deviceSize.width,
                       '応援する',
-                      Icons.thumb_up,
+                      Icons.groups,
                       CommonWidget.otherDefaultColor()!,
                     ),
+                    // child: ButtonWidget.startMainButton(
+                    //   deviceSize.width,
+                    //   '応援する',
+                    //   Icons.thumb_up,
+                    //   CommonWidget.otherDefaultColor()!,
+                    // ),
                   ),
                 ],
               )
@@ -86,7 +92,10 @@ class StartPage extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 通信中
           return Center(
-            child: ButtonWidget.startMainWaitingButton(deviceSize.width),
+            child: ButtonWidget.startMainWaitingButton(
+              deviceSize.width,
+              CommonWidget.myDefaultColor()!,
+            ),
           );
         }
 
@@ -106,7 +115,7 @@ class StartPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => StartMySettingPage(),
+                    builder: (context) => const StartMySettingPage(),
                   ),
                 ).then(
                   (value) {
@@ -114,16 +123,22 @@ class StartPage extends ConsumerWidget {
                   },
                 );
               },
-              child: Column(
-                children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                    CommonWidget.myDefaultColor()!,
-                  ),
-                ],
+              child: ButtonWidget.startMainButton(
+                deviceSize.width,
+                '自分の記録を始める',
+                Icons.directions_run,
+                CommonWidget.myDefaultColor()!,
               ),
+              // child: Column(
+              //   children: [
+              //     ButtonWidget.startMainButton(
+              //       deviceSize.width,
+              //       '自分の記録を始める',
+              //       Icons.directions_run,
+              //       CommonWidget.myDefaultColor()!,
+              //     ),
+              //   ],
+              // ),
             );
           }
 
@@ -150,16 +165,22 @@ class StartPage extends ConsumerWidget {
                   myAchievment.refreshNotifyListeners();
                 });
               },
-              child: Column(
-                children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                    CommonWidget.myDefaultColor()!,
-                  ),
-                ],
+              child: ButtonWidget.startMainButton(
+                deviceSize.width,
+                '自分の記録を始める',
+                Icons.directions_run,
+                CommonWidget.myDefaultColor()!,
               ),
+              // child: Column(
+              //   children: [
+              //     ButtonWidget.startMainButton(
+              //       deviceSize.width,
+              //       '自分の記録を始める',
+              //       Icons.directions_run,
+              //       CommonWidget.myDefaultColor()!,
+              //     ),
+              //   ],
+              // ),
             );
           } else {
             // 登録ずみデータあり
@@ -180,16 +201,22 @@ class StartPage extends ConsumerWidget {
                   myAchievment.refreshNotifyListeners();
                 });
               },
-              child: Column(
-                children: [
-                  ButtonWidget.startMainButton(
-                    deviceSize.width,
-                    '自分の記録を始める',
-                    Icons.directions_run,
-                    CommonWidget.myDefaultColor()!,
-                  ),
-                ],
+              child: ButtonWidget.startMainButton(
+                deviceSize.width,
+                '自分の記録を始める',
+                Icons.directions_run,
+                CommonWidget.myDefaultColor()!,
               ),
+              // child: Column(
+              //   children: [
+              //     ButtonWidget.startMainButton(
+              //       deviceSize.width,
+              //       '自分の記録を始める',
+              //       Icons.directions_run,
+              //       CommonWidget.myDefaultColor()!,
+              //     ),
+              //   ],
+              // ),
             );
           }
         } else {
