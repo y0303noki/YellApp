@@ -24,7 +24,7 @@ class StartMySettingPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
-        elevation: 5,
+        elevation: 0,
         actions: const [],
       ),
       body: Container(
@@ -43,7 +43,7 @@ class StartMySettingPage extends ConsumerWidget {
               children: [
                 Column(
                   children: [
-                    TextWidget.headLineText5('続けるえらいこと'),
+                    TextWidget.headLineText5('続けること'),
                     TextField(
                       controller: _textEditingController,
                       maxLength: 20,

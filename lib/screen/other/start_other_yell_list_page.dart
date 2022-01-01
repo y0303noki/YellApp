@@ -54,8 +54,23 @@ class StartOtherYellListPage extends ConsumerWidget {
 
         if (snapshot.error != null) {
           // エラー
-          return const Center(
-            child: Text('エラーがおきました'),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StartOtherSettingCodePage(),
+                      ),
+                    );
+                  },
+                  child: TextWidget.headLineText6('招待コードを入力する'),
+                ),
+              ),
+            ],
           );
         }
 

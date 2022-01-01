@@ -2,16 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/firebase/my_goal_firebase.dart';
+import 'package:yell_app/model/invite.dart';
+import 'package:yell_app/model/myGoal.dart';
+import 'package:yell_app/screen/my/my_achievement_page.dart';
 import 'package:yell_app/screen/my/start_my_setting_confirm_page.dart';
+import 'package:yell_app/state/invite_provider.dart';
+import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/start_my_setting_provider.dart';
 
 final errorTextProvider = StateProvider((ref) => '');
+MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
 class StartMySettinMynamePage extends ConsumerWidget {
   const StartMySettinMynamePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final myAchievment = ref.watch(myAchievmentProvider);
+    final invite = ref.watch(inviteProvider);
+
     final deviceSize = MediaQuery.of(context).size;
     String errorText = ref.watch(errorTextProvider);
     final startMySetting = ref.watch(startMySettingProvider);
@@ -22,12 +32,12 @@ class StartMySettinMynamePage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
-        elevation: 5,
+        elevation: 0,
         actions: const [],
       ),
       body: Container(
         margin: const EdgeInsets.only(
-          top: 20,
+          top: 10,
           left: 10,
           right: 10,
         ),
@@ -95,11 +105,13 @@ class StartMySettinMynamePage extends ConsumerWidget {
                             errorText = '';
                           }
                           startMySetting.myName = _textEditingController.text;
+
+                          myAchievment.refresh = true;
+                          sendMyGoalData(startMySetting, myAchievment, invite);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const StartMySettingConfirmPage(),
+                              builder: (context) => const MyAchievementPage(),
                             ),
                           );
                         },
@@ -114,5 +126,24 @@ class StartMySettinMynamePage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // firestoreに送信
+  Future<void> sendMyGoalData(StartMySetting startMySetting,
+      MyAchievment myAchievment, Invite invite) async {
+    MyGoalModel model = MyGoalModel(
+      goalTitle: startMySetting.goalTitle,
+      myName: startMySetting.myName,
+    );
+
+    // データ送信
+    Map<String, Object?> resultMap =
+        await _myGoalFirebase.insertMyGoalData(model);
+    if (resultMap['myGoal'] != null) {
+      myAchievment.setInitialData(resultMap['myGoal'] as MyGoalModel, [], []);
+    }
+    if (resultMap['invite'] != null) {
+      invite.setInitialData(resultMap['invite'] as InviteModel);
+    }
   }
 }
