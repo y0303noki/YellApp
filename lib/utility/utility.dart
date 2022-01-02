@@ -17,6 +17,14 @@ class Utility {
     return formatted;
   }
 
+  static String toStringddhh(DateTime? _dateTime) {
+    if (_dateTime == null) {
+      return '--:--';
+    }
+    String _date = '${_dateTime.day}日 ${_dateTime.hour}:${_dateTime.minute}';
+    return _date;
+  }
+
   // 頭文字を2文字切り取る。1文字だったら1文字だけ
   static String substring1or2(String _str) {
     if (_str.isEmpty) {

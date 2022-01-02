@@ -9,6 +9,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/screen/my/reset_time_page.dart';
 import 'package:yell_app/screen/my/select_log_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
@@ -38,6 +39,29 @@ class MyAchievementPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         actions: [
+          // リセットタイマー
+          IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResetTimePage(),
+                ),
+              ).then(
+                (value) {
+                  // ロゴを選択してたらリロードする
+                  if (value != null && value) {
+                    myAchievment.refresh = true;
+                    myAchievment.refreshNotifyListeners();
+                  }
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.timer,
+              color: Colors.yellow,
+            ),
+          ),
           // 目標を削除する
           IconButton(
             onPressed: () async {
@@ -104,10 +128,10 @@ class MyAchievementPage extends ConsumerWidget {
       // メンバーがいるとき
       return Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
+          color: Colors.grey[200],
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
           ),
         ),
         child: Column(
@@ -126,13 +150,18 @@ class MyAchievementPage extends ConsumerWidget {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(
+                      left: 30,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
                       left: 10,
                     ),
                     child: const Text(
                       '応援コメント',
-                      // style: TextStyle(
-                      //   color: Colors.white,
-                      // ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Container(
@@ -159,11 +188,8 @@ class MyAchievementPage extends ConsumerWidget {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: 300,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-              ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: myAchievment.yellMembers.length,
@@ -290,15 +316,22 @@ class MyAchievementPage extends ConsumerWidget {
             myAchievment,
             null,
             _logoWidget(myAchievment, context),
+            myAchievment.startDate,
           ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // 自分のでかいアイコン
-              ButtonWidget.iconBigMainWidget(
-                Utility.substring1or2(myAchievment.myName),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                ),
+                child: ButtonWidget.iconBigMainWidget(
+                  Utility.substring1or2(myAchievment.myName),
+                ),
               ),
+
               Expanded(
                 child: Tooltip(
                   message: '応援してくれるメンバーにコメントが表示されます',
@@ -340,30 +373,40 @@ class MyAchievementPage extends ConsumerWidget {
               child: const Text('達成したのでひとこと残す')),
           Column(
             children: [
-              Slider(
-                label: myAchievment.sliderLabel,
-                min: MyAchievment.sliderMinValue,
-                max: MyAchievment.sliderMaxValue,
-                value: myAchievment.achieved
-                    ? MyAchievment.sliderMaxValue
-                    : myAchievment.sliderValue,
-                activeColor: Colors.orange,
-                inactiveColor: Colors.blueAccent,
-                divisions: 3,
-                onChanged: myAchievment.achieved
-                    ? null
-                    : (double _value) async {
-                        myAchievment.updateSliderValue(_value);
-                        // 右まで到達したら達成処理
-                        if (_value == MyAchievment.sliderMaxValue) {
-                          bool result =
-                              await _achievementFunc(context, myAchievment);
-                          if (result) {
-                            myAchievment.refresh = true;
-                            myAchievment.refreshNotifyListeners();
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                ),
+                child: Slider(
+                  label: myAchievment.sliderLabel,
+                  min: MyAchievment.sliderMinValue,
+                  max: MyAchievment.sliderMaxValue,
+                  value: myAchievment.achieved
+                      ? MyAchievment.sliderMaxValue
+                      : myAchievment.sliderValue,
+                  activeColor: Colors.orange,
+                  inactiveColor: Colors.blueAccent,
+                  divisions: 3,
+                  onChanged: myAchievment.achieved
+                      ? null
+                      : (double _value) async {
+                          myAchievment.updateSliderValue(_value);
+                          // 右まで到達したら達成処理
+                          if (_value == MyAchievment.sliderMaxValue) {
+                            bool result =
+                                await _achievementFunc(context, myAchievment);
+                            if (result) {
+                              myAchievment.refresh = true;
+                              myAchievment.refreshNotifyListeners();
+                            }
                           }
-                        }
-                      },
+                        },
+                ),
+              ),
+              Container(
+                child: Text(
+                    '前回達成：${Utility.toStringddhh(myAchievment.updatedCurrentDayAt)}'),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -453,8 +496,9 @@ class MyAchievementPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Icon(
-                  Icons.thumb_up_alt_outlined,
+                  Icons.done_outline,
                   size: 60,
+                  color: Colors.blue,
                 ),
                 Flexible(
                   child: Container(

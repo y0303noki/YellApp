@@ -11,6 +11,7 @@ class MyGoalModel {
   bool isDeleted = false;
   List<String> memberIds = [];
   String inviteId = '';
+  int resetHour = 0; // リセットする時間（hrou)
   DateTime? createdAt;
   DateTime? updatedAt;
   MyGoalModel({
@@ -25,6 +26,7 @@ class MyGoalModel {
     this.isDeleted = false,
     this.memberIds = const [],
     this.inviteId = '',
+    this.resetHour = 0,
     this.createdAt,
     this.updatedAt,
   });

@@ -132,4 +132,41 @@ class DialogWidget {
     );
     return result;
   }
+
+  // 他人の応援を止める
+  Future<String?> exitOtherGoal(
+    BuildContext dialogContext,
+    String _ownerName,
+  ) async {
+    String? result;
+    await DialogUtil.show(
+      context: dialogContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$_ownerNameさんのメンバーから外れますか？'),
+          content: const Text('もう一度招待コードを入力しないと応援できなくなります。'),
+          actions: [
+            TextButton(
+              child: const Text(
+                '外れる',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                result = 'EXIT';
+                Navigator.of(context).pop('EXIT');
+              },
+            ),
+            TextButton(
+              child: const Text('キャンセル'),
+              onPressed: () {
+                result = 'CANCEL';
+                Navigator.of(context).pop('CANCEL');
+              },
+            ),
+          ],
+        );
+      },
+    );
+    return result;
+  }
 }

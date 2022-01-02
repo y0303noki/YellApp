@@ -24,8 +24,10 @@ class StartMySettingConfirmPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blueGrey,
+        automaticallyImplyLeading: false,
         elevation: 0,
+        actions: const [],
       ),
       body: Container(
         margin: const EdgeInsets.only(
@@ -89,7 +91,7 @@ class StartMySettingConfirmPage extends ConsumerWidget {
                   TextButton(
                     onPressed: () {
                       myAchievment.refresh = true;
-                      sendMyGoalData(startMySetting, myAchievment, invite);
+                      // sendMyGoalData(startMySetting, myAchievment, invite);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -136,25 +138,6 @@ class StartMySettingConfirmPage extends ConsumerWidget {
       row.add(tempWidget);
     }
     return row;
-  }
-
-  // firestoreに送信
-  Future<void> sendMyGoalData(StartMySetting startMySetting,
-      MyAchievment myAchievment, Invite invite) async {
-    MyGoalModel model = MyGoalModel(
-      goalTitle: startMySetting.goalTitle,
-      myName: startMySetting.myName,
-    );
-
-    // データ送信
-    Map<String, Object?> resultMap =
-        await _myGoalFirebase.insertMyGoalData(model);
-    if (resultMap['myGoal'] != null) {
-      myAchievment.setInitialData(resultMap['myGoal'] as MyGoalModel, [], []);
-    }
-    if (resultMap['invite'] != null) {
-      invite.setInitialData(resultMap['invite'] as InviteModel);
-    }
   }
 
   // Firebaseに自分のデータを送信のテスト

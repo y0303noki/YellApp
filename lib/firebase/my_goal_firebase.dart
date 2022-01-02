@@ -82,6 +82,7 @@ class MyGoalFirebase {
       achievedDayOrTime: data['tempGoalModel'] ?? '',
       achievedMyComment: data['achievedMyComment'] ?? '',
       logoImageNumber: data['logoImageNumber'] ?? -1,
+      resetHour: data['resetHour'] ?? 0,
       isDeleted: data['isDeleted'] ?? false,
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
@@ -145,6 +146,7 @@ class MyGoalFirebase {
       tempGoalModel.updatedCurrentDayAt = data['updatedCurrentDayAt']?.toDate();
       tempGoalModel.achievedDayOrTime = data['achievedDayOrTime'] ?? '';
       tempGoalModel.achievedMyComment = data['achievedMyComment'] ?? '';
+      tempGoalModel.resetHour = data['resetHour'] ?? 0;
       tempGoalModel.isDeleted = data['isDeleted'] ?? false;
       tempGoalModel.createdAt = data['createdAt'].toDate();
       tempGoalModel.updatedAt = data['updatedAt'].toDate();
@@ -182,6 +184,7 @@ class MyGoalFirebase {
         achievedDayOrTime: data['tempGoalModel'] ?? '',
         achievedMyComment: data['achievedMyComment'] ?? '',
         logoImageNumber: data['logoImageNumber'] ?? -1,
+        resetHour: data['resetHour'] ?? 0,
         isDeleted: data['isDeleted'] ?? false,
         createdAt: data['createdAt'].toDate(),
         updatedAt: data['updatedAt'].toDate(),
@@ -210,6 +213,7 @@ class MyGoalFirebase {
     addObject['achievedDayOrTime'] = myGoalModel.achievedDayOrTime;
     addObject['achievedMyComment'] = myGoalModel.achievedMyComment;
     addObject['updatedCurrentDayAt'] = null;
+    addObject['resetHour'] = 24; // デフォルトは24hにしておく
     addObject['isDeleted'] = false;
     addObject['createdAt'] = now;
     addObject['updatedAt'] = now;
@@ -240,6 +244,7 @@ class MyGoalFirebase {
         achievedDayOrTime: addObject['achievedDayOrTime'],
         achievedMyComment: addObject['achievedMyComment'],
         isDeleted: addObject['isDeleted'] ?? false,
+        resetHour: addObject['resetHour'] ?? 0,
         createdAt: addObject['createdAt'],
         updatedAt: addObject['updatedAt'],
       );
@@ -294,6 +299,22 @@ class MyGoalFirebase {
     DateTime now = DateTime.now();
 
     updateData['logoImageNumber'] = logoImageNumber;
+    updateData['updatedAt'] = now;
+
+    try {
+      await _firestore.collection(myGoals).doc(docId).update(updateData);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// リセットタイマー時間を更新
+  Future<void> updateresetHour(String docId, int resetHour) async {
+    // 新しい日付に更新
+    Map<String, dynamic> updateData = {};
+    DateTime now = DateTime.now();
+
+    updateData['resetHour'] = resetHour;
     updateData['updatedAt'] = now;
 
     try {
