@@ -27,143 +27,150 @@ class OtherYellMainPage extends ConsumerWidget {
     final otherAchievment = ref.watch(otherAchievmentProvider);
     print('名前：${otherAchievment.ownerName}');
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
-        automaticallyImplyLeading: false,
-        elevation: 5,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-          icon: const Icon(Icons.home),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              String? result = await DialogWidget()
-                  .exitOtherGoal(context, otherAchievment.ownerName);
-              if (result == null || result == 'CANCEL') {
-                return;
-              } else {
-                // 退出する
-                MemberModel? thisMemebrModel =
-                    await memberFirebase.fetchMemberDatasByGoalIdAndMyUserId(
-                        otherAchievment.goalId);
-                if (thisMemebrModel == null) {
-                  // メンバーから既に退出されている状態
-                } else {
-                  memberFirebase.deleteMemberData(thisMemebrModel.id);
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                }
-              }
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueGrey,
+          automaticallyImplyLeading: false,
+          elevation: 5,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
             },
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.red,
+            icon: const Icon(Icons.home),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                String? result = await DialogWidget()
+                    .exitOtherGoal(context, otherAchievment.ownerName);
+                if (result == null || result == 'CANCEL') {
+                  return;
+                } else {
+                  // 退出する
+                  MemberModel? thisMemebrModel =
+                      await memberFirebase.fetchMemberDatasByGoalIdAndMyUserId(
+                          otherAchievment.goalId);
+                  if (thisMemebrModel == null) {
+                    // メンバーから既に退出されている状態
+                  } else {
+                    memberFirebase.deleteMemberData(thisMemebrModel.id);
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  }
+                }
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.red,
+              ),
             ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(
-            top: 10,
-          ),
-          child: Column(
-            children: [
-              CommonWidget.achieveTitleWidget(
-                null,
-                otherAchievment,
-                _logoWidget(otherAchievment, context),
-                otherAchievment.startDate,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.only(
+              top: 10,
+            ),
+            child: Column(
+              children: [
+                CommonWidget.achieveTitleWidget(
+                  null,
+                  otherAchievment,
+                  _logoWidget(otherAchievment, context),
+                  otherAchievment.startDate,
                 ),
-                child: Row(
-                  children: [
-                    // アイコン
-                    ButtonWidget.iconMainWidget(
-                      Utility.substring1or2(otherAchievment.ownerName),
-                    ),
-                    Flexible(
-                      child: Column(
-                        children: [
-                          Tooltip(
-                            message: '応援してくれるメンバーにコメントが表示されます',
-                            child: Bubble(
-                              margin: const BubbleEdges.only(
-                                top: 10,
-                                right: 10,
-                              ),
-                              borderColor: CommonWidget.myDefaultColor(),
-                              stick: true,
-                              nip: BubbleNip.leftCenter,
-                              child: otherAchievment.ownerAchievedment.isEmpty
-                                  ? const Text(
-                                      '達成時コメントがここに表示されます',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 15,
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      // アイコン
+                      ButtonWidget.iconMainWidget(
+                        Utility.substring1or2(otherAchievment.ownerName),
+                      ),
+                      Flexible(
+                        child: Column(
+                          children: [
+                            Tooltip(
+                              message: '応援してくれるメンバーにコメントが表示されます',
+                              child: Bubble(
+                                margin: const BubbleEdges.only(
+                                  top: 10,
+                                  right: 10,
+                                ),
+                                borderColor: CommonWidget.myDefaultColor(),
+                                stick: true,
+                                nip: BubbleNip.leftCenter,
+                                child: otherAchievment.ownerAchievedment.isEmpty
+                                    ? const Text(
+                                        '達成時コメントがここに表示されます',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15,
+                                        ),
+                                      )
+                                    : Text(
+                                        otherAchievment.ownerAchievedment,
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.clip,
+                                        style: const TextStyle(fontSize: 20),
                                       ),
-                                    )
-                                  : Text(
-                                      otherAchievment.ownerAchievedment,
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.clip,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
+                              ),
                             ),
-                          ),
-                          // Utility.toStringddhh(_myAchievment.updatedCurrentDayAt);
-                          // Text(Utility.toStringddhh(otherAchievment)),
-                        ],
+                            // Utility.toStringddhh(_myAchievment.updatedCurrentDayAt);
+                            // Text(Utility.toStringddhh(otherAchievment)),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // 達成したらコメントを残すように促す
-              suggestSendMessage(context, otherAchievment),
+                // 達成したらコメントを残すように促す
+                suggestSendMessage(context, otherAchievment),
 
-              // 応援者のアイコンと名前
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 5,
-                  bottom: 0,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // メッセージ
-                    Expanded(
-                      child: Bubble(
-                        margin: const BubbleEdges.only(top: 20),
-                        padding: const BubbleEdges.only(top: 20, bottom: 20),
-                        nip: BubbleNip.rightTop,
-                        color: CommonWidget.otherDefaultColor(),
-                        child: Text(otherAchievment.yellMessage,
-                            textAlign: TextAlign.right),
+                // 応援者のアイコンと名前
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 5,
+                    bottom: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // メッセージ
+                      Expanded(
+                        child: Bubble(
+                          margin: const BubbleEdges.only(top: 20),
+                          padding: const BubbleEdges.only(top: 20, bottom: 20),
+                          nip: BubbleNip.rightTop,
+                          color: CommonWidget.otherDefaultColor(),
+                          child: Text(otherAchievment.yellMessage,
+                              textAlign: TextAlign.right),
+                        ),
                       ),
-                    ),
 
-                    ButtonWidget.iconMainWidget(
-                      Utility.substring1or2(otherAchievment.otherName),
-                    ),
-                  ],
+                      ButtonWidget.iconMainWidget(
+                        Utility.substring1or2(otherAchievment.otherName),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              // const Text('過去のメッセージ'),
-            ],
+                // const Text('過去のメッセージ'),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> _willPopCallback() async {
+    return true;
   }
 
   String substring1or2(String _str) {

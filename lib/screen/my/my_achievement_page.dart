@@ -27,72 +27,80 @@ class MyAchievementPage extends ConsumerWidget {
     final myAchievment = ref.watch(myAchievmentProvider);
     final invite = ref.watch(inviteProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
-        automaticallyImplyLeading: false,
-        elevation: 10,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-          icon: const Icon(Icons.arrow_back),
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Scaffold(
+        drawerEdgeDragWidth: 0,
+        appBar: AppBar(
+          backgroundColor: Colors.blueGrey,
+          automaticallyImplyLeading: false,
+          elevation: 10,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+          actions: [
+            // リセットタイマー
+            IconButton(
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ResetTimePage(),
+                  ),
+                ).then(
+                  (value) {
+                    // ロゴを選択してたらリロードする
+                    if (value != null && value) {
+                      myAchievment.refresh = true;
+                      myAchievment.refreshNotifyListeners();
+                    }
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.timer,
+                color: Colors.yellow,
+              ),
+            ),
+            // 目標を削除する
+            IconButton(
+              onPressed: () async {
+                String? result = await DialogWidget().endMyGoalDialog(context);
+                if (result == null || result == 'CANCEL') {
+                  return;
+                } else {
+                  // 削除実行
+                  await _myGoalFirebase.deleteMyGoalData(myAchievment.goalId);
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                }
+              },
+              icon: const Icon(
+                Icons.delete_forever,
+                color: Colors.red,
+              ),
+            ),
+          ],
         ),
-        actions: [
-          // リセットタイマー
-          IconButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ResetTimePage(),
-                ),
-              ).then(
-                (value) {
-                  // ロゴを選択してたらリロードする
-                  if (value != null && value) {
-                    myAchievment.refresh = true;
-                    myAchievment.refreshNotifyListeners();
-                  }
-                },
-              );
-            },
-            icon: const Icon(
-              Icons.timer,
-              color: Colors.yellow,
-            ),
+        body: RefreshIndicator(
+          // 下に引っ張って更新
+          onRefresh: () async {
+            myAchievment.refresh = true;
+            myAchievment.refreshNotifyListeners();
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: _futureBody(context, myAchievment, invite),
           ),
-          // 目標を削除する
-          IconButton(
-            onPressed: () async {
-              String? result = await DialogWidget().endMyGoalDialog(context);
-              if (result == null || result == 'CANCEL') {
-                return;
-              } else {
-                // 削除実行
-                await _myGoalFirebase.deleteMyGoalData(myAchievment.goalId);
-                Navigator.popUntil(context, (route) => route.isFirst);
-              }
-            },
-            icon: const Icon(
-              Icons.delete_forever,
-              color: Colors.red,
-            ),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        // 下に引っ張って更新
-        onRefresh: () async {
-          myAchievment.refresh = true;
-          myAchievment.refreshNotifyListeners();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: _futureBody(context, myAchievment, invite),
         ),
       ),
     );
+  }
+
+  Future<bool> _willPopCallback() async {
+    return true;
   }
 
   // メンバーウィジット
