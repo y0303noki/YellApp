@@ -88,32 +88,38 @@ class OtherYellMainPage extends ConsumerWidget {
                     ButtonWidget.iconMainWidget(
                       Utility.substring1or2(otherAchievment.ownerName),
                     ),
-                    Expanded(
-                      child: Tooltip(
-                        message: '応援してくれるメンバーにコメントが表示されます',
-                        child: Bubble(
-                          margin: const BubbleEdges.only(
-                            top: 10,
-                            right: 10,
+                    Flexible(
+                      child: Column(
+                        children: [
+                          Tooltip(
+                            message: '応援してくれるメンバーにコメントが表示されます',
+                            child: Bubble(
+                              margin: const BubbleEdges.only(
+                                top: 10,
+                                right: 10,
+                              ),
+                              borderColor: CommonWidget.myDefaultColor(),
+                              stick: true,
+                              nip: BubbleNip.leftCenter,
+                              child: otherAchievment.ownerAchievedment.isEmpty
+                                  ? const Text(
+                                      '達成時コメントがここに表示されます',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 15,
+                                      ),
+                                    )
+                                  : Text(
+                                      otherAchievment.ownerAchievedment,
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.clip,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                            ),
                           ),
-                          borderColor: CommonWidget.myDefaultColor(),
-                          stick: true,
-                          nip: BubbleNip.leftCenter,
-                          child: otherAchievment.ownerAchievedment.isEmpty
-                              ? const Text(
-                                  '達成時コメントがここに表示されます',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 15,
-                                  ),
-                                )
-                              : Text(
-                                  otherAchievment.ownerAchievedment,
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.clip,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                        ),
+                          // Utility.toStringddhh(_myAchievment.updatedCurrentDayAt);
+                          // Text(Utility.toStringddhh(otherAchievment)),
+                        ],
                       ),
                     ),
                   ],
