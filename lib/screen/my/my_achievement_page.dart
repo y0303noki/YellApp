@@ -35,7 +35,6 @@ class MyAchievementPage extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.blueGrey,
           automaticallyImplyLeading: false,
-          elevation: 10,
           leading: IconButton(
             onPressed: () {
               Navigator.popUntil(context, (route) => route.isFirst);
@@ -43,20 +42,20 @@ class MyAchievementPage extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LocalNotificationPage(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.timer,
-                color: Colors.red,
-              ),
-            ),
+            // IconButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const LocalNotificationPage(),
+            //       ),
+            //     );
+            //   },
+            //   icon: const Icon(
+            //     Icons.timer,
+            //     color: Colors.red,
+            //   ),
+            // ),
             // リセットタイマー
             IconButton(
               onPressed: () async {

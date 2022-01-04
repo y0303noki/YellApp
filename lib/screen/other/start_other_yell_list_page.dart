@@ -28,7 +28,6 @@ class StartOtherYellListPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
-        elevation: 5,
         leading: IconButton(
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);

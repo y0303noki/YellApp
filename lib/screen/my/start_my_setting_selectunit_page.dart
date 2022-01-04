@@ -19,7 +19,6 @@ class StartMySettingSelectUnitPage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
-        elevation: 5,
         actions: const [],
       ),
       body: Container(
