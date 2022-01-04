@@ -29,6 +29,7 @@ dev_dependencies:
   flutter_advanced_segment: ^2.0.1+2
   bubble: ^1.2.1
   share: ^2.0.4
+  flutter_local_notifications: ^9.2.0
 
 flutter:
   uses-material-design: true

@@ -9,6 +9,7 @@ import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/model/yell_message.dart';
 import 'package:yell_app/screen/my/invite_main_page.dart';
+import 'package:yell_app/screen/my/local_notification_page.dart';
 import 'package:yell_app/screen/my/reset_time_page.dart';
 import 'package:yell_app/screen/my/select_log_page.dart';
 import 'package:yell_app/state/invite_provider.dart';
@@ -42,6 +43,20 @@ class MyAchievementPage extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
           ),
           actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LocalNotificationPage(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.timer,
+                color: Colors.red,
+              ),
+            ),
             // リセットタイマー
             IconButton(
               onPressed: () async {
