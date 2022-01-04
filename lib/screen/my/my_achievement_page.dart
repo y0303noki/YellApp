@@ -318,59 +318,38 @@ class MyAchievementPage extends ConsumerWidget {
             _logoWidget(myAchievment, context),
             myAchievment.startDate,
           ),
+          // CommonWidget.myInfoWidget(myAchievment),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 自分のでかいアイコン
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                ),
-                child: ButtonWidget.iconBigMainWidget(
-                  Utility.substring1or2(myAchievment.myName),
-                ),
+              TextButton(
+                onPressed: !myAchievment.achieved
+                    ? null
+                    : () async {
+                        // ひとことコメント
+                        String? achievedMyMessage = await DialogWidget()
+                            .achievedMyMessagelDialog(
+                                context, myAchievment.achieveComment);
+                        if (achievedMyMessage == null) {
+                          return;
+                        } else {
+                          await _myGoalFirebase.updateAchievecomment(
+                              myAchievment.goalId, achievedMyMessage);
+                          myAchievment.updatedAchieveComment(achievedMyMessage);
+                        }
+                      },
+                child: const Text('ひとこと残す'),
               ),
-
-              Expanded(
-                child: Tooltip(
-                  message: '応援してくれるメンバーにコメントが表示されます',
-                  child: Bubble(
-                    margin: const BubbleEdges.only(
-                      top: 10,
-                      right: 10,
-                    ),
-                    borderColor: CommonWidget.myDefaultColor(),
-                    stick: true,
-                    nip: BubbleNip.leftCenter,
-                    child: Text(
-                      myAchievment.achieveComment,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
+              const Tooltip(
+                message: '達成するとコメントを残すことができます。',
+                child: Icon(
+                  Icons.help,
+                  size: 24,
                 ),
               ),
             ],
           ),
-          TextButton(
-              onPressed: !myAchievment.achieved
-                  ? null
-                  : () async {
-                      // ひとことコメント
-                      String? achievedMyMessage = await DialogWidget()
-                          .achievedMyMessagelDialog(
-                              context, myAchievment.achieveComment);
-                      if (achievedMyMessage == null) {
-                        return;
-                      } else {
-                        await _myGoalFirebase.updateAchievecomment(
-                            myAchievment.goalId, achievedMyMessage);
-                        myAchievment.updatedAchieveComment(achievedMyMessage);
-                      }
-                    },
-              child: const Text('達成したのでひとこと残す')),
           Column(
             children: [
               Container(
@@ -403,10 +382,6 @@ class MyAchievementPage extends ConsumerWidget {
                           }
                         },
                 ),
-              ),
-              Container(
-                child: Text(
-                    '前回達成：${Utility.toStringddhh(myAchievment.updatedCurrentDayAt)}'),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

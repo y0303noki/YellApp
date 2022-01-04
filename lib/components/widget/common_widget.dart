@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:yell_app/state/other_achievment_provider.dart';
@@ -139,15 +140,20 @@ class CommonWidget {
   ) {
     int count = -1; // カウント
     String title = ''; // タイトル
+    String lastTimeDate = ''; // 前回達成日時
+    String resetTime = ''; // リセットタイム
 
     if (_myAchievment != null && _otherAchievment == null) {
       // オーナー画面
       count = _myAchievment.continuationCount;
       title = _myAchievment.goalTitle;
+      lastTimeDate = Utility.toStringddhh(_myAchievment.updatedCurrentDayAt);
+      resetTime = _myAchievment.resetHour.toString();
     } else if (_myAchievment == null && _otherAchievment != null) {
       // 応援画面
       count = _otherAchievment.continuationCount;
       title = _otherAchievment.goalTitle;
+      lastTimeDate = Utility.toStringddhh(_otherAchievment.updatedCurrentDayAt);
     }
     return Container(
       margin: const EdgeInsets.only(
@@ -163,8 +169,16 @@ class CommonWidget {
         right: 10,
       ),
       decoration: BoxDecoration(
-        color: CommonWidget.myDefaultColor(),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1.0,
+            blurRadius: 10.0,
+            offset: Offset(1, 1),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -175,7 +189,7 @@ class CommonWidget {
             ),
             child: Row(
               children: [
-                TextWidget.headLineText5('# $count'),
+                TextWidget.headLineText6('# $count'),
               ],
             ),
           ),
@@ -193,16 +207,92 @@ class CommonWidget {
             ],
           ),
           const Divider(
-            color: Colors.black,
+            color: Colors.grey,
           ),
+          _achieveDescriptionRow(
+              'はじめた日', '${Utility.toDateFormatted(_startDateTime)}'),
+          _achieveDescriptionRow(
+            '前回',
+            lastTimeDate,
+          ),
+          resetTime.isEmpty
+              ? Container()
+              : _achieveDescriptionRow('リセット時間', resetTime),
+        ],
+      ),
+    );
+  }
+
+  // したの追加部分
+  static Widget _achieveDescriptionRow(String key, String value) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      TextWidget.subTitleText2(key),
+      TextWidget.subTitleText3(value),
+    ]);
+  }
+
+  static Widget myInfoWidget(MyAchievment myAchievment) {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 20,
+        bottom: 20,
+        left: 10,
+        right: 10,
+      ),
+      padding: const EdgeInsets.only(
+        top: 20,
+        bottom: 20,
+        left: 10,
+        right: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1.0,
+            blurRadius: 10.0,
+            offset: Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text('#23'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 自分のアイコン
+              // Container(
+              //   margin: const EdgeInsets.only(
+              //     left: 10,
+              //     right: 10,
+              //   ),
+              //   child: ButtonWidget.iconMainWidget(
+              //     Utility.substring1or2(myAchievment.myName),
+              //   ),
+              // ),
+              // Text(
+              //   myAchievment.myName,
+              //   style: const TextStyle(
+              //     fontSize: 28,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+            ],
+          ),
+          // ひとこと
           Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextWidget.subTitleText1('はじめた日   '),
-                TextWidget.subTitleText3(
-                    '${Utility.toDateFormatted(_startDateTime)}'),
-              ],
+            margin: const EdgeInsets.only(
+              top: 20,
+              left: 10,
+              right: 10,
+            ),
+            child: Text(
+              myAchievment.achieveComment,
+              overflow: TextOverflow.clip,
             ),
           ),
         ],
@@ -233,46 +323,19 @@ class CommonWidget {
         _imagePath = 'images/sumaho.png';
         break;
       default:
-        _imagePath = '';
+        _imagePath = 'images/noimage.png';
         break;
     }
 
-    if (_imagePath.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(
-          left: 10,
-          right: 20,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const SizedBox(
-          width: 60,
-          height: 60,
-          child: Center(child: Text('image')),
-        ),
-      );
-    }
-
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       margin: const EdgeInsets.only(
         left: 10,
         right: 20,
       ),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            spreadRadius: 1.0,
-            blurRadius: 10.0,
-            offset: Offset(1, 1),
-          ),
-        ],
+        border: Border.all(color: Colors.grey, width: 3),
       ),
       child: Image.asset(
         _imagePath,

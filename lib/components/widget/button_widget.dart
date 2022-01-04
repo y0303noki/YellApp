@@ -126,7 +126,7 @@ class ButtonWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 5),
+        border: Border.all(color: Colors.grey, width: 3),
         borderRadius: BorderRadius.circular(120 / 2),
       ),
       child: Center(
@@ -141,7 +141,7 @@ class ButtonWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2),
+        border: Border.all(color: Colors.grey, width: 2),
         borderRadius: BorderRadius.circular(80 / 2),
       ),
       child: Center(
