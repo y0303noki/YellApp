@@ -5,6 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const flavor = String.fromEnvironment('FLAVOR');
+  print('環境:$flavor');
+
   await Firebase.initializeApp();
   runApp(
     ProviderScope(

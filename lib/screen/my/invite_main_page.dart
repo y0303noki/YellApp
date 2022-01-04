@@ -21,7 +21,6 @@ class InviteMainPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 29, 35, 37),
-        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.only(

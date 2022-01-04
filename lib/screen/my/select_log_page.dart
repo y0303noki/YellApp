@@ -18,7 +18,6 @@ class SelectLogoPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
-        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.only(
@@ -33,7 +32,7 @@ class SelectLogoPage extends ConsumerWidget {
                 top: 10,
                 bottom: 5,
               ),
-              child: TextWidget.headLineText5('ロゴを変更'),
+              child: TextWidget.headLineText5('イメージロゴを変更'),
             ),
             Expanded(
               child: Container(
@@ -50,7 +49,6 @@ class SelectLogoPage extends ConsumerWidget {
             Container(
               margin: const EdgeInsets.only(
                 top: 5,
-                bottom: 50,
               ),
               child: TextButton(
                 onPressed: () async {
@@ -64,6 +62,13 @@ class SelectLogoPage extends ConsumerWidget {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 50,
+              ),
+              child:
+                  TextWidget.subTitleText3('ご提供 : https://www.linustock.com/'),
             ),
           ],
         ),
@@ -114,6 +119,20 @@ class SelectLogoPage extends ConsumerWidget {
         'スマホ',
         'images/sumaho.png',
         5,
+      ),
+      _tileContainer(
+        context,
+        myAchievment,
+        'コーヒー',
+        'images/coffee.png',
+        6,
+      ),
+      _tileContainer(
+        context,
+        myAchievment,
+        'いぬ',
+        'images/dog.png',
+        7,
       ),
     ];
   }

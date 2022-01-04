@@ -322,6 +322,12 @@ class CommonWidget {
       case 5:
         _imagePath = 'images/sumaho.png';
         break;
+      case 6:
+        _imagePath = 'images/coffee.png';
+        break;
+      case 7:
+        _imagePath = 'images/dog.png';
+        break;
       default:
         _imagePath = 'images/noimage.png';
         break;

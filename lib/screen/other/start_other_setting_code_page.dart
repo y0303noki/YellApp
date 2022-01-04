@@ -4,8 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:yell_app/components/widget/button_widget.dart';
 import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
+import 'package:yell_app/const.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
+import 'package:yell_app/firebase/user_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
@@ -14,6 +16,7 @@ import 'package:yell_app/state/other_achievment_provider.dart';
 
 InviteFirebase inviteFirebase = InviteFirebase();
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
+UserFirebase userFirebase = UserFirebase();
 
 class StartOtherSettingCodePage extends ConsumerWidget {
   const StartOtherSettingCodePage({Key? key}) : super(key: key);
@@ -29,6 +32,7 @@ class StartOtherSettingCodePage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         elevation: 0,
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         margin: const EdgeInsets.only(
@@ -61,6 +65,14 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                         otherAchievment.code = text;
                       },
                     ),
+                    otherAchievment.errorText.isEmpty
+                        ? Container()
+                        : Container(
+                            child: Text(
+                              otherAchievment.errorText,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
                   ],
                 ),
                 CommonWidget.descriptionWidget(
@@ -77,6 +89,7 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                     children: [
                       TextButton(
                         onPressed: () {
+                          otherAchievment.resetData();
                           Navigator.pop(context);
                         },
                         child: TextWidget.headLineText5('戻る'),
@@ -85,11 +98,29 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                         onPressed: () async {
                           // 招待コードを検索
                           // 正しいコードなら次に遷移
-                          MyGoalModel? myGoalModel =
+                          Map<String, Object?> result =
+                              // MyGoalModel? myGoalModel =
                               await _searchInviteByCode(otherAchievment);
-                          if (myGoalModel != null) {
-                            otherAchievment.setInitialData(myGoalModel);
+                          if (result.containsKey('errorText')) {
+                            String errorText = result['errorText'] as String;
+                            otherAchievment.resetData();
+                            if (errorText == Const.INVALID_CODE) {
+                              otherAchievment.setErrorText('正しいコードを入力してください');
+                            } else if (errorText == Const.EXPIRED_CODE) {
+                              otherAchievment.setErrorText('有効期限が切れています');
+                            } else if (errorText == Const.MYSELF_CODE) {
+                              otherAchievment.setErrorText('自分自身のコードは使えません');
+                            } else {
+                              otherAchievment.setErrorText('予期しないエラーが発生しました');
+                            }
+
+                            return;
                           }
+
+                          MyGoalModel myGoalModel =
+                              result['ownerGoalModel'] as MyGoalModel;
+                          otherAchievment.setInitialData(myGoalModel);
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -111,21 +142,28 @@ class StartOtherSettingCodePage extends ConsumerWidget {
     );
   }
 
-  Future<MyGoalModel?> _searchInviteByCode(
+  Future<Map<String, Object?>> _searchInviteByCode(
       OtherAchievment _otherAchievment) async {
     DateTime now = DateTime.now();
+    Map<String, Object?> result = {};
     InviteModel? inviteModel =
         await inviteFirebase.fetchInviteByCode(_otherAchievment.code);
     // コードが存在しない
     if (inviteModel == null) {
-      print('コードが不正');
-      return null;
+      result['errorText'] = Const.INVALID_CODE;
+      return result;
     }
     // 有効期限切れ
     if (now.isAfter(inviteModel.expiredAt as DateTime) ||
         inviteModel.isDeleted) {
-      print('有効期限切れ');
-      return null;
+      result['errorText'] = Const.EXPIRED_CODE;
+      return result;
+    }
+
+    // 自分自身の招待コードは利用不可
+    if (inviteModel.ownerUserId == userFirebase.getMyUserId()) {
+      result['errorText'] = Const.MYSELF_CODE;
+      return result;
     }
     // 有効なコード
     // 持ち主の名前を取得
@@ -134,13 +172,14 @@ class StartOtherSettingCodePage extends ConsumerWidget {
         await myGoalFirebase.fetchGoalData(userId: ownerUserId);
     if (ownerGoalModel == null) {
       // 持ち主のユーザーidが不正
-      print('持ち主がいない');
-      return null;
+      result['errorText'] = Const.UNEXPECTED_CODE;
+      return result;
     }
     // セット
     _otherAchievment.goalTitle = ownerGoalModel.goalTitle;
     _otherAchievment.goalId = ownerGoalModel.id;
     _otherAchievment.ownerName = ownerGoalModel.myName;
-    return ownerGoalModel;
+    result['ownerGoalModel'] = ownerGoalModel;
+    return result;
   }
 }

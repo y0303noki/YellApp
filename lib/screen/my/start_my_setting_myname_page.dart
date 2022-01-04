@@ -32,7 +32,6 @@ class StartMySettinMynamePage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
         automaticallyImplyLeading: false,
-        elevation: 0,
         actions: const [],
       ),
       body: Container(

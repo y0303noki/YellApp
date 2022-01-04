@@ -18,7 +18,6 @@ class ResetTimePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
-        elevation: 10,
       ),
       body: Container(
         margin: const EdgeInsets.only(
