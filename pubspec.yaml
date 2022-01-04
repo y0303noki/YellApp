@@ -37,9 +37,9 @@ flutter_icons:
   android: true
   ios: true
 
-# flutter_native_splash:
-#   image: images/AppIcon/yellAppLogo001.png
-#   color: "4DD0E1"
+flutter_native_splash:
+  image: "assets/launcher_icon/icon-stg.png"
+  color: "D5D5D5"
 
 flutter:
   uses-material-design: true

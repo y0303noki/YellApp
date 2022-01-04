@@ -47,3 +47,4 @@ ExportOptions.plist
 ios/Runner.xcodeproj/project.pbxproj
 **/ios/Flutter/DartDefines.xcconfig
 **/ios/GoogleService-Info.plist
+ios/Flutter/DartDefines.xcconfig
