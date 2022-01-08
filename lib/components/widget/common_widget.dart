@@ -142,6 +142,7 @@ class CommonWidget {
     String title = ''; // タイトル
     String lastTimeDate = ''; // 前回達成日時
     String resetTime = ''; // リセットタイム
+    bool showDetailInfo = false;
 
     if (_myAchievment != null && _otherAchievment == null) {
       // オーナー画面
@@ -149,77 +150,108 @@ class CommonWidget {
       title = _myAchievment.goalTitle;
       lastTimeDate = Utility.toStringddhh(_myAchievment.updatedCurrentDayAt);
       resetTime = _myAchievment.resetHour.toString();
+      showDetailInfo = _myAchievment.showDetailInfo;
     } else if (_myAchievment == null && _otherAchievment != null) {
       // 応援画面
       count = _otherAchievment.continuationCount;
       title = _otherAchievment.goalTitle;
       lastTimeDate = Utility.toStringddhh(_otherAchievment.updatedCurrentDayAt);
     }
-    return Container(
-      margin: const EdgeInsets.only(
-        top: 20,
-        bottom: 20,
-        left: 10,
-        right: 10,
-      ),
-      padding: const EdgeInsets.only(
-        top: 20,
-        bottom: 20,
-        left: 10,
-        right: 10,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            spreadRadius: 1.0,
-            blurRadius: 10.0,
-            offset: Offset(1, 1),
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            top: 20,
+            bottom: 20,
+            left: 20,
+            right: 20,
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-              left: 5,
-              bottom: 10,
-            ),
-            child: Row(
-              children: [
-                TextWidget.headLineText6('# $count'),
-              ],
-            ),
+          padding: const EdgeInsets.only(
+            top: 20,
+            bottom: 20,
+            left: 10,
+            right: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // タイトル
-              Expanded(
-                child: Center(
-                  child: TextWidget.headLineText4(title),
-                ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                spreadRadius: 1.0,
+                blurRadius: 10.0,
+                offset: Offset(1, 1),
               ),
-              // ロゴ
-              _logoWidget,
             ],
           ),
-          const Divider(
-            color: Colors.grey,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(
+                  left: 5,
+                  bottom: 10,
+                ),
+                child: Row(
+                  children: [
+                    // TextWidget.headLineText6('# $count'),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // タイトル
+                  Expanded(
+                    child: Center(
+                      child: TextWidget.headLineText4(title),
+                    ),
+                  ),
+                  // ロゴ
+                  _logoWidget,
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 20,
+                ),
+                child: ExpansionTile(
+                  onExpansionChanged: (bool changed) {
+                    // 開いた時の処理を書ける
+                  },
+                  title: Text(''),
+                  children: [
+                    _achieveDescriptionRow(
+                        'はじめた日', '${Utility.toDateFormatted(_startDateTime)}'),
+                    _achieveDescriptionRow(
+                      '前回',
+                      lastTimeDate,
+                    ),
+                    resetTime.isEmpty
+                        ? Container()
+                        : _achieveDescriptionRow('リセット時間', resetTime),
+                  ],
+                ),
+              ),
+            ],
           ),
-          _achieveDescriptionRow(
-              'はじめた日', '${Utility.toDateFormatted(_startDateTime)}'),
-          _achieveDescriptionRow(
-            '前回',
-            lastTimeDate,
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            top: 5,
+            left: 10,
           ),
-          resetTime.isEmpty
-              ? Container()
-              : _achieveDescriptionRow('リセット時間', resetTime),
-        ],
-      ),
+          height: 50,
+          width: 100,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.black),
+          ),
+          child: Center(
+            child: TextWidget.headLineText6('# $count'),
+          ),
+        ),
+      ],
     );
   }
 

@@ -478,8 +478,7 @@ class MyAchievementPage extends ConsumerWidget {
       xDayMessage = '達成おめでとう！';
     }
 
-    String snsShareText =
-        '${myAchievment.goalTitle}を$increment回目の達成です。今日もえらい！\n#今日もえらい\nhttp:googlecom;';
+    String snsShareText = '${myAchievment.goalTitle}を$increment回目の達成です。';
     String message = '今回の記録をSNSでシェアしますか？';
     final snackBar = SnackBar(
       backgroundColor: Colors.yellow[50],
