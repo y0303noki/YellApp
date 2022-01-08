@@ -113,6 +113,8 @@ class StartOtherSettingCodePage extends ConsumerWidget {
                               otherAchievment.setErrorText('有効期限が切れています');
                             } else if (errorText == Const.MYSELF_CODE) {
                               otherAchievment.setErrorText('自分自身のコードは使えません');
+                            } else if (errorText == Const.REGISTED_CODE) {
+                              otherAchievment.setErrorText('既に登録済みです');
                             } else {
                               otherAchievment.setErrorText('予期しないエラーが発生しました');
                             }
