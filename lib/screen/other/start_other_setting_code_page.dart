@@ -6,9 +6,11 @@ import 'package:yell_app/components/widget/common_widget.dart';
 import 'package:yell_app/components/widget/text_widget.dart';
 import 'package:yell_app/const.dart';
 import 'package:yell_app/firebase/invite_firebase.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/firebase/my_goal_firebase.dart';
 import 'package:yell_app/firebase/user_firebase.dart';
 import 'package:yell_app/model/invite.dart';
+import 'package:yell_app/model/member.dart';
 import 'package:yell_app/model/myGoal.dart';
 import 'package:yell_app/screen/other/start_other_setting_confirm_page.dart';
 import 'package:yell_app/screen/other/start_other_setting_yourinfo_page.dart';
@@ -16,6 +18,7 @@ import 'package:yell_app/state/other_achievment_provider.dart';
 
 InviteFirebase inviteFirebase = InviteFirebase();
 MyGoalFirebase myGoalFirebase = MyGoalFirebase();
+final MemberFirebase memberFirebase = MemberFirebase();
 UserFirebase userFirebase = UserFirebase();
 
 class StartOtherSettingCodePage extends ConsumerWidget {
@@ -163,6 +166,16 @@ class StartOtherSettingCodePage extends ConsumerWidget {
     // 自分自身の招待コードは利用不可
     if (inviteModel.ownerUserId == userFirebase.getMyUserId()) {
       result['errorText'] = Const.MYSELF_CODE;
+      return result;
+    }
+
+    List<MemberModel> members = await memberFirebase.fetchMemberDatas();
+    MemberModel existData = members.firstWhere(
+        (member) => member.ownerGoalId == inviteModel.goalId,
+        orElse: () => MemberModel());
+    // 既に同じ目標を登録中
+    if (existData.ownerGoalId.isNotEmpty) {
+      result['errorText'] = Const.REGISTED_CODE;
       return result;
     }
     // 有効なコード
