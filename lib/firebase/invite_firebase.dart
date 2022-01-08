@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yell_app/firebase/member_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/state/user_auth_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class InviteFirebase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final MemberFirebase _memberFirebase = MemberFirebase();
   final Uuid _uuid = const Uuid();
 
   // コレクション名前
@@ -58,6 +60,7 @@ class InviteFirebase {
     final _inviteModel = InviteModel(
       id: data['id'],
       ownerUserId: data['ownerUserId'],
+      goalId: data['goalId'],
       code: data['code'],
       expiredAt: data['expiredAt']?.toDate(),
       isDeleted: data['isDeleted'] ?? false,
@@ -71,7 +74,7 @@ class InviteFirebase {
   /// 招待コードをfirestoreに格納
   /// 発行が終わったらそのデータを返す
   /// mygoalを作ったときに既に作っておく
-  Future<InviteModel?> insertInviteData(String docId) async {
+  Future<InviteModel?> insertInviteData(String docId, String goalId) async {
     // ドキュメント作成
     Map<String, dynamic> addObject = <String, dynamic>{};
     DateTime now = DateTime.now();
@@ -84,6 +87,7 @@ class InviteFirebase {
 
     addObject['id'] = docId;
     addObject['ownerUserId'] = _userId;
+    addObject['goalId'] = goalId;
     addObject['code'] = code;
     addObject['expiredAt'] = nowAdd24h;
     addObject['isDeleted'] = false;
@@ -105,6 +109,7 @@ class InviteFirebase {
       final _inviteModel = InviteModel(
         id: docId,
         ownerUserId: addObject['ownerUserId'],
+        goalId: addObject['goalId'],
         code: addObject['code'],
         expiredAt: addObject['expiredAt'],
         isDeleted: addObject['isDeleted'] ?? false,

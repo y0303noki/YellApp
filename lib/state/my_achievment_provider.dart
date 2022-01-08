@@ -40,6 +40,8 @@ class MyAchievment extends ChangeNotifier {
 
   DateTime startDate = DateTime.now(); // 開始日時
 
+  bool showDetailInfo = false; // 他の詳細情報を表示する
+
   String achieveComment = ''; // 達成コメント
   void updatedAchieveComment(String _comment) {
     achieveComment = _comment;
@@ -176,6 +178,11 @@ class MyAchievment extends ChangeNotifier {
     // }
 
     achieved = true;
+    notifyListeners();
+  }
+
+  void changeShowDetailInfo(bool _e) {
+    showDetailInfo = _e;
     notifyListeners();
   }
 

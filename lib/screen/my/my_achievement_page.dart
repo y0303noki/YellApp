@@ -17,6 +17,7 @@ import 'package:yell_app/state/my_achievment_provider.dart';
 import 'package:bubble/bubble.dart';
 import 'package:share/share.dart';
 import 'package:yell_app/utility/utility.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 MyGoalFirebase _myGoalFirebase = MyGoalFirebase();
 
@@ -363,13 +364,22 @@ class MyAchievementPage extends ConsumerWidget {
                       },
                 child: const Text('ひとこと残す'),
               ),
-              const Tooltip(
-                message: '達成するとコメントを残すことができます。',
-                child: Icon(
+              IconButton(
+                onPressed: () {
+                  Fluttertoast.showToast(
+                      msg: "達成するとコメントを残せます",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 3,
+                      // backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                },
+                icon: const Icon(
                   Icons.help,
                   size: 24,
                 ),
-              ),
+              )
             ],
           ),
           Column(
@@ -478,8 +488,7 @@ class MyAchievementPage extends ConsumerWidget {
       xDayMessage = '達成おめでとう！';
     }
 
-    String snsShareText =
-        '${myAchievment.goalTitle}を$increment回目の達成です。今日もえらい！\n#今日もえらい\nhttp:googlecom;';
+    String snsShareText = '${myAchievment.goalTitle}を$increment回目の達成です。';
     String message = '今回の記録をSNSでシェアしますか？';
     final snackBar = SnackBar(
       backgroundColor: Colors.yellow[50],

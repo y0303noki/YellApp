@@ -6,6 +6,7 @@ import 'package:yell_app/firebase/invite_firebase.dart';
 import 'package:yell_app/model/invite.dart';
 import 'package:yell_app/state/invite_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 InviteFirebase inviteFirebase = InviteFirebase();
 
@@ -59,6 +60,14 @@ class InviteMainPage extends ConsumerWidget {
                             // クリップボードにコピー
                             final data = ClipboardData(text: invite.code);
                             await Clipboard.setData(data);
+                            Fluttertoast.showToast(
+                                msg: "コピーしました。",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                // backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                           },
                         ),
                         const Text('コピー'),

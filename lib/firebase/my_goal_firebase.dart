@@ -231,7 +231,7 @@ class MyGoalFirebase {
       await CommonFirebase().updateDocId(myGoals, docId);
 
       InviteModel? _inviteModel =
-          await _inviteFirebase.insertInviteData(inviteDocId);
+          await _inviteFirebase.insertInviteData(inviteDocId, docId);
       resultMap['invite'] = _inviteModel;
 
       final _myGoalModel = MyGoalModel(

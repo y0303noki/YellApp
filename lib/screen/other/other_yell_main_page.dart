@@ -283,7 +283,7 @@ class OtherYellMainPage extends ConsumerWidget {
 
   // メッセージを送る
   _showModalBottomSheat(BuildContext context, OtherAchievment otherAchievment) {
-    return showModalBottomSheet<void>(
+    return showModalBottomSheet<String>(
       context: context,
       builder: (BuildContext context) {
         return Column(

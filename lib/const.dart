@@ -15,4 +15,7 @@ class Const {
 
   // 自分自身のコード
   static const String MYSELF_CODE = 'myself code';
+
+  // 既に登録済み
+  static const String REGISTED_CODE = 'registed code';
 }
